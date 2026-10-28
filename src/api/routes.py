@@ -15,9 +15,12 @@ from src.core.config import get_settings
 from src.services import geometry as geo
 from src.services import orders as store
 from src.services.payment_verifier import verify_payment_screenshot
+from src.services.pricing import calculate_catalog_hpp
+from src.services.pricing_agent import evaluate_repricing
 from src.services.qris_service import (build_amount_with_suffix,
                                         build_payment_url, build_qris_for_order,
                                         format_rupiah, render_qr_base64)
+from src.services.sigaokmas_bridge import fetch_commodity_prices
 from src.services.vision_client import measure_image
 
 router = APIRouter()
@@ -211,6 +214,59 @@ def vision_measure(body: VisionMeasureBody, response: Response):
             "infer_seconds": seg.get("infer_seconds"),
             "confidence": "sedang",
             "warnings": ["skala dari pengguna, bukan papan acuan"]}
+
+
+class RepriceBody(BaseModel):
+    prices_today: dict[str, float] | None = None
+    prices_yesterday: dict[str, float] | None = None
+    prices_hari_ini: dict[str, float] | None = None
+    prices_kemarin: dict[str, float] | None = None
+
+
+@router.get("/api/pricing/commodities")
+def pricing_commodities():
+    """Ambil data komoditas pangan pasar tradisional Banyumas (SIGAOKMAS)."""
+    return fetch_commodity_prices()
+
+
+@router.get("/api/pricing/hpp")
+def pricing_hpp():
+    """Perhitungan HPP dan saran harga deterministik untuk seluruh katalog resep."""
+    import json
+    p = STATIC.parent / "data" / "recipes.json"
+    recipes = json.loads(p.read_text(encoding="utf-8")) if p.is_file() else {}
+    commodities = fetch_commodity_prices()
+    prices = commodities.get("prices", {})
+    catalog = calculate_catalog_hpp(recipes, prices)
+    return {
+        "ok": True,
+        "source": commodities.get("sumber", "sigaokmas.banyumaskab.go.id"),
+        "tanggal": commodities.get("tanggal"),
+        "stale": commodities.get("stale", False),
+        "products": catalog,
+    }
+
+
+@router.post("/api/pricing/reprice")
+async def pricing_reprice(body: RepriceBody | None = None):
+    """Jalankan evaluasi repricing cerdas (penalaran perubahan biaya pokok)."""
+    import json
+    p = STATIC.parent / "data" / "recipes.json"
+    recipes = json.loads(p.read_text(encoding="utf-8")) if p.is_file() else {}
+
+    commodities = fetch_commodity_prices()
+    default_today = commodities.get("prices", {})
+
+    b = body or RepriceBody()
+    today = b.prices_today or b.prices_hari_ini or default_today
+    yesterday = b.prices_yesterday or b.prices_kemarin or default_today
+
+    decision = await evaluate_repricing(recipes, today, yesterday)
+    return {
+        "ok": True,
+        "decision": decision,
+        "input_prices": {"today": today, "yesterday": yesterday},
+    }
 
 
 @router.get("/merchant-qris-b64")

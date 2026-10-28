@@ -1,1 +1,94 @@
-{"_catatan": "TODO-DAPUR: takaran asli belum diisi. Isi dari dapur sendiri (takaran per biji).", "bakpao-ayam": {"biji": 1, "ingredients": [], "overhead_ratio": 0.08, "target_food_cost_pct": 0.3}}
+{
+  "bakpao-ayam": {
+    "name": "Bakpao Ayam (Reguler)",
+    "biji": 1,
+    "size": "reguler",
+    "target_price": 3000,
+    "target_food_cost_pct": 0.30,
+    "overhead_ratio": 0.08,
+    "ingredients": [
+      {"name": "Tepung terigu", "gram_per_biji": 45, "unit": "gram", "key": "terigu"},
+      {"name": "Daging ayam cincang", "gram_per_biji": 20, "unit": "gram", "key": "ayam"},
+      {"name": "Gula pasir", "gram_per_biji": 8, "unit": "gram", "key": "gula"},
+      {"name": "Ragi instant", "gram_per_biji": 1.5, "unit": "gram", "key": "ragi"},
+      {"name": "Minyak nabati", "gram_per_biji": 3.0, "unit": "gram", "key": "minyak"},
+      {"name": "Bumbu racik gurih", "gram_per_biji": 3.0, "unit": "gram", "key": "bumbu"}
+    ]
+  },
+  "bakpao-ayam-mini": {
+    "name": "Bakpao Ayam (Mini)",
+    "biji": 1,
+    "size": "mini",
+    "target_price": 2000,
+    "target_food_cost_pct": 0.30,
+    "overhead_ratio": 0.08,
+    "ingredients": [
+      {"name": "Tepung terigu", "gram_per_biji": 25, "unit": "gram", "key": "terigu"},
+      {"name": "Daging ayam cincang", "gram_per_biji": 12, "unit": "gram", "key": "ayam"},
+      {"name": "Gula pasir", "gram_per_biji": 5, "unit": "gram", "key": "gula"},
+      {"name": "Ragi instant", "gram_per_biji": 1.0, "unit": "gram", "key": "ragi"},
+      {"name": "Minyak nabati", "gram_per_biji": 2.0, "unit": "gram", "key": "minyak"},
+      {"name": "Bumbu racik gurih", "gram_per_biji": 2.0, "unit": "gram", "key": "bumbu"}
+    ]
+  },
+  "bakpao-coklat": {
+    "name": "Bakpao Coklat (Reguler)",
+    "biji": 1,
+    "size": "reguler",
+    "target_price": 3000,
+    "target_food_cost_pct": 0.30,
+    "overhead_ratio": 0.08,
+    "ingredients": [
+      {"name": "Tepung terigu", "gram_per_biji": 45, "unit": "gram", "key": "terigu"},
+      {"name": "Pasta coklat lumer", "gram_per_biji": 20, "unit": "gram", "key": "coklat"},
+      {"name": "Gula pasir", "gram_per_biji": 10, "unit": "gram", "key": "gula"},
+      {"name": "Ragi instant", "gram_per_biji": 1.5, "unit": "gram", "key": "ragi"},
+      {"name": "Minyak nabati", "gram_per_biji": 3.0, "unit": "gram", "key": "minyak"}
+    ]
+  },
+  "bakpao-coklat-mini": {
+    "name": "Bakpao Coklat (Mini)",
+    "biji": 1,
+    "size": "mini",
+    "target_price": 2000,
+    "target_food_cost_pct": 0.30,
+    "overhead_ratio": 0.08,
+    "ingredients": [
+      {"name": "Tepung terigu", "gram_per_biji": 25, "unit": "gram", "key": "terigu"},
+      {"name": "Pasta coklat lumer", "gram_per_biji": 12, "unit": "gram", "key": "coklat"},
+      {"name": "Gula pasir", "gram_per_biji": 6, "unit": "gram", "key": "gula"},
+      {"name": "Ragi instant", "gram_per_biji": 1.0, "unit": "gram", "key": "ragi"},
+      {"name": "Minyak nabati", "gram_per_biji": 2.0, "unit": "gram", "key": "minyak"}
+    ]
+  },
+  "bakpao-kacang-hijau": {
+    "name": "Bakpao Kacang Hijau (Reguler)",
+    "biji": 1,
+    "size": "reguler",
+    "target_price": 3000,
+    "target_food_cost_pct": 0.30,
+    "overhead_ratio": 0.08,
+    "ingredients": [
+      {"name": "Tepung terigu", "gram_per_biji": 45, "unit": "gram", "key": "terigu"},
+      {"name": "Tausa kacang hijau", "gram_per_biji": 20, "unit": "gram", "key": "kacang_hijau"},
+      {"name": "Gula pasir", "gram_per_biji": 10, "unit": "gram", "key": "gula"},
+      {"name": "Ragi instant", "gram_per_biji": 1.5, "unit": "gram", "key": "ragi"},
+      {"name": "Minyak nabati", "gram_per_biji": 3.0, "unit": "gram", "key": "minyak"}
+    ]
+  },
+  "bakpao-kacang-hijau-mini": {
+    "name": "Bakpao Kacang Hijau (Mini)",
+    "biji": 1,
+    "size": "mini",
+    "target_price": 2000,
+    "target_food_cost_pct": 0.30,
+    "overhead_ratio": 0.08,
+    "ingredients": [
+      {"name": "Tepung terigu", "gram_per_biji": 25, "unit": "gram", "key": "terigu"},
+      {"name": "Tausa kacang hijau", "gram_per_biji": 12, "unit": "gram", "key": "kacang_hijau"},
+      {"name": "Gula pasir", "gram_per_biji": 6, "unit": "gram", "key": "gula"},
+      {"name": "Ragi instant", "gram_per_biji": 1.0, "unit": "gram", "key": "ragi"},
+      {"name": "Minyak nabati", "gram_per_biji": 2.0, "unit": "gram", "key": "minyak"}
+    ]
+  }
+}
