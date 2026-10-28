@@ -1,0 +1,454 @@
+"""RUN #1 — FASE 0 PREFLIGHT (P1-P7) untuk Bakpao.my.id.
+
+Aturan mutlak (dari muse_tasks/BAKPAO_RUN_01_PREFLIGHT.md):
+- API key HANYA dari env var MODEL_API_KEY. Tidak ada key literal di mana pun.
+- Tidak menyentuh file di luar bakpao-agent/.
+- max_output_tokens >= 2048 di semua request LLM.
+- Teks dibaca dari output[].content[].text (bukan output_text).
+- Cek resp["status"] == "completed" sebelum membaca teks.
+- Estimasi biaya wajib dicatat per P.
+
+Uji yang butuh key akan SKIP (bukan FAIL) kalau MODEL_API_KEY tidak ada.
+Kill criterion (P1/P2/P4 GAGAL -> STOP) hanya berlaku untuk hasil FAIL,
+bukan SKIP.
+
+Contoh:
+    python scripts/preflight.py
+    python scripts/preflight.py --only p2 p3
+"""
+
+import argparse
+import base64
+import io
+import json
+import os
+import sys
+import time
+import urllib.request
+import urllib.error
+import wave
+
+BASE = "https://api.meta.ai/v1"
+OUT_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+                       "docs", "preflight")
+
+# Tarif per 1M token (BAKPAO_00_PLAN.md Tabel 6.1): (input, output, reasoning)
+RATES = {
+    "muse-spark-1.3": (0.15, 1.25, 4.25),
+    "muse-wonder-1.0": (0.20, 4.00, 20.00),
+    "muse-image-1.0": None,  # flat ~$0.01/gambar (BAKPAO_05_CATALOG_IMAGE.md)
+}
+
+# Clause anti nutrition-coach — WAJIB di setiap system prompt (PLAN md S3).
+GUARDRAIL = (
+    "Anda adalah asisten bisnis untuk pemilik warung. Fokus: HPP, harga pokok, margin, "
+    "food-cost, yield, porsi produksi, stok, pesanan, omzet, reject rate, batch, dan repricing. "
+    "DILARANG memberikan: nilai caloric, makro, nutrient, diet, wellness, health score, "
+    "rekomendasi makanan, atau penilaian \"sehat\"/\"tidak sehat\". "
+    "Semua angka bersifat estimasi operasional (komersial), bukan penilaian kesehatan."
+)
+
+
+def get_key():
+    key = os.environ.get("MODEL_API_KEY", "")
+    if key:
+        return key
+    # Fallback: baca dari bakpao-agent/.env (JANGAN pernah mencetak nilainya).
+    root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    try:
+        with open(os.path.join(root, ".env"), encoding="utf-8") as f:
+            for line in f:
+                line = line.strip()
+                if line.startswith("MODEL_API_KEY="):
+                    v = line.split("=", 1)[1].strip().strip("\"'")
+                    if v:
+                        os.environ["MODEL_API_KEY"] = v
+                        return v
+    except FileNotFoundError:
+        pass
+    return ""
+
+
+def post_responses(payload, timeout=120):
+    """POST {BASE}/responses (pemetaan langsung dari client.responses.create SDK)."""
+    req = urllib.request.Request(
+        BASE + "/responses",
+        data=json.dumps(payload).encode("utf-8"),
+        headers={"Authorization": "Bearer " + get_key(),
+                 "Content-Type": "application/json"},
+        method="POST",
+    )
+    try:
+        with urllib.request.urlopen(req, timeout=timeout) as r:
+            return r.status, json.loads(r.read().decode("utf-8"))
+    except urllib.error.HTTPError as e:
+        try:
+            body = e.read().decode("utf-8")[:2000]
+        except Exception:
+            body = "<unreadable>"
+        return e.code, {"_http_error": body}
+
+
+def extract_text(resp):
+    for item in resp.get("output", []):
+        if item.get("type") == "message":
+            for c in item.get("content", []):
+                if c.get("text"):
+                    return c["text"]
+    return ""
+
+
+def usage_of(resp):
+    u = resp.get("usage", {}) or {}
+    det = u.get("output_tokens_details", {}) or {}
+    return (u.get("input_tokens", 0), u.get("output_tokens", 0),
+            det.get("reasoning_tokens", 0))
+
+
+def usd(model, inp, out, rea):
+    r = RATES.get(model)
+    if r is None:
+        return 0.0
+    return (inp * r[0] + out * r[1] + rea * r[2]) / 1_000_000
+
+
+def b64_png(img):
+    buf = io.BytesIO()
+    img.save(buf, format="PNG")
+    return base64.b64encode(buf.getvalue()).decode()
+
+
+def synth_product():
+    """Gambar produk sintetis kecil untuk P1 (bukan foto asli)."""
+    from PIL import Image, ImageDraw
+    img = Image.new("RGB", (512, 512), (245, 235, 220))
+    d = ImageDraw.Draw(img)
+    d.ellipse([156, 156, 356, 356], fill=(210, 170, 120), outline=(120, 80, 40), width=4)
+    d.ellipse([216, 216, 296, 296], fill=(120, 70, 30))
+    d.text((190, 400), "BAKPAO SINTETIS P1", fill=(60, 40, 20))
+    return img
+
+
+def synth_receipt():
+    """Struk sintetis mirip e-wallet untuk P2 (BUKAN struk asli)."""
+    from PIL import Image, ImageDraw
+    img = Image.new("RGB", (480, 640), "white")
+    d = ImageDraw.Draw(img)
+    y = 40
+    for line in ["Pembayaran Berhasil", "", "Nominal", "Rp13.185", "",
+                 "ID Transaksi", "TRX20261029ABC", "", "Pengirim",
+                 "Warung Bakpao", "", "Bank", "GoPay"]:
+        d.text((40, y), line, fill="black")
+        y += 40
+    return img
+
+
+def run_p1():
+    """P1: muse-image-1.0 — catat persis bentuk respons, jangan diasumsikan."""
+    t0 = time.time()
+    payload = {
+        "model": "muse-image-1.0",
+        "input": [{"role": "user", "content": [
+            {"type": "input_text", "text":
+             "Buat poster katalog bakpao: gaya foto produk warung premium, "
+             "warna krem-coklat, ada ruang kosong untuk harga dan nama produk."},
+            {"type": "input_image",
+             "image_url": "data:image/png;base64," + b64_png(synth_product())},
+        ]}],
+        "max_output_tokens": 4096,
+        "reasoning": {"effort": "low"},
+    }
+    st, resp = post_responses(payload, timeout=300)
+    dt = time.time() - t0
+    top_keys = sorted(resp.keys()) if isinstance(resp, dict) else []
+    # Cari kandidat gambar tanpa asumsi: URL http atau string base64 panjang.
+    found, saved = "none", ""
+    def walk(o):
+        nonlocal found, saved
+        if isinstance(o, dict):
+            for k, v in o.items():
+                if isinstance(v, str) and v.startswith("http") and any(
+                        e in v for e in (".png", ".jpg", "image")):
+                    found, saved = "url:" + k, v
+                if isinstance(v, str) and len(v) > 20000:
+                    found = "long_string:" + k + f"(len={len(v)})"
+                walk(v)
+        elif isinstance(o, list):
+            for v in o:
+                walk(v)
+    walk(resp)
+    if found.startswith("long_string"):
+        # Simpan string terbesar sebagai file (verifikasi visual).
+        biggest = ""
+        def walk2(o):
+            nonlocal biggest
+            if isinstance(o, dict):
+                for v in o.values():
+                    if isinstance(v, str) and len(v) > len(biggest):
+                        biggest = v
+                    walk2(v)
+            elif isinstance(o, list):
+                for v in o:
+                    walk2(v)
+        walk2(resp)
+        try:
+            raw = base64.b64decode(biggest)
+            if raw[:4] == b"RIFF":
+                ext = "webp"
+            elif raw[:8] == b"\x89PNG\r\n\x1a\n":
+                ext = "png"
+            elif raw[:2] == b"\xff\xd8":
+                ext = "jpg"
+            else:
+                ext = "bin"
+            with open(os.path.join(OUT_DIR, "p1_image." + ext),
+                      "wb") as f:
+                f.write(raw)
+            found += f" saved=p1_image.{ext}({len(raw)}B)"
+        except Exception as e:
+            found += f" save_failed={str(e)[:100]}"
+    inp, out, rea = usage_of(resp)
+    ok = st == 200 and resp.get("status") == "completed"
+    return {"status": "PASS" if ok else "FAIL", "http": st,
+            "seconds": round(dt, 1), "top_keys": top_keys,
+            "image_evidence": found + (" saved=" + saved if saved else ""),
+            "usage": {"in": inp, "out": out, "rea": rea},
+            "usd": round(0.01 if ok else 0.0, 4),
+            "raw_trunc": json.dumps(resp)[:1500]}
+
+
+def run_p2():
+    """P2: spark-1.3 vision + json_schema dari struk sintetis."""
+    t0 = time.time()
+    schema = {"type": "object",
+              "properties": {"detected_amount": {"type": "integer"},
+                             "detected_reference": {"type": "string"},
+                             "confidence": {"type": "number"}},
+              "required": ["detected_amount", "detected_reference", "confidence"],
+              "additionalProperties": False}
+    payload = {
+        "model": "muse-spark-1.3",
+        "instructions": GUARDRAIL,
+        "input": [{"role": "user", "content": [
+            {"type": "input_text", "text":
+             "Baca screenshot bukti transfer ini. Ekstrak nominal transfer "
+             "sebagai integer rupiah, nomor referensi, dan confidence 0-1."},
+            {"type": "input_image",
+             "image_url": "data:image/png;base64," + b64_png(synth_receipt())},
+        ]}],
+        "text": {"format": {"type": "json_schema", "name": "struk",
+                            "strict": True, "schema": schema}},
+        "max_output_tokens": 4096,
+        "reasoning": {"effort": "low"},
+        "temperature": 0.0,
+    }
+    st, resp = post_responses(payload)
+    dt = time.time() - t0
+    txt = extract_text(resp)
+    parsed, valid = None, False
+    try:
+        parsed = json.loads(txt)
+        valid = (isinstance(parsed.get("detected_amount"), int)
+                 and isinstance(parsed.get("detected_reference"), str)
+                 and isinstance(parsed.get("confidence"), (int, float)))
+    except Exception:
+        pass
+    inp, out, rea = usage_of(resp)
+    ok = st == 200 and resp.get("status") == "completed" and valid
+    return {"status": "PASS" if ok else "FAIL", "http": st,
+            "seconds": round(dt, 1), "parsed": parsed,
+            "usage": {"in": inp, "out": out, "rea": rea},
+            "usd": round(usd("muse-spark-1.3", inp, out, rea), 4)}
+
+
+def run_p3():
+    """P3: sam-3.1 via Meta API — ekspektasi: balas kosong."""
+    t0 = time.time()
+    payload = {
+        "model": "sam-3.1",
+        "input": [{"role": "user", "content": [
+            {"type": "input_text", "text": "bakpao"},
+            {"type": "input_image",
+             "image_url": "data:image/png;base64," + b64_png(synth_product())},
+        ]}],
+        "max_output_tokens": 2048,
+    }
+    st, resp = post_responses(payload, timeout=180)
+    dt = time.time() - t0
+    txt = extract_text(resp)
+    u = resp.get("usage", {}) or {}
+    empty = (txt == "" and u.get("input_tokens", 0) == 0
+             and u.get("output_tokens", 0) == 0)
+    ok = st == 200 and empty
+    return {"status": "PASS" if ok else "FAIL", "http": st,
+            "seconds": round(dt, 1), "empty_confirmed": empty,
+            "usage": u, "usd": 0.0,
+            "raw_trunc": json.dumps(resp)[:800]}
+
+
+def run_p5():
+    """P5: voice-transcribe — catat signature endpoint + contoh respons."""
+    import urllib.parse
+    t0 = time.time()
+    models_url = BASE + "/models"
+    req = urllib.request.Request(
+        models_url, headers={"Authorization": "Bearer " + get_key()})
+    try:
+        with urllib.request.urlopen(req, timeout=60) as r:
+            models = json.loads(r.read().decode("utf-8"))
+        names = [m.get("id", "?") for m in models.get("data", [])]
+        voice_present = "muse-voice-transcribe-1.0" in names
+    except Exception as e:
+        return {"status": "FAIL", "models_error": str(e)[:300]}
+    # Coba pola OpenAI audio/transcriptions dengan WAV hening 1 detik.
+    buf = io.BytesIO()
+    with wave.open(buf, "wb") as w:
+        w.setnchannels(1)
+        w.setsampwidth(2)
+        w.setframerate(16000)
+        w.writeframes(b"\x00" * 32000)
+    boundary = "----preflight boundary"
+    body = (
+        "--" + boundary + '\r\nContent-Disposition: form-data; name="model"'
+        + '\r\n\r\nmuse-voice-transcribe-1.0\r\n'
+        + "--" + boundary + '\r\nContent-Disposition: form-data; '
+        + 'name="file"; filename="silence.wav"\r\n'
+        + "Content-Type: audio/wav\r\n\r\n").encode() + buf.getvalue() \
+        + ("\r\n--" + boundary + "--\r\n").encode()
+    areq = urllib.request.Request(
+        BASE + "/audio/transcriptions", data=body,
+        headers={"Authorization": "Bearer " + get_key(),
+                 "Content-Type": "multipart/form-data; boundary=" + boundary},
+        method="POST")
+    try:
+        with urllib.request.urlopen(areq, timeout=120) as r:
+            st, resp_txt = r.status, r.read().decode("utf-8")[:1500]
+    except urllib.error.HTTPError as e:
+        try:
+            resp_txt = e.read().decode("utf-8")[:1500]
+        except Exception:
+            resp_txt = "<unreadable>"
+        st = e.code
+    except Exception as e:
+        st, resp_txt = -1, str(e)[:500]
+    dt = time.time() - t0
+    return {"status": "PASS" if st == 200 else "FAIL",
+            "voice_in_models": voice_present,
+            "transcribe_endpoint": "POST /audio/transcriptions",
+            "http": st, "seconds": round(dt, 1),
+            "response_trunc": resp_txt}
+
+
+def run_p6():
+    """P6: muse-wonder-1.0 — 1 panggilan, catat token."""
+    t0 = time.time()
+    payload = {
+        "model": "muse-wonder-1.0",
+        "instructions": GUARDRAIL,
+        "input": [{"role": "user",
+                   "content": [{"type": "input_text",
+                                "text": "Balas tepat: OK"}]}],
+        "max_output_tokens": 2048,
+        "reasoning": {"effort": "low"},
+    }
+    st, resp = post_responses(payload)
+    dt = time.time() - t0
+    inp, out, rea = usage_of(resp)
+    ok = st == 200 and resp.get("status") == "completed"
+    return {"status": "PASS" if ok else "FAIL", "http": st,
+            "seconds": round(dt, 1), "text": extract_text(resp)[:200],
+            "usage": {"in": inp, "out": out, "rea": rea},
+            "usd": round(usd("muse-wonder-1.0", inp, out, rea), 4)}
+
+
+def run_p7():
+    """P7: harga bahan — validasi harga_bahan.json hasil riset."""
+    with open(os.path.join(OUT_DIR, "harga_bahan.json"), encoding="utf-8") as f:
+        data = json.load(f)
+    items = data.get("terkait_bakpao", {})
+    ok = bool(data.get("sumber")) and len(items) >= 5
+    return {"status": "PASS" if ok else "FAIL",
+            "sumber": data.get("sumber", "?"),
+            "tanggal_data": data.get("tanggal_data", "?"),
+            "items": items}
+
+
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--only", nargs="*", default=["p1", "p2", "p3", "p5",
+                                                  "p6", "p7"],
+                    help="subset uji; p4 dijalankan terpisah via Modal")
+    args = ap.parse_args()
+    key = get_key()
+    key_fns = {"p1": run_p1, "p2": run_p2, "p3": run_p3,
+               "p5": run_p5, "p6": run_p6}
+    results = {}
+    for name in args.only:
+        if name == "p4":
+            results[name] = {"status": "UNRUN",
+                             "note": "dijalankan terpisah via Modal"}
+        elif name == "p7":
+            try:
+                results[name] = run_p7()
+            except Exception as e:
+                results[name] = {"status": "FAIL", "error": str(e)[:300]}
+        elif name in key_fns:
+            if not key:
+                results[name] = {
+                    "status": "SKIP",
+                    "reason": "MODEL_API_KEY tidak ada di environment"}
+            else:
+                try:
+                    results[name] = key_fns[name]()
+                except Exception as e:
+                    results[name] = {"status": "FAIL",
+                                     "error": str(e)[:500]}
+    for name in ("p1", "p2", "p3", "p4", "p5", "p6", "p7"):
+        results.setdefault(name, {"status": "NOT_RUN"})
+    total = sum(r.get("usd", 0) for r in results.values()
+                if isinstance(r.get("usd"), (int, float)))
+    lines = ["TASK: 00 — Preflight", "STATUS: " + (
+        "PASS" if all(results[k]["status"] in ("PASS", "SKIP", "UNRUN")
+                      for k in results) and
+        results["p1"]["status"] == "PASS" and
+        results["p2"]["status"] == "PASS" else
+        ("PARTIAL" if any(results[k]["status"] == "PASS"
+                          for k in results) else "FAIL")),
+        "P1_muse_image: %(status)s | %(image_evidence)s | $%(usd)s"
+        % {**results["p1"], "image_evidence": results["p1"].get(
+            "image_evidence", "-"), "usd": results["p1"].get("usd", "-")},
+        "P2_spark_vision_json: %(status)s | %(parsed)s"
+        % {"status": results["p2"]["status"],
+           "parsed": json.dumps(results["p2"].get("parsed"))},
+        "P3_sam31_api: %(status)s | empty=%(empty_confirmed)s"
+        % {"status": results["p3"]["status"],
+           "empty_confirmed": results["p3"].get("empty_confirmed", "?")},
+        "P4_sam21_modal: %(status)s" % {"status": results["p4"]["status"]},
+        "P5_voice: %(status)s | %(transcribe_endpoint)s http=%(http)s"
+        % {"status": results["p5"]["status"],
+           "transcribe_endpoint": results["p5"].get("transcribe_endpoint",
+                                                   "-"),
+           "http": results["p5"].get("http", "-")},
+        "P6_wonder: %(status)s | %(usage)s $%(usd)s"
+        % {"status": results["p6"]["status"],
+           "usage": json.dumps(results["p6"].get("usage")),
+           "usd": results["p6"].get("usd", "-")},
+        "P7_harga_bahan: %(status)s | %(sumber)s | %(tanggal_data)s"
+        % {"status": results["p7"]["status"],
+           "sumber": results["p7"].get("sumber", "-"),
+           "tanggal_data": results["p7"].get("tanggal_data", "-")},
+        "TOTAL_COST: $%s (belum termasuk GPU P4)" % round(total, 4),
+        "FILES: scripts/preflight.py, docs/preflight/harga_bahan.json",
+        "BLOCKERS: " + ("none" if key else
+                        "MODEL_API_KEY tidak ada di environment"),
+        "",
+        "DETAIL_JSON:",
+        json.dumps(results, indent=1, ensure_ascii=False)[:6000]]
+    rep = os.path.join(OUT_DIR, "report.md")
+    with open(rep, "w", encoding="utf-8") as f:
+        f.write("\n".join(lines))
+    print("\n".join(lines))
+
+
+if __name__ == "__main__":
+    main()
