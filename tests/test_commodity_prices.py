@@ -1,4 +1,4 @@
-"""Unit test untuk jembatan data harga pangan SIGAOKMAS Banyumas."""
+"""Unit test untuk sumber harga bahan (harga dapur + fallback preflight)."""
 from src.services.commodity_prices import fetch_commodity_prices
 
 
@@ -30,7 +30,7 @@ def test_fetch_commodity_prices_stale_detection():
 
 
 def test_no_cache_returns_error_gracefully(monkeypatch):
-    import src.services.sigaokmas_bridge as bridge
+    import src.services.commodity_prices as bridge
 
     # Mock bila cache dan preflight tidak ada
     monkeypatch.setattr(bridge, "_read_cache", lambda: None)
