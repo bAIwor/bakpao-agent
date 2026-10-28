@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bayar — Bakpao.my.id</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  body { font-family: Georgia, serif; background: #f7f1e5; }
+  .sans { font-family: system-ui, sans-serif; }
+  .card { background: #fffdf8; border: 2px solid #2b2118; border-radius: 10px;
+          box-shadow: 4px 4px 0 #2b2118; }
+  .btn { background: #6b4423; color: #fff; border: 2px solid #2b2118;
+         border-radius: 8px; box-shadow: 3px 3px 0 #2b2118; }
+</style>
+</head>
+<body class="text-[#2b2118]">
+<main class="max-w-3xl mx-auto px-4 py-6">
+  <a href="/" class="sans text-sm underline">&larr; Kembali ke menu</a>
+  <h1 class="text-2xl font-bold mt-2">Pembayaran <span id="ocode" class="sans"></span></h1>
+  <p id="statusline" class="sans mt-1 font-bold">Status: MENUNGGU_BAYAR</p>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+    <div class="card p-4 text-center">
+      <h2 class="font-bold mb-2">1. Scan QR pesanan</h2>
+      <img id="qrpay" alt="QR pesanan" class="mx-auto w-52 h-52 border border-[#2b2118] rounded-md">
+      <p class="sans text-sm mt-2">Nominal tepat:</p>
+      <p id="nominal" class="text-3xl font-bold"></p>
+      <p class="sans text-sm">Kode unik: <span id="suffix" class="font-bold"></span></p>
+    </div>
+    <div class="card p-4 text-center">
+      <h2 class="font-bold mb-2">2. Atau scan QRIS merchant</h2>
+      <img src="/static/assets/merchant-qris.png" alt="QRIS merchant"
+           class="mx-auto w-52 h-52 object-contain border border-[#2b2118] rounded-md">
+      <p class="sans text-xs mt-2 border border-dashed border-[#2b2118] rounded p-2">
+        Mode simulasi untuk demo hackathon. Pembayaran sungguhan memakai
+        QRIS statis merchant di atas. Ketik nominal tepat + kode unik.
+      </p>
+    </div>
+  </div>
+
+  <div class="card sans p-4 mt-4">
+    <h2 class="font-bold mb-2">3. Upload bukti transfer</h2>
+    <input id="bukti" type="file" accept="image/png,image/jpeg,image/webp" class="text-sm">
+    <button id="uploadbtn" class="btn px-4 py-2 mt-2 text-sm font-bold">Upload Bukti Transfer</button>
+    <p id="uploadmsg" class="text-sm mt-2"></p>
+  </div>
+</main>
+<script src="/static/pay.js"></script>
+</body>
+</html>

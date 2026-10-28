@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bakpao.my.id — Hangat, Lembut, Cerdas</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  body { font-family: Georgia, 'Times New Roman', serif; background: #f7f1e5; }
+  .sans { font-family: system-ui, -apple-system, sans-serif; }
+  .card { background: #fffdf8; border: 2px solid #2b2118; border-radius: 10px;
+          box-shadow: 4px 4px 0 #2b2118; }
+  .btn-order { background: #6b4423; color: #fff; border: 2px solid #2b2118;
+               border-radius: 8px; box-shadow: 3px 3px 0 #2b2118; }
+  .btn-order:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 #2b2118; }
+  #cartbar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 20; }
+</style>
+</head>
+<body class="text-[#2b2118]">
+<header class="border-b-2 border-[#2b2118] bg-[#fffdf8]">
+  <div class="max-w-3xl mx-auto px-4 py-3 flex items-center justify-between">
+    <a href="/" class="text-xl font-bold">Bakpao.my.id</a>
+    <nav class="sans text-sm flex gap-4">
+      <a href="/dapur" class="underline">Dapur</a>
+      <a href="/cara-kerja" class="underline">Cara kerja</a>
+    </nav>
+  </div>
+</header>
+
+<main class="max-w-3xl mx-auto px-4 pb-32">
+  <section class="py-8">
+    <h1 class="text-3xl md:text-4xl font-bold leading-tight">Bakpao.my.id — Hangat,
+      Lembut, &amp; Diproses Cerdas oleh bAIwor Agent</h1>
+    <p class="sans mt-3 text-[#5a4a3a]">Pesan bakpao kukus fresh dari dapur kami.
+      Bayar via QRIS, pantau antrean dapur secara live.</p>
+  </section>
+
+  <section>
+    <h2 class="text-xl font-bold mb-3">Menu</h2>
+    <div id="menu" class="grid grid-cols-1 sm:grid-cols-2 gap-4"></div>
+  </section>
+</main>
+
+<div id="cartbar" class="hidden">
+  <div class="max-w-3xl mx-auto px-4 pb-4">
+    <div class="card sans p-3 flex items-center justify-between">
+      <div><span id="cartcount" class="font-bold">0</span> item ·
+        <span id="carttotal" class="font-bold">Rp 0</span></div>
+      <button id="orderbtn" class="btn-order px-4 py-2 font-bold">Pesan Sekarang</button>
+    </div>
+  </div>
+</div>
+
+<script src="/static/app.js"></script>
+</body>
+</html>
