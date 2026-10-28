@@ -17,5 +17,5 @@ for flavor, (bg, fg, label) in STYLE.items():
         d = ImageDraw.Draw(im)
         d.ellipse([w * 0.22, h * 0.18, w * 0.78, h * 0.82], fill=fg)
         d.text((w * 0.36, h * 0.05), f"{label} {size.upper()}", fill=fg)
-        im.save(OUT / f"bakpao-{flavor}.jpg", quality=90)
+        im.save(OUT / f"bakpao-{flavor.replace('_', '-')}.jpg", quality=90)
 print("6 placeholder dibuat ->", OUT)
