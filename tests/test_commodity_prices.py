@@ -1,5 +1,5 @@
 """Unit test untuk jembatan data harga pangan SIGAOKMAS Banyumas."""
-from src.services.sigaokmas_bridge import fetch_commodity_prices
+from src.services.commodity_prices import fetch_commodity_prices
 
 
 def test_fetch_commodity_prices_benchmark_cache():

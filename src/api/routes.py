@@ -21,7 +21,7 @@ from src.services.pricing_agent import evaluate_repricing
 from src.services.qris_service import (build_amount_with_suffix,
                                         build_payment_url, build_qris_for_order,
                                         format_rupiah, render_qr_base64)
-from src.services.sigaokmas_bridge import fetch_commodity_prices
+from src.services.commodity_prices import fetch_commodity_prices
 from src.services.vision_client import measure_image
 
 router = APIRouter()

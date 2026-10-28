@@ -1,11 +1,13 @@
-"""Konektor data harga pangan Kabupaten Banyumas (SIGAOKMAS & Pasar Tradisional).
+"""Harga bahan per kg untuk perhitungan HPP.
 
-Mengambil data harga komoditas pasar harian dengan fallback cache yang tangguh.
-Prioritas sumber:
-1. Portal SIGAOKMAS Banyumas (https://sigaokmas.banyumaskab.go.id)
-2. Resilient local cache (data/cache/sigaokmas_prices.json)
-3. Data rujukan Badan Pangan Nasional Jateng (docs/preflight/harga_bahan.json)
-"""
+Sumber kebenaran = harga beli dapur (dikonfirmasi pemilik).
+Empat sumber otomatis sudah diuji dan TIDAK dipakai:
+  - sigaokmas.banyumaskab.go.id        : tidak merespons
+  - dimassatria.banyumaskab.go.id      : semua harga Rp 0
+  - klikindomaret.com                  : Cloudflare bot challenge
+  - alfagift.id                        : SPA, tanpa API publik
+Kalau nanti ada feed yang benar-benar hidup, tambahkan sebagai sumber
+dengan pengaman: tolak harga <= 0 dan catat tanggalnya."""
 from __future__ import annotations
 
 import datetime
