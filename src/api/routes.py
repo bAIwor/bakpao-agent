@@ -270,7 +270,7 @@ class RepriceBody(BaseModel):
 
 @router.get("/api/pricing/commodities")
 def pricing_commodities():
-    """Ambil data komoditas pangan pasar tradisional Banyumas (SIGAOKMAS)."""
+    """Harga bahan per kg (harga beli dapur + fallback preflight)."""
     return fetch_commodity_prices()
 
 
@@ -283,6 +283,19 @@ def pricing_hpp():
     commodities = fetch_commodity_prices()
     prices = commodities.get("prices", {})
     catalog = calculate_catalog_hpp(recipes, prices)
+
+    # Bandingkan dengan harga jual yang BENAR-BENAR dipakai, bukan hanya harga saran.
+    produk_path = STATIC.parent / "data" / "products.json"
+    produk = (json.loads(produk_path.read_text(encoding="utf-8"))
+              if produk_path.is_file() else [])
+    harga_aktual = {x.get("id"): x.get("price") for x in produk}
+    for pid, row in catalog.items():
+        aktual = harga_aktual.get(pid)
+        if aktual:
+            row["price_aktual"] = aktual
+            row["margin_aktual"] = aktual - row["hpp"]
+            row["food_cost_aktual_pct"] = round(row["hpp"] / aktual * 100, 1)
+
     return {
         "ok": True,
         "source": commodities.get("sumber", "tidak_diketahui"),
