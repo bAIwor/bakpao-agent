@@ -13,7 +13,7 @@ def db(tmp_path, monkeypatch):
 def test_create_totals_exact(db):
     o = store.create_order([{"product_id": "bakpao-ayam", "qty": 2},
                             {"product_id": "bakpao-coklat", "qty": 1}])
-    assert o["total"] == 2 * 3000 + 3000
+    assert o["total"] == 2 * 3500 + 3500
     assert o["amount"] == o["total"] + o["unique_suffix"]
     assert o["status"] == "MENUNGGU_BAYAR"
     assert o["paid_at"] is None and o["queue_number"] is None

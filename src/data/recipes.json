@@ -3,7 +3,7 @@
     "name": "Bakpao Ayam (Reguler)",
     "biji": 1,
     "size": "reguler",
-    "target_price": 3000,
+    "target_price": 3500,
     "target_food_cost_pct": 0.30,
     "overhead_ratio": 0.08,
     "ingredients": [
@@ -19,7 +19,7 @@
     "name": "Bakpao Ayam (Mini)",
     "biji": 1,
     "size": "mini",
-    "target_price": 2000,
+    "target_price": 2500,
     "target_food_cost_pct": 0.30,
     "overhead_ratio": 0.08,
     "ingredients": [
@@ -35,7 +35,7 @@
     "name": "Bakpao Coklat (Reguler)",
     "biji": 1,
     "size": "reguler",
-    "target_price": 3000,
+    "target_price": 3500,
     "target_food_cost_pct": 0.30,
     "overhead_ratio": 0.08,
     "ingredients": [
@@ -50,7 +50,7 @@
     "name": "Bakpao Coklat (Mini)",
     "biji": 1,
     "size": "mini",
-    "target_price": 2000,
+    "target_price": 2500,
     "target_food_cost_pct": 0.30,
     "overhead_ratio": 0.08,
     "ingredients": [
@@ -65,7 +65,7 @@
     "name": "Bakpao Kacang Hijau (Reguler)",
     "biji": 1,
     "size": "reguler",
-    "target_price": 3000,
+    "target_price": 3500,
     "target_food_cost_pct": 0.30,
     "overhead_ratio": 0.08,
     "ingredients": [
@@ -80,7 +80,7 @@
     "name": "Bakpao Kacang Hijau (Mini)",
     "biji": 1,
     "size": "mini",
-    "target_price": 2000,
+    "target_price": 2500,
     "target_food_cost_pct": 0.30,
     "overhead_ratio": 0.08,
     "ingredients": [

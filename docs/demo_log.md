@@ -3,21 +3,21 @@
 ```
 ======================================================================
 🥟 BAKPAO.MY.ID — DEMO OTOMASI END-TO-END (META GLOBAL HACKATHON)
-Waktu Mulai : 2026-10-29 05:00:56 WIB
+Waktu Mulai : 2026-10-29 06:08:02 WIB
 Target URL  : http://127.0.0.1:8000
 ======================================================================
 
 [Langkah 1/12] Pengecekan Status Keaktifan Sistem (/api/health)
-  ✓ Layanan aktif: Bakpao.my.id | Waktu server: 2026-10-28T22:00:56.855955+00:00
+  ✓ Layanan aktif: Bakpao.my.id | Waktu server: 2026-10-28T23:08:02.563333+00:00
 
 [Langkah 2/12] Pengambilan Katalog Menu (/api/products)
   ✓ Berhasil memuat 6 varian menu:
-    - Bakpao Ayam (Reguler) | Rp 3,000 | Paling Laris 🔥
-    - Bakpao Ayam (Mini) | Rp 2,000 | Hemat 🌟
-    - Bakpao Coklat (Reguler) | Rp 3,000 | Favorit Manis 🍫
-    - Bakpao Coklat (Mini) | Rp 2,000 | Cemilan Pas ☕
-    - Bakpao Kacang Hijau (Reguler) | Rp 3,000 | Klasik Wangi 🌿
-    - Bakpao Kacang Hijau (Mini) | Rp 2,000 | Tradisional 🍵
+    - Bakpao Ayam (Reguler) | Rp 3,500 | Paling Laris 🔥
+    - Bakpao Ayam (Mini) | Rp 2,500 | Hemat 🌟
+    - Bakpao Coklat (Reguler) | Rp 3,500 | Favorit Manis 🍫
+    - Bakpao Coklat (Mini) | Rp 2,500 | Cemilan Pas ☕
+    - Bakpao Kacang Hijau (Reguler) | Rp 3,500 | Klasik Wangi 🌿
+    - Bakpao Kacang Hijau (Mini) | Rp 2,500 | Tradisional 🍵
 
 [Langkah 3/12] Rujukan Harga Pasar Banyumas (/api/pricing/commodities)
   ✓ Sumber Data: SIGAOKMAS Pemkab Banyumas (Pasar Wage & Pasar Manis Purwokerto) (Tanggal: 2026-10-29)
@@ -32,27 +32,27 @@ Target URL  : http://127.0.0.1:8000
 
 [Langkah 5/12] Simulasi Agen Repricing Pintar (/api/pricing/reprice)
   Simulasi kenaikan harga daging ayam +28.5% (Rp 35.000 -> Rp 45.000)...
-  ✓ Ringkasan Keputusan: 2 varian ayam terdampak kenaikan HPP 12.11% perlu review supplier tanpa repricing, 4 varian lain HPP stabil HOLD.
-  ✓ Peringatan Vendor  : Harga ayam naik dari 35000 ke 45000, evaluasi supplier ayam alternatif atau negosiasi batch untuk jaga HPP dan margin.
+  ✓ Ringkasan Keputusan: 2 varian Bakpao Ayam HPP naik 12.11% akibat kenaikan ayam, diputuskan REVIEW_SUPPLIER dengan tahan harga jual. 4 varian Coklat dan Kacang Hijau HPP 0% HOLD.
+  ✓ Peringatan Vendor  : Harga ayam naik dari 35000 ke 45000, memicu HPP Bakpao Ayam Reguler dan Mini naik 12.11%. Evaluasi supplier ayam alternatif, negosiasi batch dan cek yield porsi untuk tekan food-cost.
 
 [Langkah 6/12] Pembuatan Pesanan Pembeli (/api/orders)
-  ✓ Pesanan Berhasil Dibuat: Kode [BQ-WQAVY3]
-  ✓ Subtotal: Rp 8,000 | Kode Unik 3-Digit: 198
-  ✓ Total Tagihan Exact: Rp 8.198 (Rp 8,198)
-  ✓ URL Pembayaran: https://baiwormyid--bakpao.modal.run/pay/BQ-WQAVY3
+  ✓ Pesanan Berhasil Dibuat: Kode [BQ-7TPHFA]
+  ✓ Subtotal: Rp 9,500 | Kode Unik 3-Digit: 269
+  ✓ Total Tagihan Exact: Rp 9.769 (Rp 9,769)
+  ✓ URL Pembayaran: https://baiwormyid--bakpao.modal.run/pay/BQ-7TPHFA
 
-[Langkah 7/12] Cek Status Pesanan (/api/orders/BQ-WQAVY3)
+[Langkah 7/12] Cek Status Pesanan (/api/orders/BQ-7TPHFA)
   ✓ Status Pesanan Saat Ini: MENUNGGU_BAYAR
 
-[Langkah 8/12] Konfirmasi Mutasi QRIS Masuk (/api/orders/BQ-WQAVY3/paid)
+[Langkah 8/12] Konfirmasi Mutasi QRIS Masuk (/api/orders/BQ-7TPHFA/paid)
   ✓ Status Berubah: LUNAS ✅
-  ✓ Nomor Antrean Dapur: #2
+  ✓ Nomor Antrean Dapur: #3
 
 [Langkah 9/12] Pemantauan Layar Dapur KDS (/api/kitchen/queue)
-  ✓ Antrean aktif di dapur: 2 pesanan
-  ✓ Pesanan [BQ-WQAVY3] terverifikasi masuk antrean produksi: True
+  ✓ Antrean aktif di dapur: 3 pesanan
+  ✓ Pesanan [BQ-7TPHFA] terverifikasi masuk antrean produksi: True
 
-[Langkah 10/12] Tombol Dapur: Siap Disajikan (/api/orders/BQ-WQAVY3/complete)
+[Langkah 10/12] Tombol Dapur: Siap Disajikan (/api/orders/BQ-7TPHFA/complete)
   ✓ Status Final: SELESAI 🎉 (Pesanan selesai)
 
 [Langkah 11/12] Uji Mesin Geometri Vision (SAM 2.1 QC Simulation)
@@ -66,6 +66,6 @@ Target URL  : http://127.0.0.1:8000
 
 ======================================================================
 ✅ SELURUH 12 LANGKAH INTEGRASI END-TO-END BERHASIL TUNTAS 100%!
-Total Durasi Pengujian: 10.78 detik
+Total Durasi Pengujian: 8.31 detik
 ======================================================================
 ```

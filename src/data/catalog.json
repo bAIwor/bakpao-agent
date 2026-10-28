@@ -1,44 +1,56 @@
 [
- {
-  "id": "bakpao-ayam",
-  "name": "Bakpao Ayam (Reguler)",
-  "price": 3000,
-  "img": "/static/assets/katalog/bakpao-ayam.webp",
-  "caption": "Bakpao Ayam Reguler isi ayam cincang bumbu gurih cuma Rp3.000! Kulit lembut dan rasa gurih nikmat di setiap gigitan."
- },
- {
-  "id": "bakpao-ayam-mini",
-  "name": "Bakpao Ayam (Mini)",
-  "price": 2000,
-  "img": "/static/assets/produk/bakpao-ayam.jpg",
-  "caption": "Bakpao Ayam Mini cuma Rp2.000! Isian ayam cincang gurih manis dengan roti lembut empuk yang lumer di mulut."
- },
- {
-  "id": "bakpao-coklat",
-  "name": "Bakpao Coklat (Reguler)",
-  "price": 3000,
-  "img": "/static/assets/produk/bakpao-coklat.jpg",
-  "caption": "Bakpao Coklat Reguler cuma Rp3.000! Isi coklat lumer manis legit dengan bakpao lembut empuk."
- },
- {
-  "id": "bakpao-coklat-mini",
-  "name": "Bakpao Coklat (Mini)",
-  "price": 2000,
-  "img": "/static/assets/produk/bakpao-coklat.jpg",
-  "caption": "Bakpao Coklat Mini cuma Rp2.000! Lembut empuk dengan isian coklat lumer manis legit di dalamnya."
- },
- {
-  "id": "bakpao-kacang-hijau",
-  "name": "Bakpao Kacang Hijau (Reguler)",
-  "price": 3000,
-  "img": "/static/assets/produk/bakpao-kacang-hijau.jpg",
-  "caption": "Bakpao Kacang Hijau Reguler lembut dengan isian kacang hijau manis legit. Cuma Rp3.000 per buah!"
- },
- {
-  "id": "bakpao-kacang-hijau-mini",
-  "name": "Bakpao Kacang Hijau (Mini)",
-  "price": 2000,
-  "img": "/static/assets/produk/bakpao-kacang-hijau.jpg",
-  "caption": "Bakpao Kacang Hijau Mini cuma Rp2.000! Isi kacang hijau lembut lumer dengan rasa manis legit yang nagih."
- }
+  {
+    "id": "bakpao-ayam",
+    "name": "Bakpao Ayam (Reguler)",
+    "flavor": "ayam",
+    "size": "reguler",
+    "price": 3500,
+    "poster": "/static/assets/katalog/bakpao-ayam.webp",
+    "caption": "Bakpao Ayam Reguler isi ayam cincang bumbu gurih cuma Rp3.500! Kulit lembut dan rasa gurih nikmat di setiap gigitan."
+  },
+  {
+    "id": "bakpao-ayam-mini",
+    "name": "Bakpao Ayam (Mini)",
+    "flavor": "ayam",
+    "size": "mini",
+    "price": 2500,
+    "poster": "/static/assets/produk/bakpao-ayam.jpg",
+    "caption": "Bakpao Ayam Mini cuma Rp2.500! Isian ayam cincang gurih manis dengan roti lembut empuk yang lumer di mulut."
+  },
+  {
+    "id": "bakpao-coklat",
+    "name": "Bakpao Coklat (Reguler)",
+    "flavor": "coklat",
+    "size": "reguler",
+    "price": 3500,
+    "poster": "/static/assets/produk/bakpao-coklat.jpg",
+    "caption": "Bakpao Coklat Reguler cuma Rp3.500! Isi coklat lumer manis legit dengan bakpao lembut empuk."
+  },
+  {
+    "id": "bakpao-coklat-mini",
+    "name": "Bakpao Coklat (Mini)",
+    "flavor": "coklat",
+    "size": "mini",
+    "price": 2500,
+    "poster": "/static/assets/produk/bakpao-coklat.jpg",
+    "caption": "Bakpao Coklat Mini cuma Rp2.500! Lembut empuk dengan isian coklat lumer manis legit di dalamnya."
+  },
+  {
+    "id": "bakpao-kacang-hijau",
+    "name": "Bakpao Kacang Hijau (Reguler)",
+    "flavor": "kacang_hijau",
+    "size": "reguler",
+    "price": 3500,
+    "poster": "/static/assets/produk/bakpao-kacang-hijau.jpg",
+    "caption": "Bakpao Kacang Hijau Reguler lembut dengan isian kacang hijau manis legit. Cuma Rp3.500 per buah!"
+  },
+  {
+    "id": "bakpao-kacang-hijau-mini",
+    "name": "Bakpao Kacang Hijau (Mini)",
+    "flavor": "kacang_hijau",
+    "size": "mini",
+    "price": 2500,
+    "poster": "/static/assets/produk/bakpao-kacang-hijau.jpg",
+    "caption": "Bakpao Kacang Hijau Mini cuma Rp2.500! Isi kacang hijau lembut lumer dengan rasa manis legit yang nagih."
+  }
 ]
