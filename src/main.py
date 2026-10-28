@@ -5,7 +5,7 @@ from pathlib import Path
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parent  # src/
 DATA_DIR = Path(os.environ.get("DATA_DIR", "data"))
 if not DATA_DIR.is_absolute():
     # Relatif terhadap CWD bila dijalankan dari repo root.
