@@ -56,7 +56,40 @@ function renderCart() {
   bar.classList.remove("hidden");
   document.getElementById("cartcount").textContent = count;
   document.getElementById("carttotal").textContent = rupiah(total);
+  const box = document.getElementById("cartitems");
+  box.innerHTML = "";
+  for (const [id, qty] of Object.entries(cart)) {
+    const p = PRODUCTS.find(x => x.id === id);
+    if (!p) continue;
+    const row = document.createElement("div");
+    row.className = "flex items-center justify-between text-sm";
+    row.innerHTML =
+      "<span>" + p.name + " × " + qty + "</span>" +
+      '<span class="flex gap-1">' +
+      '<button data-id="' + id + '" data-act="dec" class="cartbtn border border-[#2b2118] rounded px-2">−</button>' +
+      '<button data-id="' + id + '" data-act="inc" class="cartbtn border border-[#2b2118] rounded px-2">+</button>' +
+      '<button data-id="' + id + '" data-act="del" class="cartbtn border border-[#2b2118] rounded px-2">hapus</button>' +
+      "</span>";
+    box.appendChild(row);
+  }
+  box.querySelectorAll(".cartbtn").forEach(b => {
+    b.addEventListener("click", () => {
+      const id = b.dataset.id;
+      if (b.dataset.act === "inc") cart[id] = (cart[id] || 0) + 1;
+      if (b.dataset.act === "dec") {
+        cart[id] = (cart[id] || 1) - 1;
+        if (cart[id] <= 0) delete cart[id];
+      }
+      if (b.dataset.act === "del") delete cart[id];
+      saveCart();
+    });
+  });
 }
+
+document.getElementById("clearbtn").addEventListener("click", () => {
+  cart = {};
+  saveCart();
+});
 
 document.getElementById("orderbtn").addEventListener("click", async () => {
   const items = Object.entries(cart).map(([product_id, qty]) => ({ product_id, qty }));

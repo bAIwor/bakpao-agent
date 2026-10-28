@@ -12,3 +12,4 @@ env/
 venv/
 /data/
 .env.baseten
+.pytest_temp/

@@ -111,8 +111,9 @@ def build_dynamic_qris_payload(static_payload: str, amount_idr: int) -> str:
     body = static_payload[:-4]
     assert body.endswith("6304"), "tag 6304 hilang"
     tlvs = _parse_tlv(body[:-4])
-    # Nilai tag 54: rupiah + 2 desimal tanpa titik. mis. 13185 -> '1318500'.
-    amount_str = ("%d.00" % amount_idr).replace(".", "")
+    # EMVCo tag 54 = nominal dengan titik desimal, mis. 13185 -> "13185.00".
+    # JANGAN buang titiknya: tanpa titik nilainya terbaca 100x lipat.
+    amount_str = f"{amount_idr}.00"
     rebuilt, inserted = [], False
     for tag, val in tlvs:
         if tag == "01":

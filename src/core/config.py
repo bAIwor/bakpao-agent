@@ -17,7 +17,7 @@ class Settings(BaseSettings):
 
     STORE_NAME: str = "Bakpao.my.id"
     STORE_BASE_URL: str = "http://localhost:8000"
-    MERCHANT_QRIS_IMAGE: str = "static/assets/merchant-qris.png"
+    MERCHANT_QRIS_IMAGE: str = "static/assets/merchant-qris.jpg"
     MERCHANT_QRIS_PAYLOAD_FILE: str = "src/data/merchant_qris.txt"
     QR_MODE: str = "static"
     PORT: int = 8000

@@ -43,10 +43,16 @@
 
 <div id="cartbar" class="hidden">
   <div class="max-w-3xl mx-auto px-4 pb-4">
-    <div class="card sans p-3 flex items-center justify-between">
-      <div><span id="cartcount" class="font-bold">0</span> item ·
-        <span id="carttotal" class="font-bold">Rp 0</span></div>
-      <button id="orderbtn" class="btn-order px-4 py-2 font-bold">Pesan Sekarang</button>
+    <div class="card sans p-3">
+      <div id="cartitems" class="flex flex-col gap-1 mb-2"></div>
+      <div class="flex items-center justify-between">
+        <div><span id="cartcount" class="font-bold">0</span> item ·
+          <span id="carttotal" class="font-bold">Rp 0</span></div>
+        <div class="flex gap-2">
+          <button id="clearbtn" class="px-3 py-2 text-sm underline">Kosongkan</button>
+          <button id="orderbtn" class="btn-order px-4 py-2 font-bold">Pesan Sekarang</button>
+        </div>
+      </div>
     </div>
   </div>
 </div>

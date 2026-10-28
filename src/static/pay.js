@@ -33,7 +33,11 @@ document.getElementById("uploadbtn").addEventListener("click", async () => {
     method: "POST", body: fd
   });
   const data = await r.json();
-  msg.textContent = "Hasil: " + (data.reason || data.status || r.status);
+  const txt = data.reason || data.status || r.status;
+  msg.textContent = txt === "not_implemented"
+    ? "Verifikasi otomatis belum aktif di versi ini — bukti transfer diterima, "
+      + "status diperbarui manual oleh dapur."
+    : "Hasil: " + txt;
   refreshStatus();
 });
 

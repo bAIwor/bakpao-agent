@@ -74,6 +74,14 @@ def test_dynamic_payload_recomputes_crc():
     assert crc16_qris(head) == crc
 
 
+def test_dynamic_tag54_carries_exact_amount():
+    """Tag 54 wajib '13185.00' (titik desimal), bukan '1318500' (100x)."""
+    dyn = build_dynamic_qris_payload(MERCHANT, 13185)
+    # tag 53 = 5303360, lalu 54 (len 08) = '13185.00', lalu 5802ID
+    assert "5303360540813185.005802ID" in dyn
+    assert "54081318500" not in dyn
+
+
 def test_build_qris_for_order_modes(monkeypatch):
     import src.services.qris_service as qs
     monkeypatch.setattr(qs.get_settings(), "QR_MODE", "static")
