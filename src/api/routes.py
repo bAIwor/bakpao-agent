@@ -285,7 +285,7 @@ def pricing_hpp():
     catalog = calculate_catalog_hpp(recipes, prices)
     return {
         "ok": True,
-        "source": commodities.get("sumber", "sigaokmas.banyumaskab.go.id"),
+        "source": commodities.get("sumber", "tidak_diketahui"),
         "tanggal": commodities.get("tanggal"),
         "stale": commodities.get("stale", False),
         "products": catalog,
