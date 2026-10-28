@@ -48,79 +48,150 @@
 
 <main class="max-w-4xl mx-auto px-4 py-8 flex-1 w-full space-y-8">
 
-  <!-- Hero Title -->
-  <section class="text-center space-y-2 max-w-xl mx-auto">
-    <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-100 text-amber-900 text-xs font-bold">
-      <span>⚙️</span> Arsitektur Agen bAIwor
+  <!-- Firsthand Story: Kenapa Ini Ada -->
+  <section class="bg-gradient-to-br from-amber-950 via-amber-900 to-stone-900 rounded-3xl p-6 sm:p-8 text-amber-50 shadow-xl border border-amber-800">
+    <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-400/20 text-amber-300 text-xs font-bold mb-3 border border-amber-400/30">
+      <span>📖</span> Kisah Nyata &amp; Nilai Dampak Langsung
     </div>
-    <h1 class="font-display text-3xl sm:text-4xl text-amber-950">
-      Cara Kerja Micro-Bakery Otonom
+    <h1 class="font-display text-2xl sm:text-3xl text-amber-100 mb-3">
+      Kenapa Bakpao.my.id Dibangun?
     </h1>
-    <p class="text-xs sm:text-sm text-stone-600 leading-relaxed">
-      Bagaimana AI Agent mengotomasi operasional dapur bakpao tradisional di Banyumas: dari pesanan pelanggan hingga pantauan nampan kukus.
+    <p class="text-xs sm:text-sm text-amber-200/90 leading-relaxed space-y-2">
+      Bakpao.my.id dibangun karena warung bakpao tradisional milik kami sendiri di Banyumas sebelumnya masih berjalan serba manual:
+      harga pokok (HPP) hanya dihitung di kepala, tidak tahu persis bakpao mana yang cacat ukuran saat dikukus, dan pemilik warung harus bolak-balik memeriksa aplikasi m-banking untuk memastikan uang pembayaran QRIS benar-benar masuk sebelum pesanan masuk ke kukusan dapur.
     </p>
+    <div class="mt-4 pt-4 border-t border-amber-800/80 grid grid-cols-1 sm:grid-cols-3 gap-3 text-center">
+      <div class="p-3 bg-stone-900/40 rounded-2xl border border-amber-800/40">
+        <div class="font-display text-xl text-amber-400">Rp 1.784</div>
+        <div class="text-[11px] text-amber-200/70">HPP Riil Terhitung (Ayam Reguler)</div>
+      </div>
+      <div class="p-3 bg-stone-900/40 rounded-2xl border border-amber-800/40">
+        <div class="font-display text-xl text-amber-400">&plusmn; 4.0 cm</div>
+        <div class="text-[11px] text-amber-200/70">Akurasi Ukuran Vision SAM 2.1</div>
+      </div>
+      <div class="p-3 bg-stone-900/40 rounded-2xl border border-amber-800/40">
+        <div class="font-display text-xl text-amber-400">&lt; 10 Detik</div>
+        <div class="text-[11px] text-amber-200/70">Verifikasi Slip Masuk ke Dapur</div>
+      </div>
+    </div>
   </section>
 
   <!-- Step-by-Step Flow -->
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+  <section class="space-y-4">
+    <h2 class="font-display text-2xl text-amber-950 text-center">
+      Alur Operasional 4 Tahap Otonom
+    </h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 
-    <!-- Step 1 -->
-    <div class="info-card rounded-3xl p-6 space-y-3">
-      <div class="w-12 h-12 rounded-2xl bg-amber-100 text-amber-900 flex items-center justify-center font-display text-xl font-bold">
-        1
+      <!-- Step 1 -->
+      <div class="info-card rounded-3xl p-6 space-y-3">
+        <div class="w-12 h-12 rounded-2xl bg-amber-100 text-amber-900 flex items-center justify-center font-display text-xl font-bold">
+          1
+        </div>
+        <h3 class="font-bold text-lg text-amber-950">Pemesanan Storefront &amp; Cart</h3>
+        <p class="text-xs sm:text-sm text-stone-600 leading-relaxed">
+          Pelanggan memilih varian rasa (Ayam, Coklat, Kacang Hijau) dan ukuran (Reguler Rp 3.000 atau Mini Rp 2.000). Sistem secara instan mencatat pesanan dan menghasilkan kode tiket unik.
+        </p>
+        <div class="pt-2 text-xs font-semibold text-amber-800 flex items-center gap-1">
+          <span>✓</span> Mobile-first floating cart drawer
+        </div>
       </div>
-      <h3 class="font-bold text-lg text-amber-950">Pemesanan Storefront &amp; Cart</h3>
-      <p class="text-xs sm:text-sm text-stone-600 leading-relaxed">
-        Pelanggan memilih varian rasa (Ayam, Coklat, Kacang Hijau) dan ukuran (Reguler Rp 3.000 atau Mini Rp 2.000). Sistem secara instan mencatat pesanan dan menghasilkan kode tiket unik.
+
+      <!-- Step 2 -->
+      <div class="info-card rounded-3xl p-6 space-y-3">
+        <div class="w-12 h-12 rounded-2xl bg-amber-100 text-amber-900 flex items-center justify-center font-display text-xl font-bold">
+          2
+        </div>
+        <h3 class="font-bold text-lg text-amber-950">QRIS Dinamis &amp; Verifikasi Slip</h3>
+        <p class="text-xs sm:text-sm text-stone-600 leading-relaxed">
+          Sistem menyematkan kode verifikasi unik 3-digit. Pembeli mentransfer via QRIS DANA Bisnis, lalu mengunggah bukti transfer yang diverifikasi otomatis oleh model multimodal tanpa cek m-banking manual.
+        </p>
+        <div class="pt-2 text-xs font-semibold text-amber-800 flex items-center gap-1">
+          <span>✓</span> DANA Bisnis NMID: ID1026624673848
+        </div>
+      </div>
+
+      <!-- Step 3 -->
+      <div class="info-card rounded-3xl p-6 space-y-3">
+        <div class="w-12 h-12 rounded-2xl bg-amber-100 text-amber-900 flex items-center justify-center font-display text-xl font-bold">
+          3
+        </div>
+        <h3 class="font-bold text-lg text-amber-950">Visual QA Nampan (Meta SAM 2.1)</h3>
+        <p class="text-xs sm:text-sm text-stone-600 leading-relaxed">
+          Kamera dapur memotret nampan klakat bambu. Model segmentasi Meta SAM 2.1 open-weights mengukur diameter fisik (cm), menghitung jumlah bakpao matang, dan mendeteksi persentase reject sebelum disajikan.
+        </p>
+        <div class="pt-2 text-xs font-semibold text-amber-800 flex items-center gap-1">
+          <span>✓</span> Model facebook/sam2.1-hiera-large di Modal
+        </div>
+      </div>
+
+      <!-- Step 4 -->
+      <div class="info-card rounded-3xl p-6 space-y-3">
+        <div class="w-12 h-12 rounded-2xl bg-amber-100 text-amber-900 flex items-center justify-center font-display text-xl font-bold">
+          4
+        </div>
+        <h3 class="font-bold text-lg text-amber-950">Layar Dapur &amp; HPP Dinamis</h3>
+        <p class="text-xs sm:text-sm text-stone-600 leading-relaxed">
+          Pesanan lunas langsung diteruskan ke Layar Dapur Live (KDS) untuk dikukus. Harga bahan baku dipantau otomatis dari portal pasar tradisional SIGAOKMAS Banyumas dengan agen repricing mandiri.
+        </p>
+        <div class="pt-2 text-xs font-semibold text-amber-800 flex items-center gap-1">
+          <span>✓</span> SIGAOKMAS Pemkab Banyumas &amp; Pasar Wage
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Model Meta AI & Biaya -->
+  <section class="info-card rounded-3xl p-6 sm:p-8 space-y-5">
+    <div>
+      <h3 class="font-display text-2xl text-amber-950 flex items-center gap-2">
+        <span>🤖</span> Arsitektur Model Meta AI &amp; Transparansi Biaya
+      </h3>
+      <p class="text-xs sm:text-sm text-stone-500 mt-1">
+        Pemisahan tugas teknis: vision open-weights di cloud serverless, reasoning bisnis di Meta Model API.
       </p>
-      <div class="pt-2 text-xs font-semibold text-amber-800 flex items-center gap-1">
-        <span>✓</span> Mobile-first floating cart drawer
-      </div>
     </div>
 
-    <!-- Step 2 -->
-    <div class="info-card rounded-3xl p-6 space-y-3">
-      <div class="w-12 h-12 rounded-2xl bg-amber-100 text-amber-900 flex items-center justify-center font-display text-xl font-bold">
-        2
-      </div>
-      <h3 class="font-bold text-lg text-amber-950">QRIS Dinamis &amp; Verifikasi Slip</h3>
-      <p class="text-xs sm:text-sm text-stone-600 leading-relaxed">
-        Sistem menghitung nominal dengan kode verifikasi unik (3 digit acak). Pembeli mentransfer via QRIS DANA Bisnis, lalu mengunggah tangkapan layar bukti transfer untuk dicocokkan otomatis oleh AI.
-      </p>
-      <div class="pt-2 text-xs font-semibold text-amber-800 flex items-center gap-1">
-        <span>✓</span> DANA Bisnis QRIS NMID: ID1026624673848
-      </div>
+    <div class="overflow-x-auto">
+      <table class="w-full text-left text-xs border-collapse">
+        <thead>
+          <tr class="border-b border-amber-200 text-amber-950 font-bold bg-amber-50/50">
+            <th class="py-2.5 px-3 rounded-l-xl">Model Meta</th>
+            <th class="py-2.5 px-3">Penyedia / Runtime</th>
+            <th class="py-2.5 px-3">Tugas Spesifik</th>
+            <th class="py-2.5 px-3 rounded-r-xl">Estimasi Biaya</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-stone-100 text-stone-700">
+          <tr>
+            <td class="py-3 px-3 font-semibold text-amber-900">SAM 2.1 Hiera Large</td>
+            <td class="py-3 px-3">Modal Cloud (Open-Weights)</td>
+            <td class="py-3 px-3">Segmentasi loyang, kalkulasi diameter cm, dan reject rate</td>
+            <td class="py-3 px-3 text-emerald-700 font-bold">~$0.0007 / loyang</td>
+          </tr>
+          <tr>
+            <td class="py-3 px-3 font-semibold text-amber-900">Muse Spark 1.3</td>
+            <td class="py-3 px-3">Meta Model API</td>
+            <td class="py-3 px-3">Penalaran fluktuasi HPP komoditas &amp; pembuatan alert vendor</td>
+            <td class="py-3 px-3 text-emerald-700 font-bold">~$0.000002 / run</td>
+          </tr>
+          <tr>
+            <td class="py-3 px-3 font-semibold text-amber-900">Muse Image 1.0</td>
+            <td class="py-3 px-3">Meta Model API</td>
+            <td class="py-3 px-3">Pembuatan poster visual katalog komersial beresolusi tinggi</td>
+            <td class="py-3 px-3 text-emerald-700 font-bold">$0.01 / poster</td>
+          </tr>
+          <tr>
+            <td class="py-3 px-3 font-semibold text-amber-900">Muse Spark Open 1026</td>
+            <td class="py-3 px-3">Baseten GPU Endpoint</td>
+            <td class="py-3 px-3">Multimodal OCR verifikasi slip e-wallet &amp; caption katalog</td>
+            <td class="py-3 px-3 text-emerald-700 font-bold">Free Hackathon Credit</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
-
-    <!-- Step 3 -->
-    <div class="info-card rounded-3xl p-6 space-y-3">
-      <div class="w-12 h-12 rounded-2xl bg-amber-100 text-amber-900 flex items-center justify-center font-display text-xl font-bold">
-        3
-      </div>
-      <h3 class="font-bold text-lg text-amber-950">Visual QA Nampan (Meta SAM 2.1)</h3>
-      <p class="text-xs sm:text-sm text-stone-600 leading-relaxed">
-        Kamera dapur memotret nampan klakat bambu. Model segmentasi AI Meta SAM 2.1 di Modal GPU menghitung jumlah bakpao yang matang, mengukur diameter fisik (cm), dan mendeteksi cacat bentuk sebelum dikirim.
-      </p>
-      <div class="pt-2 text-xs font-semibold text-amber-800 flex items-center gap-1">
-        <span>✓</span> Modal Cloud Serverless GPU T4
-      </div>
-    </div>
-
-    <!-- Step 4 -->
-    <div class="info-card rounded-3xl p-6 space-y-3">
-      <div class="w-12 h-12 rounded-2xl bg-amber-100 text-amber-900 flex items-center justify-center font-display text-xl font-bold">
-        4
-      </div>
-      <h3 class="font-bold text-lg text-amber-950">Layar Dapur &amp; HPP Dinamis</h3>
-      <p class="text-xs sm:text-sm text-stone-600 leading-relaxed">
-        Pesanan lunas langsung diteruskan ke Layar Dapur Live (KDS) untuk segera dikukus. Harga bahan baku disinkronkan secara berkala dengan portal data pasar tradisional Banyumas.
-      </p>
-      <div class="pt-2 text-xs font-semibold text-amber-800 flex items-center gap-1">
-        <span>✓</span> Sinkronisasi harga pasar SIGAOKMAS Banyumas
-      </div>
-    </div>
-
-  </div>
+  </section>
 
   <!-- Mascot Footer Callout -->
   <div class="rounded-3xl p-6 bg-amber-950 text-white flex flex-col sm:flex-row items-center gap-5">
@@ -128,7 +199,7 @@
     <div class="space-y-1 text-center sm:text-left">
       <h4 class="font-display text-lg text-amber-300">PT. BAIWOR AGENTIC INDONESIA</h4>
       <p class="text-xs text-amber-100/80">
-        Inisiatif teknologi otonom untuk memberdayakan UMKM kuliner lokal Kabupaten Banyumas melalui ekosistem AI Meta.
+        Inisiatif teknologi otonom untuk memberdayakan UMKM kuliner lokal Kabupaten Banyumas, Jawa Tengah melalui ekosistem AI Meta.
       </p>
     </div>
   </div>

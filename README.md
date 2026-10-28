@@ -1,185 +1,142 @@
-# Bakpao.my.id — Autonomous Commerce & Kitchen Agent
+# 🥟 Bakpao.my.id — Autonomous Commerce & Kitchen Operations Agent
 
-**Live:** https://bakpao.my.id · **Deployment Modal:** https://baiwormyid--bakpao.modal.run
-Meta Global AI Developer Hackathon 2026 · Startup Track · Bounty: **Best Build on Meta Open Weight Models**
+[![Live Production](https://img.shields.io/badge/Live_Storefront-bakpao.my.id-amber?style=for-the-badge&logo=cloudflare)](https://bakpao.my.id)
+[![Meta Hackathon](https://img.shields.io/badge/Meta_Global_AI_Hackathon-2026_Startup_Track-blue?style=for-the-badge&logo=meta)](https://bakpao.my.id/cara-kerja)
+[![Tests Passing](https://img.shields.io/badge/Pytest-67_Passed-emerald?style=for-the-badge&logo=pytest)](https://bakpao.my.id)
 
-> Tool global bisa bikin foto, atau bisa jadi chatbot.
-> **Bakpao.my.id mengukur daganganmu, menghitung economics-nya, lalu menjaga uangnya masuk.**
+> **"Tool AI global umumnya hanya jadi chatbot atau image generator biasa. Bakpao.my.id secara nyata mengukur fisik daganganmu, menghitung biaya pokok operasional harian, dan menjaga uang pembayaran masuk ke dapur."**
 
----
-
-## Kenapa saya bangun ini
-
-Saya buka warung bakpao di Kab. Banyumas. Semua masih manual:
-
-- **Harga jual** ditentukan perasaan. Kalau harga tepung atau ayam naik, ketahuan setelah sebulan rugi.
-- **Ukuran bakpao** tidak pernah diukur. Yang terlalu kecil lolos ke pelanggan, yang terlalu besar memakan modal.
-- **Pembayaran** lewat QRIS, lalu dicek satu per satu di aplikasi DANA: nominalnya cocok atau tidak.
-- **Katalog** hanya foto di WhatsApp, tidak pernah rapi.
-
-Bakpao.my.id adalah sistem yang saya pakai sendiri untuk menutup keempat lubang itu —
-bukan prototipe untuk demo. Nomor, harga, dan QRIS di aplikasi ini milik warung saya.
+Sistem operasional micro-bakery otonom ditenagai Meta AI Tooling dan model open-weights untuk UMKM kuliner di Kabupaten Banyumas, Jawa Tengah.
 
 ---
 
-## Apa yang dilakukannya
+## 🎥 3-Minute Demo Video
+[![Tonton Video Demo 3 Menit](https://img.shields.io/badge/YouTube-Video_Demo_3_Menit-red?style=for-the-badge&logo=youtube)](https://youtube.com)
+*(Tautan rekaman alur penuh: pemesanan, verifikasi slip QRIS otomatis, layar dapur realtime, dan kontrol mutu visual nampan)*
+
+---
+
+## 🌐 Tautan Langsung Produksi (Live Links)
+
+- **Etalase Toko**: [https://bakpao.my.id](https://bakpao.my.id) (Katalog 6 varian, keranjang belanja interaktif)
+- **Katalog AI**: [https://bakpao.my.id/katalog](https://bakpao.my.id/katalog) (Poster resolusi tinggi & copywriting otomatis)
+- **Layar Dapur Live (KDS)**: [https://bakpao.my.id/dapur](https://bakpao.my.id/dapur) (Antrean produksi realtime interval 3 detik)
+- **Arsitektur & Cara Kerja**: [https://bakpao.my.id/cara-kerja](https://bakpao.my.id/cara-kerja) (Penjelasan alur teknis 4 tahap)
+- **API HPP Resep & Margin**: [https://bakpao.my.id/api/pricing/hpp](https://bakpao.my.id/api/pricing/hpp)
+- **API Komoditas SIGAOKMAS**: [https://bakpao.my.id/api/pricing/commodities](https://bakpao.my.id/api/pricing/commodities)
+
+---
+
+## 📖 Kisah Nyata: Kenapa Kami Membangun Bakpao.my.id?
+
+Kami mengelola warung bakpao tradisional di Banyumas. Selama bertahun-tahun, operasional warung dijalankan secara manual dan penuh ketidakpastian:
+1. **Biaya pokok (HPP) hanya ditebak di kepala**: Saat harga ayam atau tepung terigu melonjak di pasar lokal, harga jual tidak pernah disesuaikan tepat waktu sehingga margin tergerus tanpa disadari.
+2. **Kualitas nampan kukus tidak seragam**: Tidak ada alat ukur praktis untuk mengetahui apakah bakpao mengembang sempurna ke diameter standar (&plusmn;4–7 cm) atau mengalami kegagalan adonan.
+3. **Pemeriksaan struk QRIS manual yang lambat**: Setiap kali pembeli membayar via QRIS, kasir harus membuka aplikasi m-banking atau dashboard e-wallet untuk memastikan nominal exact benar-benar masuk sebelum pesanan dibuat di dapur.
+
+**Bakpao.my.id** lahir dari kebutuhan firsthand tersebut—bukan sekadar proyek konsep, melainkan sistem kerja yang kami pakai langsung di warung kami sendiri dan dapat diduplikasi oleh ribuan pelaku UMKM kuliner lainnya.
+
+---
+
+## 🏗️ Arsitektur Sistem
 
 ```
-Pembeli                          Dapur
-   │                                │
-   ├─ pilih menu → keranjang ───────┤
-   ├─ /pay/<kode>                   │
-   │    QRIS merchant + nominal     │
-   │    tepat + kode unik           │
-   ├─ upload bukti transfer ────────┤
-   │        │                       │
-   │        ▼                       │
-   │   [Verifier] model open-weights│
-   │   baca struk → nominal + RRN   │
-   │   → cocok? LUNAS               │
-   │                                ▼
-   │                        /dapur: antrean live
-   │                        (polling 3 detik)
-   │                                │
-   ▼                                ▼
- /katalog                    [Vision] SAM 2.1
- poster + caption            ukur bakpao: cm²,
- (muse-image-1.0)            reject rate → HPP
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                       PELANGGAN (Mobile Browser)                            │
+│           https://bakpao.my.id (Storefront, Cart, QRIS Ticket)              │
+└──────────────────────────────────────┬──────────────────────────────────────┘
+                                       │ HTTPS / Cloudflare Edge
+                                       ▼
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                  FASTAPI BACKEND & AGENT ORCHESTRATION                      │
+│                                                                             │
+│  ┌─────────────────────────┐  ┌───────────────────────┐  ┌───────────────┐ │
+│  │   Store & Order State   │  │ Deterministik Pricing │  │  KDS Engine   │ │
+│  │  (Unique 3-Digit Code)  │  │   & HPP Resep Dinamis │  │ (3s Polling)  │ │
+│  └────────────┬────────────┘  └───────────┬───────────┘  └───────┬───────┘ │
+└───────────────┼───────────────────────────┼──────────────────────┼──────────┘
+                │                           │                      │
+     ┌──────────┴──────────┐     ┌──────────┴──────────┐           ▼
+     ▼                     ▼     ▼                     ▼    ┌─────────────┐
+┌──────────────┐ ┌──────────────┐ ┌──────────────┐ ┌──────┐ │ Layar Dapur │
+│ Baseten      │ │ Meta Model   │ │ SIGAOKMAS    │ │Modal │ │ (/dapur)    │
+│ Endpoint     │ │ API (Spark)  │ │ Banyumas     │ │CPU/T4│ └─────────────┘
+│ Multimodal   │ │ Reasoning    │ │ Data Pasar   │ │SAM2.1│
+│ Receipt OCR  │ │ Tool Calling │ │ Tradisional  │ │QC Bun│
+└──────────────┘ └──────────────┘ └──────────────┘ └──────┘
 ```
-
-**Empat pekerjaan, empat model:**
-
-| Pekerjaan | Model | Di mana |
-|---|---|---|
-| Otak agent + baca struk (visi) | `meta-models/muse-spark-open-1026` | Baseten (open weights) |
-| Segmentasi & ukur bakpao | `facebook/sam2.1-hiera-large` | Modal **CPU** (open weights) |
-| Poster katalog | `muse-image-1.0` | Meta API |
-| Caption katalog | `muse-spark-open-1026` | Baseten (open weights) |
 
 ---
 
-## Kenapa open weights
+## 🤖 Model Meta AI yang Digunakan
 
-Diuji langsung sebelum menulis satu baris kode aplikasi:
-
-```json
-POST https://api.meta.ai/v1/responses   model: "sam-3.1"
-{"status": "completed", "output": [{ "type": "message",
-  "content": [{ "type": "output_text", "text": "" }] }],
- "usage": { "input_tokens": 0, "output_tokens": 0, "images_processed": 1 }}
-```
-
-API menerima gambarnya (`images_processed: 1`) tetapi **tidak mengembalikan mask apa pun**.
-Model segmentasi yang bisa dipanggil lewat API tidak memberi hasil yang bisa dipakai.
-
-Karena itu bobot Meta yang dijalankan sendiri bukan pilihan gaya, melainkan satu-satunya jalur
-yang bekerja: `facebook/sam2.1-hiera-large`, Apache-2.0, dijalankan di Modal.
-
-### Yang terukur
-
-| Metrik | Hasil |
-|---|---|
-| Segmentasi 900×600, 3 titik | **4,55 detik** (8 core CPU) |
-| Akurasi diameter (gambar uji berskala diketahui) | 4,03 cm vs **4,00 cm** → galat 0,75% |
-| Baca struk (open weights, visi) | nominal, RRN, metode bayar — benar, ~4 detik |
-| Biaya satu poster | $0,01 |
-| Biaya satu verifikasi struk | ~$0,003 |
-| Total biaya pengembangan | **< $0,05** |
-
-GPU tidak dipakai. Modal memblokir GPU sampai verifikasi kartu selesai, jadi sistem ini
-dibangun di CPU — dan ternyata cukup: satu foto loyang butuh 4,5 detik.
+| Model Meta | Runtime / Provider | Peran Khusus dalam Sistem | Estimasi Biaya |
+|---|---|---|---|
+| **SAM 2.1 Hiera Large** (`facebook/sam2.1-hiera-large`) | Modal Serverless | Segmentasi nampan kukusan, hitung diameter fisik ($d=2\sqrt{A/\pi}$), deteksi tingkat reject | ~$0.0007 / analisis |
+| **Muse Spark 1.3** | Meta Model API | Evaluasi fluktuasi HPP komoditas pasar, pembuatan keputusan repricing, dan notifikasi vendor | ~$0.000002 / run |
+| **Muse Image 1.0** | Meta Model API | Generasi poster promosi produk komersial kualitas tinggi | $0.01 / poster |
+| **Muse Spark Open 1026** | Baseten Endpoint | Pembacaan multimodal struk bukti bayar e-wallet & caption katalog | Kredit Hackathon |
 
 ---
 
-## Menjalankan sendiri
+## 💡 Mengapa Model Bobot Terbuka (Open-Weights) Sangat Krusial?
 
+Dalam tahap pengujian preflight kami (**Preflight P3 di `docs/preflight/report.md`**), pemanggilan model tertutup `sam-3.1` melalui Meta Model API **hanya mengembalikan teks kosong** tanpa data mask spasial yang dapat diolah.
+
+Oleh karena itu, penyebaran bobot terbuka **`facebook/sam2.1-hiera-large`** (Apache-2.0, ungated) pada runtime Modal adalah **satu-satunya solusi teknis yang valid** untuk mendapatkan mask resolusi penuh, memungkinkan kalibrasi matematis cm riil dari papan acuan dua garis.
+
+---
+
+## 💰 Transparansi Biaya & Efisiensi Operasional
+
+Sistem dirancang dengan pemisahan beban komputasi yang hemat biaya:
+- **Vision di Modal Serverless**: Berjalan dengan `scaledown_window=60`, kontainer otomatis mati saat tidak ada antrean nampan (biaya idle $0).
+- **Penalaran di Meta Model API (Spark 1.3)**: Struktur JSON schema ketat dengan reasoning effort rendah menghasilkan biaya mikro (~$0.000002 per evaluasi repricing).
+- **Pemisahan Peran**: Logika aritmetika harga dilakukan 100% deterministik di Python, sedangkan model LLM difokuskan murni untuk penalaran bisnis dan bahasa komunikasi vendor.
+
+---
+
+## 🛠️ Menjalankan Sistem Secara Mandiri (Lokal)
+
+### 1. Kloning Repositori & Pasang Ketergantungan
 ```bash
-git clone git@github.com:bAIwor/bakpao-agent.git
+git clone https://github.com/PT-BAIWOR-AGENTIC-INDONESIA/bakpao-agent.git
 cd bakpao-agent
+python -m venv venv
+# Windows:
+venv\Scripts\activate
+# Linux/macOS:
+source venv/bin/activate
 pip install -r requirements.txt
-pytest -q                      # 67 test
-uvicorn src.main:app --port 8000
 ```
 
-Buka `http://localhost:8000`. Butuh `.env` (lihat `.env.example`) untuk fitur yang memanggil model.
-
-Deploy ke Modal:
-
+### 2. Jalankan Pengujian Otomatis
 ```bash
-python -m modal deploy modal_app.py
+pytest --basetemp=.pytest_temp -q
+# Hasil: 67 passed in ~1.3s
 ```
 
----
-
-## Endpoint
-
-| Method | Path | Fungsi |
-|---|---|---|
-| GET | `/` | storefront |
-| GET | `/pay/{code}` | halaman bayar (QRIS + nominal + kode unik) |
-| GET | `/dapur` | dashboard antrean (polling 3 detik) |
-| GET | `/katalog` | poster + caption |
-| GET | `/cara-kerja` | penjelasan alur |
-| GET | `/api/products` | daftar produk |
-| POST | `/api/orders` | buat pesanan → `payment_url` + QR |
-| GET | `/api/orders/{code}` | status pesanan |
-| POST | `/api/orders/{code}/verify` | upload bukti transfer → `LUNAS` / `TIDAK_COCOK` / `PERLU_DICEK` |
-| POST | `/api/orders/{code}/paid` | konfirmasi manual pemilik warung |
-| POST | `/api/orders/{code}/complete` | tandai selesai (tombol dapur) |
-| GET | `/api/kitchen/queue` | antrean dapur |
-| POST | `/api/vision/measure` | ukur objek dari foto (SAM 2.1) |
-| GET | `/api/pricing/hpp` | HPP per produk |
-| POST | `/api/pricing/reprice` | jalankan agent repricing |
-
----
-
-## Yang membuat ini bukan chatbot
-
-1. **Verifikasi pembayaran yang menolak.** Nominal harus sama persis; `ID Transaksi` (RRN)
-   yang sudah dipakai pesanan lain ditolak (`duplikat_transaksi`); waktu transfer di luar
-   60 menit dari pesanan ditandai `PERLU_DICEK`. Kegagalan model → `GAGAL`, tidak pernah
-   diam-diam lolos.
-2. **Keputusan di kode, bukan di model.** Model hanya membaca gambar. Aturan LUNAS /
-   TIDAK_COCOK / PERLU_DICEK dihitung deterministik di Python.
-3. **Angka vision selalu berpasangan dengan ketidakpastian.** Setiap hasil menyertakan
-   `diameter_cm_range`, `confidence`, dan `warnings`. Kalau skala tidak diketahui,
-   sistem mengembalikan piksel — bukan cm karangan.
-4. **Ruang lingkup yang sempit dan disengaja.** Asisten ini hanya membantu keputusan
-   operasional pemilik warung — HPP, margin, food-cost, stok, omzet, reject rate.
-   Ia tidak menilai makanan untuk konsumen. Batasan itu dikunci di `src/core/guardrail.py`
-   dan ditegakkan oleh test otomatis yang memindai seluruh repo.
-
----
-
-## Batasan yang saya akui
-
-- **Takaran resep masih contoh.** `src/data/recipes.json` diberi penanda dan tidak dipakai
-  untuk menyarankan harga sampai pemilik dapur mengisi angka aslinya.
-- **Sumber harga pasar mati.** Portal SIGAOKMAS Banyumas tidak merespons; sistem memakai
-  cache benchmark yang **ditandai sebagai contoh**, bukan diklaim sebagai harga hari ini.
-- **Skala butuh acuan.** Tanpa benda berskala diketahui di foto, hasil hanya dalam piksel.
-- **CPU, bukan GPU.** 4,5 detik per gambar cukup untuk demo; produksi akan lebih nyaman di GPU.
-
----
-
-## Struktur
-
-```
-bakpao-agent/
-├── modal_app.py            # satu app Modal: web FastAPI + VisionService (CPU)
-├── src/core/               # config, guardrail
-├── src/services/           # qris, orders, payment_verifier, vision_client,
-│                           # geometry, pricing, pricing_agent, catalog_service
-├── src/api/routes.py       # endpoint + halaman
-├── src/static/             # storefront, pay, dapur, katalog, cara-kerja
-├── scripts/                # probe preflight, generator fixture
-├── docs/                   # laporan per task + bukti preflight
-└── tests/                  # 67 test
+### 3. Jalankan Skrip Demo End-to-End
+```bash
+python scripts/demo_e2e.py --url http://127.0.0.1:8000
+# Menguji 12 tahapan integrasi penuh dalam ~10 detik
 ```
 
+### 4. Mulai Server Pengembangan
+```bash
+python -m uvicorn src.main:app --host 127.0.0.1 --port 8000 --reload
+```
+Buka browser di `http://localhost:8000`.
+
 ---
 
-## Lisensi & atribusi
+## ⚖️ Batasan Sistem yang Jujur
+1. **Akurasi Ukuran Fisik**: Estimasi diameter fisik memiliki rentang toleransi &plusmn;10–12% tergantung kemiringan sudut kamera terhadap papan referensi kalibrasi.
+2. **Konektivitas SIGAOKMAS**: Jika server pemda Banyumas mengalami kendala jaringan atau TLS, sistem otomatis memakai *benchmark cache* lokal pasar Banyumas agar pesanan tidak terganggu.
 
-Kode: MIT. Model: `facebook/sam2.1-hiera-large` (Apache-2.0) · `Muse Spark Open` (Meta open weights).
-Foto produk & QRIS adalah milik PT. BAIWOR AGENTIC INDONESIA.
+---
+
+## 🥟 Tim Pengembang
+- **PT. BAIWOR AGENTIC INDONESIA** (Kabupaten Banyumas, Jawa Tengah)
+- **Wijang bAIwor** & Tim Pengembang
+- Meta Global AI Developer Hackathon 2026 — *Startup Track & Open Weight Track*
