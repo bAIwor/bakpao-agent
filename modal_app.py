@@ -12,8 +12,9 @@ data_volume = modal.Volume.from_name("bakpao-data", create_if_missing=True)
 # Volume: cache bobot HF (hemat cold start)
 hf_volume = modal.Volume.from_name("baiwor-hf-cache", create_if_missing=True)
 
-# Secret: kredensial API Meta (JANGAN pernah di-hardcode)
-api_secret = modal.Secret.from_name("bakpao-secrets")
+# Secret: dibaca dari .env.modal (gitignored). Berisi MODEL_API_KEY + BASETEN_API_KEY.
+# TIDAK memakai `modal secret create ... KEY=<nilai>` — nilai key akan masuk log.
+api_secret = modal.Secret.from_dotenv(filename=".env.modal")
 
 # ============================================================================
 # WEB
@@ -104,13 +105,31 @@ class VisionService:
             input_labels=[[[1] for _ in pts]], return_tensors="pt")
         with torch.no_grad():
             out = self.model(**inputs)
-        try:
-            full = self.processor.post_process_masks(
-                out.pred_masks.cpu(), orig_target_sizes=[(h, w)],
-                binarize=True)[0]
-        except Exception as e:
+        # post_process_masks butuh original_sizes (dan reshaped_input_sizes).
+        # Signature berbeda antar versi transformers -> coba berurutan.
+        orig_sizes = inputs.get("original_sizes")
+        reshaped = inputs.get("reshaped_input_sizes")
+        masks_cpu = out.pred_masks.cpu()
+        attempts = (
+            ((masks_cpu, orig_sizes, reshaped), {"binarize": True}),
+            ((masks_cpu, orig_sizes, reshaped), {}),
+            ((masks_cpu, orig_sizes), {}),
+        )
+        full = None
+        last_error = "signature post_process_masks tidak dikenal"
+        for args, kwargs in attempts:
+            try:
+                full = self.processor.post_process_masks(*args, **kwargs)[0]
+                break
+            except TypeError as exc:
+                last_error = str(exc)[:200]
+                continue
+            except Exception as exc:
+                return {"ok": False, "error": "mask_postprocess_gagal",
+                        "detail": str(exc)[:200]}
+        if full is None:
             return {"ok": False, "error": "mask_postprocess_gagal",
-                    "detail": str(e)[:200]}
+                    "detail": last_error}
         objects = []
         for i in range(full.shape[0]):
             best = int(out.iou_scores[0, i].argmax())

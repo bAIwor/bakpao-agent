@@ -3,31 +3,103 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dapur — Bakpao.my.id</title>
+<title>Layar Dapur Live — Bakpao.my.id</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Calistoga&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        fontFamily: {
+          display: ['Calistoga', 'serif'],
+          sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
+        }
+      }
+    }
+  }
+</script>
 <style>
-  body { font-family: Georgia, serif; background: #f7f1e5; }
-  .sans { font-family: system-ui, sans-serif; }
-  .card { background: #fffdf8; border: 2px solid #2b2118; border-radius: 10px;
-          box-shadow: 4px 4px 0 #2b2118; }
-  .btn { background: #2e7d32; color: #fff; border: 2px solid #2b2118;
-         border-radius: 8px; box-shadow: 3px 3px 0 #2b2118; }
-  .btn-paid { background: #e0a800; color: #2b2118; }
-  .btn-paid:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 #2b2118; }
-  .badge { border: 2px solid #2b2118; border-radius: 999px; padding: 0 10px; }
-  .st-Menunggu { background: #e0e0e0; }
-  .st-Lunas { background: #a5d6a7; }
-  .st-Gagal { background: #ef9a9a; }
-  .st-Selesai { background: #90caf9; }
+  body { font-family: 'Plus Jakarta Sans', system-ui, sans-serif; background: #1c1917; color: #f5f5f4; }
+  .font-display { font-family: 'Calistoga', serif; }
+  .ticket-card {
+    background: #292524;
+    border: 1.5px solid #44403c;
+    transition: all 0.2s ease;
+  }
+  .ticket-card:hover {
+    border-color: #d97706;
+  }
 </style>
 </head>
-<body class="text-[#2b2118]">
-<main class="max-w-3xl mx-auto px-4 py-6">
-  <a href="/" class="sans text-sm underline">&larr; Toko</a>
-  <h1 class="text-2xl font-bold mt-2">Dapur bAIwor · Live</h1>
-  <p class="sans text-sm text-[#5a4a3a]">Antrean diperbarui tiap 3 detik.</p>
-  <div id="queue" class="grid gap-3 mt-4"></div>
+<body class="min-h-screen flex flex-col selection:bg-amber-600">
+
+<!-- Kitchen Header -->
+<header class="border-b border-stone-800 bg-stone-900/90 backdrop-blur-md sticky top-0 z-30">
+  <div class="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between">
+    <div class="flex items-center gap-3">
+      <a href="/" class="p-2 rounded-xl bg-stone-800 hover:bg-stone-700 text-stone-300 text-xs font-bold transition-colors">
+        ← Toko
+      </a>
+      <div>
+        <h1 class="font-display text-xl text-amber-400 flex items-center gap-2">
+          <span>🍳</span> Layar Dapur bAIwor
+        </h1>
+        <div class="text-[10px] text-stone-400">Kitchen Display System (KDS) · Purwokerto</div>
+      </div>
+    </div>
+
+    <!-- Live indicator -->
+    <div class="flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-950/80 border border-emerald-500/30 text-emerald-400 text-xs font-bold">
+      <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping"></span>
+      <span class="hidden sm:inline">LIVE POLLING</span> 3s
+    </div>
+  </div>
+</header>
+
+<main class="max-w-5xl mx-auto px-4 py-6 flex-1 w-full space-y-6">
+
+  <!-- Overview Stats -->
+  <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+    <div class="bg-stone-900 border border-stone-800 rounded-2xl p-4 text-center">
+      <div class="text-[11px] font-semibold text-stone-400 uppercase tracking-wider">Total Antrean</div>
+      <div id="stat-total" class="text-2xl font-extrabold text-white mt-1">0</div>
+    </div>
+    <div class="bg-stone-900 border border-stone-800 rounded-2xl p-4 text-center">
+      <div class="text-[11px] font-semibold text-amber-400 uppercase tracking-wider">Menunggu Bayar</div>
+      <div id="stat-pending" class="text-2xl font-extrabold text-amber-400 mt-1">0</div>
+    </div>
+    <div class="bg-stone-900 border border-stone-800 rounded-2xl p-4 text-center">
+      <div class="text-[11px] font-semibold text-emerald-400 uppercase tracking-wider">Lunas / Siap Kukus</div>
+      <div id="stat-paid" class="text-2xl font-extrabold text-emerald-400 mt-1">0</div>
+    </div>
+    <div class="bg-stone-900 border border-stone-800 rounded-2xl p-4 text-center">
+      <div class="text-[11px] font-semibold text-blue-400 uppercase tracking-wider">Selesai</div>
+      <div id="stat-done" class="text-2xl font-extrabold text-blue-400 mt-1">0</div>
+    </div>
+  </div>
+
+  <!-- Queue Order List -->
+  <section class="space-y-4">
+    <div class="flex items-center justify-between">
+      <h2 class="font-bold text-lg text-stone-200 flex items-center gap-2">
+        <span>📋</span> Tiket Pesanan Masuk
+      </h2>
+      <span class="text-xs text-stone-500">Urutan dari yang terbaru</span>
+    </div>
+
+    <div id="queue" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <!-- Injected via JavaScript -->
+    </div>
+  </section>
+
 </main>
+
+<footer class="mt-auto border-t border-stone-800 bg-stone-950 py-5 text-center text-xs text-stone-500">
+  <p class="font-bold text-stone-400">bAIwor Kitchen Dispatch · PT. BAIWOR AGENTIC INDONESIA</p>
+</footer>
+
 <script src="/static/dapur.js"></script>
 </body>
 </html>

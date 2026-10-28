@@ -1,8 +1,68 @@
 [
-  {"id":"bakpao-ayam","name":"Bakpao Ayam (Reguler)","flavor":"ayam","size":"reguler","price":3000,"description":"Bakpao empuk hangat dengan isian daging ayam bumbu gurih.","img":"/static/assets/produk/bakpao-ayam.jpg","active":true},
-  {"id":"bakpao-ayam-mini","name":"Bakpao Ayam (Mini)","flavor":"ayam","size":"mini","price":2000,"description":"Bakpao mini isian ayam gurih, pas untuk camilan.","img":"/static/assets/produk/bakpao-ayam.jpg","active":true},
-  {"id":"bakpao-coklat","name":"Bakpao Coklat (Reguler)","flavor":"coklat","size":"reguler","price":3000,"description":"Bakpao manis lembut dengan isian coklat lumer.","img":"/static/assets/produk/bakpao-coklat.jpg","active":true},
-  {"id":"bakpao-coklat-mini","name":"Bakpao Coklat (Mini)","flavor":"coklat","size":"mini","price":2000,"description":"Bakpao mini dengan coklat manis legit.","img":"/static/assets/produk/bakpao-coklat.jpg","active":true},
-  {"id":"bakpao-kacang-hijau","name":"Bakpao Kacang Hijau (Reguler)","flavor":"kacang_hijau","size":"reguler","price":3000,"description":"Bakpao lembut dengan isian tausa kacang hijau manis alami.","img":"/static/assets/produk/bakpao-kacang-hijau.jpg","active":true},
-  {"id":"bakpao-kacang-hijau-mini","name":"Bakpao Kacang Hijau (Mini)","flavor":"kacang_hijau","size":"mini","price":2000,"description":"Bakpao mini kacang hijau pulen dan manis gurih.","img":"/static/assets/produk/bakpao-kacang-hijau.jpg","active":true}
+  {
+    "id": "bakpao-ayam",
+    "name": "Bakpao Ayam (Reguler)",
+    "flavor": "ayam",
+    "size": "reguler",
+    "price": 3000,
+    "description": "Bakpao empuk hangat dengan isian daging ayam cincang bumbu gurih khas Banyumas.",
+    "badge": "Paling Laris 🔥",
+    "img": "/static/assets/produk/bakpao-ayam.jpg",
+    "active": true
+  },
+  {
+    "id": "bakpao-ayam-mini",
+    "name": "Bakpao Ayam (Mini)",
+    "flavor": "ayam",
+    "size": "mini",
+    "price": 2000,
+    "description": "Ukuran mini pas untuk cemilan santai, isian ayam gurih lezat berasa di tiap gigitan.",
+    "badge": "Hemat 🌟",
+    "img": "/static/assets/produk/bakpao-ayam.jpg",
+    "active": true
+  },
+  {
+    "id": "bakpao-coklat",
+    "name": "Bakpao Coklat (Reguler)",
+    "flavor": "coklat",
+    "size": "reguler",
+    "price": 3000,
+    "description": "Bakpao manis lembut dengan isian coklat lumer mantap yang meleleh hangat saat digigit.",
+    "badge": "Favorit Manis 🍫",
+    "img": "/static/assets/produk/bakpao-coklat.jpg",
+    "active": true
+  },
+  {
+    "id": "bakpao-coklat-mini",
+    "name": "Bakpao Coklat (Mini)",
+    "flavor": "coklat",
+    "size": "mini",
+    "price": 2000,
+    "description": "Bakpao mini dengan coklat manis legit lumer di lidah, cocok untuk teman kopi.",
+    "badge": "Cemilan Pas ☕",
+    "img": "/static/assets/produk/bakpao-coklat.jpg",
+    "active": true
+  },
+  {
+    "id": "bakpao-kacang-hijau",
+    "name": "Bakpao Kacang Hijau (Reguler)",
+    "flavor": "kacang_hijau",
+    "size": "reguler",
+    "price": 3000,
+    "description": "Bakpao lembut dengan isian tausa kacang hijau manis alami, wangi pandan tradisional.",
+    "badge": "Klasik Wangi 🌿",
+    "img": "/static/assets/produk/bakpao-kacang-hijau.jpg",
+    "active": true
+  },
+  {
+    "id": "bakpao-kacang-hijau-mini",
+    "name": "Bakpao Kacang Hijau (Mini)",
+    "flavor": "kacang_hijau",
+    "size": "mini",
+    "price": 2000,
+    "description": "Bakpao mini kacang hijau pulen, lembut, dan manis gurih khas oleh-oleh Banyumas.",
+    "badge": "Tradisional 🍵",
+    "img": "/static/assets/produk/bakpao-kacang-hijau.jpg",
+    "active": true
+  }
 ]

@@ -3,62 +3,156 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Bayar — Bakpao.my.id</title>
+<title>Pembayaran QRIS — Bakpao.my.id</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Calistoga&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        fontFamily: {
+          display: ['Calistoga', 'serif'],
+          sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
+        }
+      }
+    }
+  }
+</script>
 <style>
-  body { font-family: Georgia, serif; background: #f7f1e5; }
-  .sans { font-family: system-ui, sans-serif; }
-  .card { background: #fffdf8; border: 2px solid #2b2118; border-radius: 10px;
-          box-shadow: 4px 4px 0 #2b2118; }
-  .btn { background: #6b4423; color: #fff; border: 2px solid #2b2118;
-         border-radius: 8px; box-shadow: 3px 3px 0 #2b2118; }
+  body { font-family: 'Plus Jakarta Sans', system-ui, sans-serif; background: #faf7f2; }
+  .font-display { font-family: 'Calistoga', serif; }
+  .pay-card {
+    background: #ffffff;
+    border: 1.5px solid #f3ebe0;
+    box-shadow: 0 10px 25px -5px rgba(120, 53, 15, 0.06);
+  }
 </style>
 </head>
-<body class="text-[#2b2118]">
-<main class="max-w-3xl mx-auto px-4 py-6">
-  <a href="/" class="sans text-sm underline">&larr; Kembali ke menu</a>
-  <h1 class="text-2xl font-bold mt-2">Pembayaran <span id="ocode" class="sans"></span></h1>
-  <p id="statusline" class="sans mt-1 font-bold">Status: MENUNGGU_BAYAR</p>
+<body class="text-stone-900 min-h-screen flex flex-col selection:bg-amber-200">
 
-  <div class="card p-4 mt-4 text-center">
-    <p class="sans text-sm">Nominal tepat yang harus dibayar</p>
-    <p id="nominal" class="text-4xl font-bold mt-1"></p>
-    <p class="sans text-sm mt-1">Kode unik: <span id="suffix" class="font-bold"></span></p>
-  </div>
-
-  <div class="grid grid-cols-1 md:grid-cols-[2fr_1fr] gap-4 mt-4">
-    <div class="card p-4 text-center">
-      <h2 class="font-bold mb-2">1. Scan QRIS merchant</h2>
-      <img src="/static/assets/merchant-qris.jpg" alt="QRIS merchant bAIwor"
-           class="mx-auto max-h-[460px] w-auto max-w-full border border-[#2b2118] rounded-md">
-      <p class="sans text-xs mt-2">
-        QRIS resmi <strong>bAIwor Agentic Indonesia</strong> &middot; Kab. Banyumas.<br>
-        Setelah scan, <strong>ketik nominal tepat + kode unik</strong> di atas.
-      </p>
-      <p class="sans text-xs mt-2 border border-dashed border-[#2b2118] rounded p-2">
-        Mode simulasi untuk demo hackathon. Pembayaran sungguhan memakai
-        QRIS statis merchant di atas.
-      </p>
-    </div>
-
-    <div class="card p-4 text-center flex flex-col justify-center">
-      <h2 class="font-bold text-sm mb-2">Buka halaman ini di HP</h2>
-      <img id="qrpay" alt="QR halaman pembayaran"
-           class="mx-auto w-32 h-32 border border-[#2b2118] rounded-md">
-      <p class="sans text-xs mt-2 text-[#5a4a3a]">
-        Hanya untuk membuka halaman pembayaran ini di perangkat lain.
-        <strong>Bukan</strong> QR pembayaran.
-      </p>
+<!-- Header -->
+<header class="border-b border-amber-100 bg-white/90 backdrop-blur-md sticky top-0 z-30">
+  <div class="max-w-3xl mx-auto px-4 h-16 flex items-center justify-between">
+    <a href="/" class="flex items-center gap-2 group">
+      <span class="text-stone-400 group-hover:-translate-x-1 transition-transform">←</span>
+      <span class="text-xs sm:text-sm font-bold text-amber-900">Kembali ke Menu</span>
+    </a>
+    <div class="flex items-center gap-2">
+      <span class="text-lg">🥟</span>
+      <span class="font-display text-lg text-amber-950">Bakpao<span class="text-amber-600">.my.id</span></span>
     </div>
   </div>
+</header>
 
-  <div class="card sans p-4 mt-4">
-    <h2 class="font-bold mb-2">2. Upload bukti transfer</h2>
-    <input id="bukti" type="file" accept="image/png,image/jpeg,image/webp" class="text-sm">
-    <button id="uploadbtn" class="btn px-4 py-2 mt-2 text-sm font-bold">Upload Bukti Transfer</button>
-    <p id="uploadmsg" class="text-sm mt-2"></p>
+<main class="max-w-3xl mx-auto px-4 py-8 flex-1 w-full space-y-6">
+  
+  <!-- Status & Order Banner -->
+  <div class="pay-card rounded-3xl p-6 relative overflow-hidden bg-gradient-to-br from-amber-950 to-stone-900 text-white">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div>
+        <div class="text-xs text-amber-300 font-semibold uppercase tracking-wider">Tiket Pembayaran</div>
+        <h1 class="text-2xl sm:text-3xl font-extrabold font-display text-white mt-1">
+          Pesanan <span id="ocode" class="font-mono text-amber-300 tracking-wider"></span>
+        </h1>
+        <p class="text-xs text-amber-100/80 mt-1">Selesaikan pembayaran agar pesanan segera dikukus oleh dapur bAIwor.</p>
+      </div>
+
+      <div class="self-start sm:self-center">
+        <div id="statusline" class="px-4 py-2 rounded-2xl bg-amber-500/20 border border-amber-400/40 text-amber-300 font-bold text-xs sm:text-sm tracking-wide">
+          Status: MENUNGGU_BAYAR
+        </div>
+      </div>
+    </div>
   </div>
+
+  <!-- QRIS Payment Grid -->
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    
+    <!-- Left Card: Dynamic Order QR & Nominal -->
+    <div class="pay-card rounded-3xl p-6 flex flex-col justify-between text-center space-y-4">
+      <div>
+        <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-100 text-amber-900 text-xs font-bold mb-3">
+          <span>📱</span> 1. Scan QR Pesanan
+        </div>
+        <p class="text-xs text-stone-500 mb-4">Scan langsung untuk membuka link pembayaran resmi ini di HP Anda.</p>
+        
+        <div class="p-3 bg-amber-50 rounded-2xl border border-amber-200/70 inline-block shadow-inner">
+          <img id="qrpay" alt="QR pesanan dinamis" class="w-48 h-48 mx-auto object-contain rounded-xl bg-white p-2">
+        </div>
+      </div>
+
+      <div class="pt-3 border-t border-amber-100/80 bg-amber-50/50 rounded-2xl p-4">
+        <div class="text-xs text-stone-500 font-medium">Nominal Tepat yang Dibayar:</div>
+        <div id="nominal" class="text-3xl font-extrabold text-amber-950 font-display tracking-tight my-1">
+          Rp 0
+        </div>
+        <div class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md bg-amber-200 text-amber-900 text-xs font-bold">
+          Kode Verifikasi Unik: <span id="suffix" class="font-mono">---</span>
+        </div>
+        <p class="text-[10px] text-stone-400 mt-1">Pastikan nominal transfer sama persis dengan angka di atas.</p>
+      </div>
+    </div>
+
+    <!-- Right Card: Official Merchant QRIS (DANA Bisnis) -->
+    <div class="pay-card rounded-3xl p-6 flex flex-col justify-between text-center space-y-4">
+      <div>
+        <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-100 text-emerald-900 text-xs font-bold mb-3">
+          <span>🏦</span> 2. Scan QRIS DANA Bisnis
+        </div>
+        <p class="text-xs text-stone-500 mb-4">Gunakan aplikasi m-Banking (BCA, Mandiri, BRI) atau e-Wallet (DANA, GoPay, OVO, ShopeePay).</p>
+        
+        <div class="p-3 bg-white rounded-2xl border border-stone-200 inline-block shadow-sm">
+          <img src="/static/assets/merchant-qris.jpg" alt="QRIS Merchant DANA Bisnis bAIwor" class="w-48 h-48 mx-auto object-contain rounded-xl">
+        </div>
+      </div>
+
+      <div class="text-left bg-stone-50 rounded-2xl p-4 border border-stone-200/80 text-xs text-stone-600 space-y-1">
+        <div class="font-bold text-stone-800 flex items-center gap-1">
+          <span>🏪</span> bAIwor Agentic Indonesia
+        </div>
+        <div class="text-[11px] text-stone-500">NMID: ID1026624673848 · Kab. Banyumas</div>
+        <p class="text-[10px] text-stone-400 pt-1 border-t border-stone-200">
+          Ketik nominal pas sesuai angka di sebelah kiri agar verifikasi berjalan cepat.
+        </p>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Upload Proof Section -->
+  <div class="pay-card rounded-3xl p-6 space-y-4">
+    <div class="flex items-center gap-2">
+      <span class="text-xl">📤</span>
+      <h2 class="font-bold text-lg text-amber-950">3. Konfirmasi / Upload Bukti Transfer</h2>
+    </div>
+    <p class="text-xs sm:text-sm text-stone-600">
+      Sudah selesai transfer via QRIS? Unggah tangkapan layar (screenshot) bukti pembayaran Anda untuk diverifikasi secara otomatis oleh AI.
+    </p>
+
+    <div class="p-4 rounded-2xl border-2 border-dashed border-amber-300 bg-amber-50/40 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div class="w-full sm:w-auto">
+        <input id="bukti" type="file" accept="image/png,image/jpeg,image/jpg,image/webp" class="block w-full text-xs text-stone-600 file:mr-4 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-amber-100 file:text-amber-900 hover:file:bg-amber-200 cursor-pointer">
+        <div class="text-[10px] text-stone-400 mt-1">Format: PNG, JPG, WEBP (Maksimal 5 MB)</div>
+      </div>
+
+      <button id="uploadbtn" class="w-full sm:w-auto px-6 py-3 rounded-2xl bg-amber-800 hover:bg-amber-900 active:scale-95 text-white font-bold text-sm shadow-md transition-all flex items-center justify-center gap-2">
+        <span>Kirim Bukti Transfer</span>
+        <span>✓</span>
+      </button>
+    </div>
+
+    <div id="uploadmsg" class="text-xs sm:text-sm font-semibold text-amber-900 min-h-[20px] transition-all"></div>
+  </div>
+
 </main>
+
+<footer class="mt-auto border-t border-amber-200/60 bg-white py-6 text-center text-xs text-stone-500">
+  <p class="font-bold text-amber-900">🥟 Bakpao.my.id · PT. BAIWOR AGENTIC INDONESIA</p>
+  <p class="text-[11px] text-stone-400 mt-0.5">Sistem verifikasi QRIS otomatis bAIwor agent</p>
+</footer>
+
 <script src="/static/pay.js"></script>
 </body>
 </html>
