@@ -79,11 +79,30 @@ Kami mengelola warung bakpao tradisional di Banyumas. Selama bertahun-tahun, ope
 
 ---
 
-## 💡 Mengapa Model Bobot Terbuka (Open-Weights) Sangat Krusial?
+## 💡 Soal model bobot terbuka — termasuk koreksi yang kami buat sendiri
 
-Dalam tahap pengujian preflight kami (**Preflight P3 di `docs/preflight/report.md`**), pemanggilan model tertutup `sam-3.1` melalui Meta Model API **hanya mengembalikan teks kosong** tanpa data mask spasial yang dapat diolah.
+Catatan awal kami (**Preflight P3**) menyimpulkan bahwa `sam-3.1` di Meta Model API
+"mengembalikan teks kosong", sehingga bobot terbuka dianggap satu-satunya jalur.
+**Kesimpulan itu salah.** Penyebabnya: prompt yang kami pakai saat itu (`"bakpao"`) tidak
+cocok dengan satu objek pun, dan dokumentasi menyebut nol hasil sebagai keluaran yang sah
+(*"zero matches is a valid outcome"*).
 
-Oleh karena itu, penyebaran bobot terbuka **`facebook/sam2.1-hiera-large`** (Apache-2.0, ungated) pada runtime Modal adalah **satu-satunya solusi teknis yang valid** untuk mendapatkan mask resolusi penuh, memungkinkan kalibrasi matematis cm riil dari papan acuan dua garis.
+Diuji ulang dengan prompt yang benar (`"steamed bun"`), `sam-3.1` bekerja dan mengembalikan
+box + mask:
+
+```
+<0f>0<|box;x1=299;y1=148;x2=543;y2=361;w=600;h=450|><|mask;x=0;y=0;data=...|>
+```
+
+Kami membiarkan koreksi ini di README karena prosesnya bagian dari cerita: satu tes dengan
+prompt yang buruk hampir membuat kami membuang jalur yang berfungsi.
+
+**Lalu kenapa segmentasi utama tetap memakai `sam2.1` di Modal?** Bukan karena API gagal,
+melainkan karena bounty ini menilai penggunaan **bobot terbuka**. `facebook/sam2.1-hiera-large`
+berlisensi Apache-2.0 dan bisa diunduh hari ini, sedangkan bobot `sam-3.1` masih gated
+(approval manual). Jadi bobot Meta dijalankan sendiri di Modal, sementara `sam-3.1` tetap
+tersedia sebagai jalur alternatif — keduanya melewati fungsi geometri yang sama,
+`src/services/geometry.py`.
 
 ---
 
