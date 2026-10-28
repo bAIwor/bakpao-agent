@@ -54,9 +54,12 @@ def hpp_per_biji(recipe: dict[str, Any], prices: dict[str, float]) -> dict[str, 
 
 
 def suggest_price(hpp: int, target_food_cost_pct: float = 0.30) -> dict[str, Any]:
-    """Hitung harga jual yang disarankan dari HPP dan target rasio food-cost.
+    """Harga jual dari HPP dan target **margin kotor** (bukan food-cost).
 
-    Formula: raw_price = hpp / (1.0 - target_food_cost_pct), dibulatkan ke Rp 500 terdekat.
+    Formula: price = hpp / (1 - target), dibulatkan KE ATAS ke Rp 500.
+    Catatan: nama parameter historis `target_food_cost_pct`, tetapi rumusnya
+    menargetkan margin — dengan target 0.30, HPP menjadi 70% dari harga.
+    Pembulatan wajib ke atas; membulatkan ke bawah membuat target terlanggar.
     """
     if hpp < 0:
         hpp = 0
@@ -67,8 +70,8 @@ def suggest_price(hpp: int, target_food_cost_pct: float = 0.30) -> dict[str, Any
     else:
         raw_price = hpp / (1.0 - target)
 
-    # Pembulatan ke Rp 500 terdekat
-    price = int(round(raw_price / 500.0) * 500)
+    # Pembulatan KE ATAS ke Rp 500
+    price = int(math.ceil(raw_price / 500.0) * 500)
 
     # Guardrail: Harga saran tidak boleh di bawah HPP
     if price < hpp:
@@ -78,7 +81,9 @@ def suggest_price(hpp: int, target_food_cost_pct: float = 0.30) -> dict[str, Any
     margin_pct = round((margin / price) * 100.0, 1) if price > 0 else 0.0
     food_cost_pct = round((hpp / price) * 100.0, 1) if price > 0 else 100.0
 
-    warning = "food_cost_above_target" if food_cost_pct > 60.0 else None
+    # Peringatan bila food-cost melewati batas waspada warung (70%).
+    # Pada warung bakpao, 60-65% adalah hal biasa; 70% ke atas margin terlalu tipis.
+    warning = "food_cost_above_target" if food_cost_pct > 70.0 else None
 
     return {
         "price": price,

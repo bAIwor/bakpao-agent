@@ -29,21 +29,22 @@ def test_hpp_per_biji_calculation():
 
 
 def test_suggest_price_spec_exact():
-    # Sesuai spesifikasi Task 3: hpp=3100, target=0.30 -> harga 4500
+    # hpp=3100, target margin 0.30 -> 4428 dibulatkan KE ATAS = 4500
     res = suggest_price(hpp=3100, target_food_cost_pct=0.30)
     assert res["price"] == 4500
     assert res["hpp"] == 3100
     assert res["margin"] == 1400
     assert abs(res["margin_pct"] - 31.1) <= 0.1
     assert abs(res["food_cost_pct"] - 68.9) <= 0.1
-    assert res["warning"] == "food_cost_above_target"
+    # 68.9% masih di bawah batas waspada 70%
+    assert res["warning"] is None
 
 
 def test_suggest_price_food_cost_warning():
-    # Food cost di atas 60% memicu warning
+    # Food cost di atas 70% memicu warning
     res = suggest_price(hpp=2500, target_food_cost_pct=0.20)
-    # 2500 / 0.8 = 3125 -> dibulatkan ke 500 = 3000
-    # food_cost_pct = 2500 / 3000 = 83.3% -> di atas 60%
+    # 2500 / 0.8 = 3125 -> dibulatkan KE ATAS ke 3500
+    # food_cost_pct = 2500 / 3500 = 71.4% -> di atas batas waspada
     assert res["warning"] == "food_cost_above_target"
 
 

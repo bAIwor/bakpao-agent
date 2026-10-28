@@ -1,18 +1,39 @@
 {
   "tanggal": "2026-10-29",
-  "sumber": "SIGAOKMAS Pemkab Banyumas (Pasar Wage & Pasar Manis Purwokerto)",
-  "pasar": "Pasar Wage, Purwokerto, Banyumas",
-  "status": "connected",
+  "sumber": "Harga beli dapur (dikonfirmasi pemilik) + estimasi pasar untuk bahan minor",
+  "status": "input_dapur",
+  "pasar": "Banyumas (harga beli pemilik, bukan feed otomatis)",
   "satuan": "Rp per kg",
   "prices": {
     "terigu": 12500,
     "ayam": 35000,
     "gula": 17500,
-    "kacang_hijau": 24000,
-    "coklat": 38000,
     "ragi": 80000,
     "minyak": 18000,
+    "garam": 10867,
+    "margarin": 40000,
+    "kecap": 30000,
+    "maizena": 15000,
+    "baking": 40000,
+    "daun_bawang": 15000,
+    "penyedap": 40000,
+    "bombay": 30000,
+    "bawang_putih": 35000,
+    "merica": 90000,
+    "air": 0,
+    "coklat": 38000,
+    "kacang_hijau": 24000,
     "bumbu": 25000
   },
-  "catatan": "Harga komoditas bahan baku pangan pasar tradisional Kabupaten Banyumas"
+  "estimasi": [
+    "maizena",
+    "baking",
+    "daun_bawang",
+    "penyedap",
+    "bombay",
+    "bawang_putih",
+    "merica",
+    "air"
+  ],
+  "catatan": "BUKAN feed otomatis: portal SIGAOKMAS tidak merespons saat diuji 29 Okt 2026. Daftar 'estimasi' = bahan yang harganya belum dikonfirmasi pemilik."
 }
