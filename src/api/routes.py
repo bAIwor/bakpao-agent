@@ -14,6 +14,7 @@ from pydantic import BaseModel, Field
 from src.core.config import get_settings
 from src.services import geometry as geo
 from src.services import orders as store
+from src.services.sam3_client import box_diameter_px, segment_text_prompt
 from src.services.payment_verifier import verify_payment_screenshot
 from src.services.pricing import calculate_catalog_hpp
 from src.services.pricing_agent import evaluate_repricing
@@ -164,6 +165,48 @@ class VisionMeasureBody(BaseModel):
     image_b64: str
     points: list | None = None
     scale_cm: dict | None = None
+    backend: str = "sam21"
+    phrase: str | None = None
+
+
+SAM3_WARN = "diameter dari kotak, bukan mask — galat lebih besar"
+
+
+def _vision_measure_sam3(raw: bytes, body: VisionMeasureBody) -> dict:
+    """Jalur sam3: frasa -> box -> diameter. Tanpa titik manual."""
+    if not (body.phrase or "").strip():
+        raise HTTPException(status_code=400,
+                            detail="phrase wajib untuk backend sam3")
+    seg = asyncio.run(
+        segment_text_prompt(raw, body.phrase.strip()))
+    if not seg.get("ok"):
+        return {"ok": False, "backend": "sam3", "error": seg.get("error"),
+                "detail": seg.get("detail", ""), "confidence": "rendah",
+                "warnings": [SAM3_WARN,
+                             "vision tidak tersedia — angka tidak dihitung"]}
+    boxes = seg.get("boxes", [])
+    base = {"backend": "sam3", "phrase": seg.get("phrase"),
+            "raw_chars": seg.get("raw_chars")}
+    if not boxes:
+        return {**base, "ok": True, "objects": [], "count": 0,
+                "confidence": "rendah",
+                "warnings": [SAM3_WARN, "tidak ada objek cocok"]}
+    px_diams = [round(box_diameter_px(b), 1) for b in boxes]
+    if not body.scale_cm or "px_per_cm" not in body.scale_cm:
+        return {**base, "ok": True, "skala": "tidak_diketahui",
+                "diameter_px": px_diams, "count": len(boxes),
+                "confidence": "sedang",
+                "warnings": [SAM3_WARN,
+                             "tanpa acuan cm — angka dalam piksel"]}
+    s = float(body.scale_cm["px_per_cm"])
+    measured = geo.measure_objects(
+        [{"area_px": (b["x2"] - b["x1"]) * (b["y2"] - b["y1"]), "iou": 1.0}
+         for b in boxes], s)
+    if not measured.get("ok"):
+        return {**base, **measured, "confidence": "rendah",
+                "warnings": [SAM3_WARN]}
+    return {**base, **measured, "confidence": "sedang",
+            "warnings": [SAM3_WARN, "skala dari pengguna, bukan papan acuan"]}
 
 
 @router.post("/api/vision/measure")
@@ -188,6 +231,8 @@ def vision_measure(body: VisionMeasureBody, response: Response):
     if min(w, h) < 200:
         raise HTTPException(status_code=400,
                             detail="gambar terlalu kecil (< 200 px)")
+    if (body.backend or "sam21") == "sam3":
+        return _vision_measure_sam3(raw, body)
     if not body.points:
         return {"ok": False, "error": "titik_hilang",
                 "detail": "sertakan points [[x, y], ...]",
