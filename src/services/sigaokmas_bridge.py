@@ -67,7 +67,10 @@ def fetch_commodity_prices(tanggal: str | None = None) -> dict[str, Any]:
     punya parser untuk mengambil harga darinya — menyajikan angka lokal dengan
     label "connected" akan menyesatkan.
     """
-    now_str = tanggal or datetime.date.today().isoformat()
+    # Tanggal acuan pakai WIB, bukan UTC container — kalau tidak, harga hari ini
+    # akan terbaca "stale" selama 7 jam setiap hari.
+    WIB = datetime.timezone(datetime.timedelta(hours=7))
+    now_str = tanggal or datetime.datetime.now(WIB).date().isoformat()
 
     # 1. Harga dapur (sumber utama)
     cached = _read_cache()
