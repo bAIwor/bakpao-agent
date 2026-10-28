@@ -3,7 +3,9 @@ STATUS: PARTIAL
 P1_muse_image: PASS | long_string:result(len=575308) saved=p1_image.webp(431480B) | $0.01
 P2_spark_vision_json: PASS | {"confidence": 0.99, "detected_amount": 13185, "detected_reference": "TRX20261029ABC"}
 P3_sam31_api: PASS | empty=True
-P4_sam21_modal: NOT_RUN
+P4_sam21_modal: BLOCKED | modal run //. T4 ditolak akun: "InvalidError('Please add a payment method to use T4 GPU functions.')" | cold start __s | $/image __
+P4_WORKAROUND_1: tambahkan metode pembayaran di modal.com (milik Wijang), lalu run ulang scripts/modal_p4_probe.py
+P4_WORKAROUND_2: uji fungsi CPU dulu (modal run tanpa gpu) sambil menunggu; geometri Task 2 tetap jalan dengan gambar sintetis
 P5_voice: FAIL | POST /audio/transcriptions http=404
 P6_wonder: PASS | {"in": 112, "out": 122, "rea": 112} $0.0028
 P7_harga_bahan: PASS | Badan Pangan Nasional — data.badanpangan.go.id/datasetpublications/5up/rata-rata-harga-pangan-bulanan-konsumen-provinsi | 2026-10-28
