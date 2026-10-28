@@ -306,3 +306,31 @@ def dapur():
 @router.get("/cara-kerja")
 def cara_kerja():
     return FileResponse(STATIC / "cara-kerja.html")
+
+
+class CatalogGenerate(BaseModel):
+    product_id: str
+
+
+@router.get("/katalog")
+def katalog():
+    page = STATIC / "katalog.html"
+    if not page.is_file():
+        raise HTTPException(status_code=404,
+                            detail="katalog belum diterbitkan")
+    return FileResponse(page)
+
+
+@router.post("/api/catalog/generate")
+async def catalog_generate(body: CatalogGenerate):
+    from src.services import catalog_service as cat
+    products = {p["id"]: p for p in cat.load_products()}
+    if body.product_id not in products:
+        raise HTTPException(status_code=404,
+                            detail="produk tidak dikenal")
+    product = products[body.product_id]
+    poster = await cat.generate_poster(
+        product, cat.poster_path(body.product_id))
+    caption = await cat.generate_caption(product, product["price"])
+    return {"product_id": body.product_id, "poster": poster,
+            "caption": caption}
