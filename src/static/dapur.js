@@ -29,11 +29,20 @@ async function loadQueue() {
       o.order_code + "</span>" + badge(o.status) + "</div>" +
       '<p class="mt-1">' + items + "</p>" +
       '<p class="font-bold">' + rupiah(o.amount) + "</p>" +
-      (o.status === "LUNAS"
+      (o.status === "MENUNGGU_BAYAR"
+        ? '<button data-code="' + o.order_code +
+          '" class="btn btn-paid paidbtn px-3 py-1 mt-2 text-xs font-bold">Tandai Lunas</button>'
+        : o.status === "LUNAS"
         ? '<button data-code="' + o.order_code +
           '" class="btn donebtn px-3 py-1 mt-2 text-xs font-bold">Siap Diantar</button>'
         : "");
     box.appendChild(el);
+  });
+  document.querySelectorAll(".paidbtn").forEach(b => {
+    b.addEventListener("click", async () => {
+      await fetch("/api/orders/" + b.dataset.code + "/paid", { method: "POST" });
+      loadQueue();
+    });
   });
   document.querySelectorAll(".donebtn").forEach(b => {
     b.addEventListener("click", async () => {

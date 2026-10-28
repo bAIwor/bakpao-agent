@@ -124,6 +124,19 @@ def cancel(code: str):
         raise HTTPException(status_code=404, detail=str(e))
 
 
+@router.post("/api/orders/{code}/paid")
+def paid(code: str):
+    """Konfirmasi manual pemilik warung setelah cek mutasi DANA.
+
+    Sementara sampai verifikasi bukti transfer otomatis aktif: verifier
+    memanggil fungsi store yang sama di belakang layar.
+    """
+    try:
+        return store.mark_paid(code)
+    except store.OrderNotFound as e:
+        raise HTTPException(status_code=404, detail=str(e))
+
+
 @router.post("/api/orders/{code}/complete")
 def complete(code: str):
     """Tombol dapur 'Siap Diantar'."""
