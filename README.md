@@ -100,7 +100,7 @@ Sistem dirancang dengan pemisahan beban komputasi yang hemat biaya:
 
 ### 1. Kloning Repositori & Pasang Ketergantungan
 ```bash
-git clone https://github.com/PT-BAIWOR-AGENTIC-INDONESIA/bakpao-agent.git
+git clone https://github.com/bAIwor/bakpao-agent.git
 cd bakpao-agent
 python -m venv venv
 # Windows:
