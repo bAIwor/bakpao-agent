@@ -36,7 +36,7 @@ app = modal.App(APP_NAME)
     volumes={"/data": data_volume},
     env={
         "DATA_DIR": "/data",
-        "STORE_BASE_URL": "https://baiwormyid--bakpao.modal.run",
+        "STORE_BASE_URL": "https://bakpao.my.id",
         "MODAL_WORKSPACE": "baiwormyid",
     },
     timeout=300,
