@@ -37,6 +37,7 @@ Buka `http://localhost:8000` di browser.
 | POST | `/api/orders/{code}/cancel` | batalkan pesanan |
 | POST | `/api/orders/{code}/complete` | tandai selesai (tombol dapur) |
 | GET | `/api/kitchen/queue` | antrean dapur (polling 3 detik) |
+| POST | `/api/vision/measure` | ukur objek dari foto (butuh Modal) |
 
 Halaman: `/` storefront · `/pay/{code}` bayar · `/dapur` dapur · `/cara-kerja`
 penjelasan alur.
@@ -54,7 +55,7 @@ penjelasan alur.
 bakpao-agent/
 ├── modal_app.py          # deploy Modal (web + GPU, 1 app)
 ├── src/core/             # config + guardrail
-├── src/services/         # qris, orders, payment_verifier (stub), meta_client
+├── src/services/         # qris, orders, payment_verifier (stub), meta_client, vision_client, geometry
 ├── src/api/routes.py     # endpoint + halaman
 ├── src/static/           # storefront, pay, dapur
 ├── src/data/             # products, recipes (TODO-DAPUR), merchant_qris

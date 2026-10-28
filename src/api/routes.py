@@ -1,5 +1,6 @@
 """Endpoint API + halaman. Screenshot bukti: diterima, dipakai di memory,
 TIDAK disimpan ke disk, TIDAK masuk log."""
+import asyncio
 import base64
 import datetime
 import io
@@ -11,11 +12,13 @@ from PIL import Image
 from pydantic import BaseModel, Field
 
 from src.core.config import get_settings
+from src.services import geometry as geo
 from src.services import orders as store
 from src.services.payment_verifier import verify_payment_screenshot
 from src.services.qris_service import (build_amount_with_suffix,
                                         build_payment_url, build_qris_for_order,
                                         format_rupiah, render_qr_base64)
+from src.services.vision_client import measure_image
 
 router = APIRouter()
 STATIC = Path(__file__).resolve().parents[1] / "static"
@@ -152,6 +155,62 @@ def complete(code: str):
 @router.get("/api/kitchen/queue")
 def queue():
     return {"queue": store.list_orders()}
+
+
+class VisionMeasureBody(BaseModel):
+    image_b64: str
+    points: list | None = None
+    scale_cm: dict | None = None
+
+
+@router.post("/api/vision/measure")
+def vision_measure(body: VisionMeasureBody, response: Response):
+    """Ukur objek dari foto: segmen via Modal, geometri lokal.
+
+    scale_cm = {"px_per_cm": angka} dari acuan yang diketahui.
+    Tanpa scale_cm -> ukuran piksel saja, JANGAN mengarang cm.
+    """
+    response.headers["Cache-Control"] = "no-store"
+    try:
+        raw = base64.b64decode(body.image_b64, validate=True)
+    except Exception:
+        raise HTTPException(status_code=400, detail="base64 tidak valid")
+    if len(raw) > MAX_UPLOAD_BYTES:
+        raise HTTPException(status_code=400, detail="file lebih dari 5 MB")
+    try:
+        with Image.open(io.BytesIO(raw)) as im:
+            w, h = im.size
+    except Exception:
+        raise HTTPException(status_code=400, detail="file bukan gambar valid")
+    if min(w, h) < 200:
+        raise HTTPException(status_code=400,
+                            detail="gambar terlalu kecil (< 200 px)")
+    if not body.points:
+        return {"ok": False, "error": "titik_hilang",
+                "detail": "sertakan points [[x, y], ...]",
+                "confidence": "rendah", "warnings": ["tanpa titik prompt"]}
+    seg = asyncio.run(measure_image(raw, body.points))
+    if not seg.get("ok"):
+        return {"ok": False, "error": seg.get("error"),
+                "detail": seg.get("detail", ""),
+                "confidence": "rendah",
+                "warnings": ["vision tidak tersedia — angka tidak dihitung"]}
+    if not body.scale_cm or "px_per_cm" not in body.scale_cm:
+        return {"ok": True, "skala": "tidak_diketahui",
+                "objects": seg["objects"], "image_px": seg["image_px"],
+                "infer_seconds": seg.get("infer_seconds"),
+                "confidence": "sedang",
+                "warnings": ["tanpa acuan cm — angka dalam piksel"]}
+    s = float(body.scale_cm["px_per_cm"])
+    measured = geo.measure_objects(
+        [{"area_px": o["area_px"], "iou": o["iou"]}
+         for o in seg["objects"]], s)
+    if not measured.get("ok"):
+        return {**measured, "confidence": "rendah", "warnings": []}
+    return {**measured, "image_px": seg["image_px"],
+            "infer_seconds": seg.get("infer_seconds"),
+            "confidence": "sedang",
+            "warnings": ["skala dari pengguna, bukan papan acuan"]}
 
 
 @router.get("/merchant-qris-b64")

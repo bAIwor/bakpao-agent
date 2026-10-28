@@ -1,7 +1,7 @@
 """Bakpao.my.id — Autonomous Commerce & Kitchen Agent.
-SATU app Modal berisi: web (FastAPI ASGI) + GPU (SAM 2.1).
+SATU app Modal berisi: web (FastAPI ASGI) + CPU (SAM 2.1 open-weights).
 URL web: https://baiwormyid--bakpao.modal.run
-Tulis file-nya saja di Task 1 — JANGAN deploy (deploy = Run #3).
+JANGAN deploy/run/serve dari run ini (Run #3 yang deploy).
 """
 import modal
 
@@ -53,23 +53,24 @@ def web():
 # GPU — SAM 2.1 (open-weights Meta, Apache-2.0, UNGATED)
 # Dipanggil INTERNAL dari web: VisionService().segment.remote(payload)
 # ============================================================================
-gpu_image = (
+cpu_image = (
     modal.Image.debian_slim(python_version="3.12")
     .pip_install("torch", "torchvision",
-                 index_url="https://download.pytorch.org/whl/cu124")
-    .pip_install("transformers>=4.48", "pillow", "numpy", "opencv-python-headless")
+                 index_url="https://download.pytorch.org/whl/cpu")
+    .pip_install("transformers>=4.52", "pillow", "numpy")
     .workdir("/root")
 )
 
-MODEL_ID = "facebook/sam2.1-hiera-large"
+MODEL_ID = "facebook/sam2.1-hiera-large"  # Ungated, Apache-2.0
 
 
 @app.cls(
-    image=gpu_image,
-    gpu="T4",
+    image=cpu_image,
+    cpu=8,
+    memory=16384,
     volumes={"/root/.cache/huggingface": hf_volume},
-    timeout=300,
-    scaledown_window=60,            # nama param baru (yang lama deprecated)
+    timeout=900,
+    scaledown_window=60,
     min_containers=0,
 )
 class VisionService:
@@ -79,15 +80,46 @@ class VisionService:
         import torch
         from transformers import Sam2Model, Sam2Processor
         t0 = time.time()
-        self.device = "cuda" if torch.cuda.is_available() else "cpu"
         self.processor = Sam2Processor.from_pretrained(MODEL_ID)
-        dtype = torch.float16 if self.device == "cuda" else torch.float32
         self.model = Sam2Model.from_pretrained(
-            MODEL_ID, dtype=dtype).to(self.device).eval()
+            MODEL_ID, dtype=torch.float32).eval()
         self.load_seconds = round(time.time() - t0, 2)
 
-    @modal.fastapi_endpoint(method="POST")
+    @modal.method()
     def segment(self, payload: dict) -> dict:
-        # Implementasi lengkap di Task 2 (BAKPAO_02_VISION_CALIBRATION.md).
-        _ = payload
-        return {"ok": False, "error": "vision_not_implemented"}
+        """payload = {"image_b64": str, "points": [[x, y], ...]}."""
+        import base64
+        import io
+        import time
+        import torch
+        from PIL import Image
+        t0 = time.time()
+        img = Image.open(
+            io.BytesIO(base64.b64decode(payload["image_b64"]))).convert("RGB")
+        w, h = img.size
+        pts = payload.get("points") or [[w // 2, h // 2]]
+        # nesting WAJIB 4 level: [image][object][point][x, y].
+        inputs = self.processor(
+            images=img, input_points=[[[p] for p in pts]],
+            input_labels=[[[1] for _ in pts]], return_tensors="pt")
+        with torch.no_grad():
+            out = self.model(**inputs)
+        try:
+            full = self.processor.post_process_masks(
+                out.pred_masks.cpu(), orig_target_sizes=[(h, w)],
+                binarize=True)[0]
+        except Exception as e:
+            return {"ok": False, "error": "mask_postprocess_gagal",
+                    "detail": str(e)[:200]}
+        objects = []
+        for i in range(full.shape[0]):
+            best = int(out.iou_scores[0, i].argmax())
+            area = int((full[i, best] > 0.5).sum().item())
+            import math
+            objects.append({"area_px": area,
+                            "iou": round(float(out.iou_scores[0, i, best]), 4),
+                            "diameter_px": round(
+                                2.0 * math.sqrt(area / math.pi), 1)})
+        return {"ok": True, "model": MODEL_ID, "device": "cpu",
+                "objects": objects, "image_px": [w, h],
+                "infer_seconds": round(time.time() - t0, 2)}
