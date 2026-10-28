@@ -13,12 +13,12 @@ async function loadMenu() {
   box.innerHTML = "";
   PRODUCTS.forEach(p => {
     const el = document.createElement("div");
-    el.className = "card p-3";
+    el.className = "card p-3 flex flex-col";
     el.innerHTML =
       '<img src="' + p.img + '" alt="' + p.name + '" class="w-full h-36 object-cover rounded-md border border-[#2b2118]">' +
-      '<h3 class="font-bold mt-2">' + p.name + '</h3>' +
+      '<h3 class="font-bold mt-2 leading-tight min-h-[3rem]">' + p.name + '</h3>' +
       '<p class="sans text-sm text-[#5a4a3a]">' + p.description + '</p>' +
-      '<div class="sans flex items-center justify-between mt-2">' +
+      '<div class="sans flex items-center justify-between mt-auto pt-2">' +
       '<span class="font-bold">' + rupiah(p.price) + '</span>' +
       '<button data-id="' + p.id + '" class="btn-order addbtn px-3 py-1 text-sm font-bold">+ Tambah</button>' +
       '</div>';
