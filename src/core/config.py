@@ -15,6 +15,10 @@ class Settings(BaseSettings):
 
     MODAL_WORKSPACE: str = "baiwormyid"
 
+    BASETEN_API_KEY: str = ""
+    BASETEN_BASE_URL: str = "https://inference.baseten.co/v1"
+    BASETEN_MODEL: str = "meta-models/muse-spark-open-1026"
+
     STORE_NAME: str = "Bakpao.my.id"
     STORE_BASE_URL: str = "http://localhost:8000"
     MERCHANT_QRIS_IMAGE: str = "static/assets/merchant-qris.jpg"

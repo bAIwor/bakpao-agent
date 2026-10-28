@@ -23,21 +23,39 @@ async function refreshStatus() {
   el.textContent = "Status: " + (o.status === "LUNAS" ? "LUNAS ✅" : o.status);
 }
 
+const REASON = {
+  nominal_beda: "Nominal tidak cocok",
+  bukan_struk_transfer: "Gambar ini bukan bukti transfer",
+  duplikat_transaksi: "Struk ini sudah dipakai pesanan lain",
+  di_luar_jendela_waktu: "Waktu pembayaran di luar 60 menit dari pesanan",
+  confidence_rendah: "Gambar kurang jelas, coba foto ulang",
+  nominal_ambigu: "Angka nominal tidak terbaca pasti",
+  nominal_tidak_terbaca: "Nominal tidak terbaca",
+  verifikasi_gagal: "Verifikasi gagal, coba lagi",
+  respons_tidak_valid: "Verifikasi gagal, coba lagi"
+};
+
 document.getElementById("uploadbtn").addEventListener("click", async () => {
   const f = document.getElementById("bukti").files[0];
   const msg = document.getElementById("uploadmsg");
   if (!f) { msg.textContent = "Pilih file gambar dulu."; return; }
+  msg.textContent = "Memeriksa bukti...";
   const fd = new FormData();
   fd.append("file", f);
   const r = await fetch("/api/orders/" + CODE + "/verify", {
     method: "POST", body: fd
   });
   const data = await r.json();
-  const txt = data.reason || data.status || r.status;
-  msg.textContent = txt === "not_implemented"
-    ? "Verifikasi otomatis belum aktif di versi ini — bukti transfer diterima, "
-      + "status diperbarui manual oleh dapur."
-    : "Hasil: " + txt;
+  const alasan = REASON[data.reason] || data.reason || "";
+  if (data.status === "LUNAS") {
+    msg.textContent = "Bukti diterima. Pesanan LUNAS.";
+  } else if (data.status === "TIDAK_COCOK") {
+    msg.textContent = alasan + (data.notes ? " — " + data.notes : "");
+  } else if (data.status === "PERLU_DICEK") {
+    msg.textContent = "Perlu dicek dapur — " + alasan;
+  } else {
+    msg.textContent = "Gagal: " + alasan;
+  }
   refreshStatus();
 });
 

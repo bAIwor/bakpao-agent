@@ -5,7 +5,7 @@ import datetime
 import io
 from pathlib import Path
 
-from fastapi import APIRouter, File, HTTPException, UploadFile
+from fastapi import APIRouter, File, HTTPException, Response, UploadFile
 from fastapi.responses import FileResponse
 from PIL import Image
 from pydantic import BaseModel, Field
@@ -78,7 +78,7 @@ def order_status(code: str):
 
 
 @router.post("/api/orders/{code}/verify")
-async def verify(code: str, file: UploadFile = File(...)):
+async def verify(code: str, response: Response, file: UploadFile = File(...)):
     try:
         order = store.get_order(code)
     except store.OrderNotFound as e:
@@ -99,8 +99,11 @@ async def verify(code: str, file: UploadFile = File(...)):
         raise HTTPException(status_code=400,
                             detail="gambar terlalu kecil (< 200 px)")
     result = await verify_payment_screenshot(
-        raw, order["amount"], order["unique_suffix"], code)
+        raw, order["amount"], order["unique_suffix"], code, order["created_at"])
     del raw
+    response.headers["Cache-Control"] = "no-store"
+    if result.get("status") == "LUNAS":
+        result["order"] = store.mark_paid(code)
     return result
 
 
