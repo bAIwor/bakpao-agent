@@ -1,1 +1,1 @@
-{"_catatan": "TODO-DAPUR: takaran asli belum diisi. Isi dari dapur sendiri (takaran per biji).", "bakpao-ayam-reguler": {"biji": 1, "ingredients": [], "overhead_ratio": 0.08, "target_food_cost_pct": 0.3}}
+{"_catatan": "TODO-DAPUR: takaran asli belum diisi. Isi dari dapur sendiri (takaran per biji).", "bakpao-ayam": {"biji": 1, "ingredients": [], "overhead_ratio": 0.08, "target_food_cost_pct": 0.3}}
