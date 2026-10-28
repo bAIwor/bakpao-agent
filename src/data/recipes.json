@@ -3,7 +3,7 @@
     "name": "Bakpao Ayam (Reguler)",
     "biji": 1,
     "size": "reguler",
-    "sumber": "Resep dapur asli, dikonfirmasi pemilik 29 Okt 2026 (1 adonan kulit + 1 resep isi = 14 biji)",
+    "sumber": "Resep dapur asli, dikonfirmasi pemilik 29 Okt 2026. 1 adonan kulit + 1 resep isian = 14 biji reguler.",
     "contoh": false,
     "target_price": 3500,
     "target_food_cost_pct": 0.3,
@@ -12,25 +12,25 @@
       {
         "name": "Tepung terigu protein rendah",
         "gram_per_biji": 35.71,
-        "unit": "gram",
+        "unit": "g",
         "key": "terigu"
       },
       {
         "name": "Maizena",
         "gram_per_biji": 5.0,
-        "unit": "gram",
+        "unit": "g",
         "key": "maizena"
       },
       {
-        "name": "Gula pasir (kulit + isi)",
+        "name": "Gula pasir (kulit)",
         "gram_per_biji": 6.86,
-        "unit": "gram",
+        "unit": "g",
         "key": "gula"
       },
       {
         "name": "Ragi instan",
         "gram_per_biji": 0.5,
-        "unit": "gram",
+        "unit": "g",
         "key": "ragi"
       },
       {
@@ -40,7 +40,7 @@
         "key": "air"
       },
       {
-        "name": "Minyak goreng (kulit + isi)",
+        "name": "Minyak goreng (kulit)",
         "gram_per_biji": 6.43,
         "unit": "ml",
         "key": "minyak"
@@ -48,61 +48,61 @@
       {
         "name": "Margarin putih",
         "gram_per_biji": 2.14,
-        "unit": "gram",
+        "unit": "g",
         "key": "margarin"
       },
       {
         "name": "Baking powder",
         "gram_per_biji": 0.29,
-        "unit": "gram",
+        "unit": "g",
         "key": "baking"
       },
       {
-        "name": "Garam (kulit + isi)",
+        "name": "Garam (kulit)",
         "gram_per_biji": 0.64,
-        "unit": "gram",
+        "unit": "g",
         "key": "garam"
       },
       {
         "name": "Daging ayam",
         "gram_per_biji": 17.86,
-        "unit": "gram",
+        "unit": "g",
         "key": "ayam"
       },
       {
         "name": "Daun bawang",
         "gram_per_biji": 8.93,
-        "unit": "gram",
+        "unit": "g",
         "key": "daun_bawang"
       },
       {
         "name": "Kecap manis",
         "gram_per_biji": 7.14,
-        "unit": "gram",
+        "unit": "g",
         "key": "kecap"
       },
       {
         "name": "Penyedap",
         "gram_per_biji": 0.29,
-        "unit": "gram",
+        "unit": "g",
         "key": "penyedap"
       },
       {
         "name": "Bawang bombay",
         "gram_per_biji": 3.57,
-        "unit": "gram",
+        "unit": "g",
         "key": "bombay"
       },
       {
         "name": "Bawang putih",
         "gram_per_biji": 1.79,
-        "unit": "gram",
+        "unit": "g",
         "key": "bawang_putih"
       },
       {
         "name": "Merica bubuk",
         "gram_per_biji": 0.14,
-        "unit": "gram",
+        "unit": "g",
         "key": "merica"
       }
     ]
@@ -111,55 +111,115 @@
     "name": "Bakpao Ayam (Mini)",
     "biji": 1,
     "size": "mini",
+    "sumber": "Resep dapur asli, dikonfirmasi pemilik 29 Okt 2026. 1 adonan kulit + 1 resep isian = 23 biji mini.",
+    "contoh": false,
     "target_price": 2500,
     "target_food_cost_pct": 0.3,
     "overhead_ratio": 0.08,
     "ingredients": [
       {
-        "name": "Tepung terigu",
-        "gram_per_biji": 25,
-        "unit": "gram",
+        "name": "Tepung terigu protein rendah",
+        "gram_per_biji": 21.74,
+        "unit": "g",
         "key": "terigu"
       },
       {
-        "name": "Daging ayam cincang",
-        "gram_per_biji": 12,
-        "unit": "gram",
-        "key": "ayam"
+        "name": "Maizena",
+        "gram_per_biji": 3.04,
+        "unit": "g",
+        "key": "maizena"
       },
       {
-        "name": "Gula pasir",
-        "gram_per_biji": 5,
-        "unit": "gram",
+        "name": "Gula pasir (kulit)",
+        "gram_per_biji": 4.17,
+        "unit": "g",
         "key": "gula"
       },
       {
-        "name": "Ragi instant",
-        "gram_per_biji": 1.0,
-        "unit": "gram",
+        "name": "Ragi instan",
+        "gram_per_biji": 0.3,
+        "unit": "g",
         "key": "ragi"
       },
       {
-        "name": "Minyak nabati",
-        "gram_per_biji": 2.0,
-        "unit": "gram",
+        "name": "Air",
+        "gram_per_biji": 12.17,
+        "unit": "ml",
+        "key": "air"
+      },
+      {
+        "name": "Minyak goreng (kulit)",
+        "gram_per_biji": 3.91,
+        "unit": "ml",
         "key": "minyak"
       },
       {
-        "name": "Bumbu racik gurih",
-        "gram_per_biji": 2.0,
-        "unit": "gram",
-        "key": "bumbu"
+        "name": "Margarin putih",
+        "gram_per_biji": 1.3,
+        "unit": "g",
+        "key": "margarin"
+      },
+      {
+        "name": "Baking powder",
+        "gram_per_biji": 0.17,
+        "unit": "g",
+        "key": "baking"
+      },
+      {
+        "name": "Garam (kulit)",
+        "gram_per_biji": 0.39,
+        "unit": "g",
+        "key": "garam"
+      },
+      {
+        "name": "Daging ayam",
+        "gram_per_biji": 10.87,
+        "unit": "g",
+        "key": "ayam"
+      },
+      {
+        "name": "Daun bawang",
+        "gram_per_biji": 5.43,
+        "unit": "g",
+        "key": "daun_bawang"
+      },
+      {
+        "name": "Kecap manis",
+        "gram_per_biji": 4.35,
+        "unit": "g",
+        "key": "kecap"
+      },
+      {
+        "name": "Penyedap",
+        "gram_per_biji": 0.17,
+        "unit": "g",
+        "key": "penyedap"
+      },
+      {
+        "name": "Bawang bombay",
+        "gram_per_biji": 2.17,
+        "unit": "g",
+        "key": "bombay"
+      },
+      {
+        "name": "Bawang putih",
+        "gram_per_biji": 1.09,
+        "unit": "g",
+        "key": "bawang_putih"
+      },
+      {
+        "name": "Merica bubuk",
+        "gram_per_biji": 0.09,
+        "unit": "g",
+        "key": "merica"
       }
-    ],
-    "contoh": true,
-    "sumber": "CONTOH — takaran belum dari dapur, jangan dipakai untuk menyarankan harga"
+    ]
   },
   "bakpao-coklat": {
     "name": "Bakpao Coklat (Reguler)",
     "biji": 1,
     "size": "reguler",
-    "sumber": "Resep dapur asli, dikonfirmasi pemilik 29 Okt 2026. Kulit sama dengan bakpao ayam; isian 150 g pasta coklat untuk 14 biji. Harga pasta coklat masih ESTIMASI Rp38.000/kg.",
+    "sumber": "Resep dapur asli, dikonfirmasi pemilik 29 Okt 2026. 1 adonan kulit + 1 resep isian = 14 biji reguler.",
     "contoh": false,
     "target_price": 3500,
     "target_food_cost_pct": 0.3,
@@ -168,25 +228,25 @@
       {
         "name": "Tepung terigu protein rendah",
         "gram_per_biji": 35.71,
-        "unit": "gram",
+        "unit": "g",
         "key": "terigu"
       },
       {
         "name": "Maizena",
         "gram_per_biji": 5.0,
-        "unit": "gram",
+        "unit": "g",
         "key": "maizena"
       },
       {
         "name": "Gula pasir (kulit)",
         "gram_per_biji": 4.29,
-        "unit": "gram",
+        "unit": "g",
         "key": "gula"
       },
       {
         "name": "Ragi instan",
         "gram_per_biji": 0.5,
-        "unit": "gram",
+        "unit": "g",
         "key": "ragi"
       },
       {
@@ -204,25 +264,25 @@
       {
         "name": "Margarin putih",
         "gram_per_biji": 2.14,
-        "unit": "gram",
+        "unit": "g",
         "key": "margarin"
       },
       {
         "name": "Baking powder",
         "gram_per_biji": 0.29,
-        "unit": "gram",
+        "unit": "g",
         "key": "baking"
       },
       {
-        "name": "Garam",
+        "name": "Garam (kulit)",
         "gram_per_biji": 0.29,
-        "unit": "gram",
+        "unit": "g",
         "key": "garam"
       },
       {
         "name": "Pasta coklat",
         "gram_per_biji": 10.71,
-        "unit": "gram",
+        "unit": "g",
         "key": "coklat"
       }
     ]
@@ -231,127 +291,229 @@
     "name": "Bakpao Coklat (Mini)",
     "biji": 1,
     "size": "mini",
+    "sumber": "Resep dapur asli, dikonfirmasi pemilik 29 Okt 2026. 1 adonan kulit + 1 resep isian = 23 biji mini.",
+    "contoh": false,
     "target_price": 2500,
     "target_food_cost_pct": 0.3,
     "overhead_ratio": 0.08,
     "ingredients": [
       {
-        "name": "Tepung terigu",
-        "gram_per_biji": 25,
-        "unit": "gram",
+        "name": "Tepung terigu protein rendah",
+        "gram_per_biji": 21.74,
+        "unit": "g",
         "key": "terigu"
       },
       {
-        "name": "Pasta coklat lumer",
-        "gram_per_biji": 12,
-        "unit": "gram",
-        "key": "coklat"
+        "name": "Maizena",
+        "gram_per_biji": 3.04,
+        "unit": "g",
+        "key": "maizena"
       },
       {
-        "name": "Gula pasir",
-        "gram_per_biji": 6,
-        "unit": "gram",
+        "name": "Gula pasir (kulit)",
+        "gram_per_biji": 2.61,
+        "unit": "g",
         "key": "gula"
       },
       {
-        "name": "Ragi instant",
-        "gram_per_biji": 1.0,
-        "unit": "gram",
+        "name": "Ragi instan",
+        "gram_per_biji": 0.3,
+        "unit": "g",
         "key": "ragi"
       },
       {
-        "name": "Minyak nabati",
-        "gram_per_biji": 2.0,
-        "unit": "gram",
+        "name": "Air",
+        "gram_per_biji": 12.17,
+        "unit": "ml",
+        "key": "air"
+      },
+      {
+        "name": "Minyak goreng (kulit)",
+        "gram_per_biji": 2.61,
+        "unit": "ml",
         "key": "minyak"
+      },
+      {
+        "name": "Margarin putih",
+        "gram_per_biji": 1.3,
+        "unit": "g",
+        "key": "margarin"
+      },
+      {
+        "name": "Baking powder",
+        "gram_per_biji": 0.17,
+        "unit": "g",
+        "key": "baking"
+      },
+      {
+        "name": "Garam (kulit)",
+        "gram_per_biji": 0.17,
+        "unit": "g",
+        "key": "garam"
+      },
+      {
+        "name": "Pasta coklat",
+        "gram_per_biji": 6.52,
+        "unit": "g",
+        "key": "coklat"
       }
-    ],
-    "contoh": true,
-    "sumber": "CONTOH — takaran belum dari dapur, jangan dipakai untuk menyarankan harga"
+    ]
   },
   "bakpao-kacang-hijau": {
     "name": "Bakpao Kacang Hijau (Reguler)",
     "biji": 1,
     "size": "reguler",
+    "sumber": "Resep dapur asli, dikonfirmasi pemilik 29 Okt 2026. 1 adonan kulit + 1 resep isian = 14 biji reguler.",
+    "contoh": false,
     "target_price": 3500,
     "target_food_cost_pct": 0.3,
     "overhead_ratio": 0.08,
     "ingredients": [
       {
-        "name": "Tepung terigu",
-        "gram_per_biji": 45,
-        "unit": "gram",
+        "name": "Tepung terigu protein rendah",
+        "gram_per_biji": 35.71,
+        "unit": "g",
         "key": "terigu"
       },
       {
-        "name": "Tausa kacang hijau",
-        "gram_per_biji": 20,
-        "unit": "gram",
-        "key": "kacang_hijau"
+        "name": "Maizena",
+        "gram_per_biji": 5.0,
+        "unit": "g",
+        "key": "maizena"
       },
       {
-        "name": "Gula pasir",
-        "gram_per_biji": 10,
-        "unit": "gram",
+        "name": "Gula pasir (kulit)",
+        "gram_per_biji": 11.43,
+        "unit": "g",
         "key": "gula"
       },
       {
-        "name": "Ragi instant",
-        "gram_per_biji": 1.5,
-        "unit": "gram",
+        "name": "Ragi instan",
+        "gram_per_biji": 0.5,
+        "unit": "g",
         "key": "ragi"
       },
       {
-        "name": "Minyak nabati",
-        "gram_per_biji": 3.0,
-        "unit": "gram",
+        "name": "Air",
+        "gram_per_biji": 20.0,
+        "unit": "ml",
+        "key": "air"
+      },
+      {
+        "name": "Minyak goreng (kulit)",
+        "gram_per_biji": 4.29,
+        "unit": "ml",
         "key": "minyak"
+      },
+      {
+        "name": "Margarin putih",
+        "gram_per_biji": 3.21,
+        "unit": "g",
+        "key": "margarin"
+      },
+      {
+        "name": "Baking powder",
+        "gram_per_biji": 0.29,
+        "unit": "g",
+        "key": "baking"
+      },
+      {
+        "name": "Garam (kulit)",
+        "gram_per_biji": 0.46,
+        "unit": "g",
+        "key": "garam"
+      },
+      {
+        "name": "Kacang hijau",
+        "gram_per_biji": 8.93,
+        "unit": "g",
+        "key": "kacang_hijau"
+      },
+      {
+        "name": "Santan instan",
+        "gram_per_biji": 2.32,
+        "unit": "ml",
+        "key": "santan"
       }
-    ],
-    "contoh": true,
-    "sumber": "CONTOH — takaran belum dari dapur, jangan dipakai untuk menyarankan harga"
+    ]
   },
   "bakpao-kacang-hijau-mini": {
     "name": "Bakpao Kacang Hijau (Mini)",
     "biji": 1,
     "size": "mini",
+    "sumber": "Resep dapur asli, dikonfirmasi pemilik 29 Okt 2026. 1 adonan kulit + 1 resep isian = 23 biji mini.",
+    "contoh": false,
     "target_price": 2500,
     "target_food_cost_pct": 0.3,
     "overhead_ratio": 0.08,
     "ingredients": [
       {
-        "name": "Tepung terigu",
-        "gram_per_biji": 25,
-        "unit": "gram",
+        "name": "Tepung terigu protein rendah",
+        "gram_per_biji": 21.74,
+        "unit": "g",
         "key": "terigu"
       },
       {
-        "name": "Tausa kacang hijau",
-        "gram_per_biji": 12,
-        "unit": "gram",
-        "key": "kacang_hijau"
+        "name": "Maizena",
+        "gram_per_biji": 3.04,
+        "unit": "g",
+        "key": "maizena"
       },
       {
-        "name": "Gula pasir",
-        "gram_per_biji": 6,
-        "unit": "gram",
+        "name": "Gula pasir (kulit)",
+        "gram_per_biji": 6.96,
+        "unit": "g",
         "key": "gula"
       },
       {
-        "name": "Ragi instant",
-        "gram_per_biji": 1.0,
-        "unit": "gram",
+        "name": "Ragi instan",
+        "gram_per_biji": 0.3,
+        "unit": "g",
         "key": "ragi"
       },
       {
-        "name": "Minyak nabati",
-        "gram_per_biji": 2.0,
-        "unit": "gram",
+        "name": "Air",
+        "gram_per_biji": 12.17,
+        "unit": "ml",
+        "key": "air"
+      },
+      {
+        "name": "Minyak goreng (kulit)",
+        "gram_per_biji": 2.61,
+        "unit": "ml",
         "key": "minyak"
+      },
+      {
+        "name": "Margarin putih",
+        "gram_per_biji": 1.96,
+        "unit": "g",
+        "key": "margarin"
+      },
+      {
+        "name": "Baking powder",
+        "gram_per_biji": 0.17,
+        "unit": "g",
+        "key": "baking"
+      },
+      {
+        "name": "Garam (kulit)",
+        "gram_per_biji": 0.28,
+        "unit": "g",
+        "key": "garam"
+      },
+      {
+        "name": "Kacang hijau",
+        "gram_per_biji": 5.43,
+        "unit": "g",
+        "key": "kacang_hijau"
+      },
+      {
+        "name": "Santan instan",
+        "gram_per_biji": 1.41,
+        "unit": "ml",
+        "key": "santan"
       }
-    ],
-    "contoh": true,
-    "sumber": "CONTOH — takaran belum dari dapur, jangan dipakai untuk menyarankan harga"
+    ]
   },
-  "_catatan": "Hanya bakpao-ayam yang memakai resep asli. Entri lain bertanda contoh=True sampai pemilik dapur mengisi resepnya."
+  "_catatan": "Semua 6 varian memakai resep asli dapur (dikonfirmasi 29 Okt 2026)."
 }

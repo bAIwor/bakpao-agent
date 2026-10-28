@@ -23,7 +23,8 @@
     "air": 0,
     "coklat": 38000,
     "kacang_hijau": 24000,
-    "bumbu": 25000
+    "bumbu": 25000,
+    "santan": 45000
   },
   "estimasi": [
     "maizena",
@@ -33,7 +34,10 @@
     "bombay",
     "bawang_putih",
     "merica",
-    "air"
+    "air",
+    "santan",
+    "kacang_hijau",
+    "coklat"
   ],
   "catatan": "BUKAN feed otomatis: portal SIGAOKMAS tidak merespons saat diuji 29 Okt 2026. Daftar 'estimasi' = bahan yang harganya belum dikonfirmasi pemilik."
 }
