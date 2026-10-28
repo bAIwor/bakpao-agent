@@ -159,43 +159,73 @@
     "name": "Bakpao Coklat (Reguler)",
     "biji": 1,
     "size": "reguler",
+    "sumber": "Resep dapur asli, dikonfirmasi pemilik 29 Okt 2026. Kulit sama dengan bakpao ayam; isian 150 g pasta coklat untuk 14 biji. Harga pasta coklat masih ESTIMASI Rp38.000/kg.",
+    "contoh": false,
     "target_price": 3500,
     "target_food_cost_pct": 0.3,
     "overhead_ratio": 0.08,
     "ingredients": [
       {
-        "name": "Tepung terigu",
-        "gram_per_biji": 45,
+        "name": "Tepung terigu protein rendah",
+        "gram_per_biji": 35.71,
         "unit": "gram",
         "key": "terigu"
       },
       {
-        "name": "Pasta coklat lumer",
-        "gram_per_biji": 20,
+        "name": "Maizena",
+        "gram_per_biji": 5.0,
         "unit": "gram",
-        "key": "coklat"
+        "key": "maizena"
       },
       {
-        "name": "Gula pasir",
-        "gram_per_biji": 10,
+        "name": "Gula pasir (kulit)",
+        "gram_per_biji": 4.29,
         "unit": "gram",
         "key": "gula"
       },
       {
-        "name": "Ragi instant",
-        "gram_per_biji": 1.5,
+        "name": "Ragi instan",
+        "gram_per_biji": 0.5,
         "unit": "gram",
         "key": "ragi"
       },
       {
-        "name": "Minyak nabati",
-        "gram_per_biji": 3.0,
-        "unit": "gram",
+        "name": "Air",
+        "gram_per_biji": 20.0,
+        "unit": "ml",
+        "key": "air"
+      },
+      {
+        "name": "Minyak goreng (kulit)",
+        "gram_per_biji": 4.29,
+        "unit": "ml",
         "key": "minyak"
+      },
+      {
+        "name": "Margarin putih",
+        "gram_per_biji": 2.14,
+        "unit": "gram",
+        "key": "margarin"
+      },
+      {
+        "name": "Baking powder",
+        "gram_per_biji": 0.29,
+        "unit": "gram",
+        "key": "baking"
+      },
+      {
+        "name": "Garam",
+        "gram_per_biji": 0.29,
+        "unit": "gram",
+        "key": "garam"
+      },
+      {
+        "name": "Pasta coklat",
+        "gram_per_biji": 10.71,
+        "unit": "gram",
+        "key": "coklat"
       }
-    ],
-    "contoh": true,
-    "sumber": "CONTOH — takaran belum dari dapur, jangan dipakai untuk menyarankan harga"
+    ]
   },
   "bakpao-coklat-mini": {
     "name": "Bakpao Coklat (Mini)",
