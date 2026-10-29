@@ -76,6 +76,12 @@ def run_e2e_demo(base_url: str = "http://127.0.0.1:8000") -> dict:
     p(f"  ✓ Status Jaringan: {c_data.get('status')} | Stale: {c_data.get('stale')}")
     prices = c_data.get("prices", {})
     p(f"    Terigu: Rp {prices.get('terigu'):,}/kg | Ayam: Rp {prices.get('ayam'):,}/kg | Coklat: Rp {prices.get('coklat'):,}/kg")
+    idx = c_data.get("indeks_pasar") or {}
+    if idx.get("ok"):
+        per = idx.get("periode") or {}
+        p(f"  ✓ Indeks eceran SIGAOKMAS {per.get('dari')}..{per.get('sampai')} ({idx.get('umur_hari')} hari lalu):")
+        for k, v in (c_data.get("bandingan_pasar") or {}).items():
+            p(f"    {k:<14} dapur Rp {v['dapur']:,} vs eceran Rp {v['eceran_median']:,} ({v['selisih_dapur_vs_eceran_pct']:+.1f}%)")
 
     # 4. HPP & Margin
     p("\n[Langkah 4/12] Perhitungan Deterministik HPP (/api/pricing/hpp)")

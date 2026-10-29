@@ -1,8 +1,11 @@
 """Harga bahan per kg untuk perhitungan HPP.
 
 Sumber kebenaran = harga beli dapur (dikonfirmasi pemilik).
-Empat sumber otomatis sudah diuji dan TIDAK dipakai:
-  - sigaokmas.banyumaskab.go.id        : tidak merespons
+Pembanding = indeks eceran SIGAOKMAS Kab. Banyumas (median 7 hari, lihat
+src/services/sigaokmas.py). Indeks itu harga eceran konsumen, bukan harga
+supplier, jadi TIDAK dipakai sebagai dasar HPP.
+
+Sumber otomatis lain yang diuji dan tidak dipakai:
   - dimassatria.banyumaskab.go.id      : semua harga Rp 0
   - klikindomaret.com                  : Cloudflare bot challenge
   - alfagift.id                        : SPA, tanpa API publik
@@ -14,6 +17,8 @@ import datetime
 import json
 from pathlib import Path
 from typing import Any
+
+from src.services.sigaokmas import bandingkan_pasar, indeks_pasar
 
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -61,14 +66,23 @@ def _read_preflight() -> dict[str, Any] | None:
 
 
 def fetch_commodity_prices(tanggal: str | None = None) -> dict[str, Any]:
-    """Harga bahan per kg untuk perhitungan HPP.
+    """Harga beli dapur per kg + pembanding indeks eceran SIGAOKMAS.
 
-    Sumber kebenaran = harga beli dapur (dikonfirmasi pemilik), disimpan di
-    cache lokal. Portal SIGAOKMAS Banyumas TIDAK dipakai: saat diuji
-    29 Okt 2026 portal itu tidak merespons, dan kalaupun merespons kita tidak
-    punya parser untuk mengambil harga darinya — menyajikan angka lokal dengan
-    label "connected" akan menyesatkan.
+    HPP tetap dihitung dari harga beli dapur. Indeks SIGAOKMAS dilampirkan
+    supaya agen bisa melihat apakah asumsi harga kita masih masuk akal
+    dibanding harga eceran rata-rata kabupaten.
     """
+    payload = _fetch_dapur(tanggal)
+    idx = indeks_pasar()
+    payload["indeks_pasar"] = idx
+    if payload.get("ok") and idx.get("ok"):
+        payload["bandingan_pasar"] = bandingkan_pasar(idx, payload.get("prices", {}))
+    return payload
+
+
+def _fetch_dapur(tanggal: str | None = None) -> dict[str, Any]:
+    # Tanggal acuan pakai WIB, bukan UTC container — kalau tidak, harga hari ini
+    # akan terbaca "stale" selama 7 jam setiap hari.
     # Tanggal acuan pakai WIB, bukan UTC container — kalau tidak, harga hari ini
     # akan terbaca "stale" selama 7 jam setiap hari.
     WIB = datetime.timezone(datetime.timedelta(hours=7))
