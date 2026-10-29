@@ -3,12 +3,12 @@
 ```
 ======================================================================
 🥟 BAKPAO.MY.ID — DEMO OTOMASI END-TO-END (META GLOBAL HACKATHON)
-Waktu Mulai : 2026-10-29 06:08:02 WIB
+Waktu Mulai : 2026-10-29 07:30:39 WIB
 Target URL  : http://127.0.0.1:8000
 ======================================================================
 
 [Langkah 1/12] Pengecekan Status Keaktifan Sistem (/api/health)
-  ✓ Layanan aktif: Bakpao.my.id | Waktu server: 2026-10-28T23:08:02.563333+00:00
+  ✓ Layanan aktif: Bakpao.my.id | Waktu server: 2026-10-29T00:30:39.360467+00:00
 
 [Langkah 2/12] Pengambilan Katalog Menu (/api/products)
   ✓ Berhasil memuat 6 varian menu:
@@ -20,39 +20,41 @@ Target URL  : http://127.0.0.1:8000
     - Bakpao Kacang Hijau (Mini) | Rp 2,500 | Tradisional 🍵
 
 [Langkah 3/12] Rujukan Harga Pasar Banyumas (/api/pricing/commodities)
-  ✓ Sumber Data: SIGAOKMAS Pemkab Banyumas (Pasar Wage & Pasar Manis Purwokerto) (Tanggal: 2026-10-29)
+  ✓ Sumber Data: Harga beli dapur (dikonfirmasi pemilik) + estimasi pasar untuk bahan minor (Tanggal: 2026-10-29)
   ✓ Status Jaringan: fallback_cache | Stale: False
     Terigu: Rp 12,500/kg | Ayam: Rp 35,000/kg | Coklat: Rp 38,000/kg
 
 [Langkah 4/12] Perhitungan Deterministik HPP (/api/pricing/hpp)
   ✓ Analisis HPP & Margin Unit:
-    - Bakpao Ayam (Reguler): HPP Rp 1,784 | Harga Saran Rp 2,500 | Margin 28.6% (Food Cost 71.4%)
-    - Bakpao Ayam (Mini): HPP Rp 1,065 | Harga Saran Rp 1,500 | Margin 29.0% (Food Cost 71.0%)
-    - Bakpao Coklat (Reguler): HPP Rp 1,805 | Harga Saran Rp 2,500 | Margin 27.8% (Food Cost 72.2%)
+    - Bakpao Ayam (Reguler): HPP Rp 2,234 | Harga Saran Rp 3,000 | Margin 25.5% (Food Cost 74.5%)
+    - Bakpao Ayam (Mini): HPP Rp 1,359 | Harga Saran Rp 2,000 | Margin 32.0% (Food Cost 68.0%)
+    - Bakpao Coklat (Reguler): HPP Rp 1,319 | Harga Saran Rp 2,000 | Margin 34.1% (Food Cost 66.0%)
 
 [Langkah 5/12] Simulasi Agen Repricing Pintar (/api/pricing/reprice)
   Simulasi kenaikan harga daging ayam +28.5% (Rp 35.000 -> Rp 45.000)...
-  ✓ Ringkasan Keputusan: 2 varian Bakpao Ayam HPP naik 12.11% akibat kenaikan ayam, diputuskan REVIEW_SUPPLIER dengan tahan harga jual. 4 varian Coklat dan Kacang Hijau HPP 0% HOLD.
-  ✓ Peringatan Vendor  : Harga ayam naik dari 35000 ke 45000, memicu HPP Bakpao Ayam Reguler dan Mini naik 12.11%. Evaluasi supplier ayam alternatif, negosiasi batch dan cek yield porsi untuk tekan food-cost.
+  ✓ Ringkasan Keputusan: 2 varian ayam terdampak kenaikan HPP 8.6% perlu REPRICE_UP. 4 varian coklat dan kacang hijau HPP stabil, HOLD.
+  ✓ Peringatan Vendor  : Harga ayam naik 28.57% dari 35000 ke 45000, memicu HPP varian ayam naik 8.6%. Evaluasi supplier ayam alternatif dan negosiasi batch berikutnya.
+    * Bakpao Ayam (Reguler): HPP lama Rp 2,234 -> HPP baru Rp 2,427 (+8.64%) -> Aksi: REPRICE_UP
+    * Bakpao Ayam (Mini): HPP lama Rp 1,359 -> HPP baru Rp 1,476 (+8.61%) -> Aksi: REPRICE_UP
 
 [Langkah 6/12] Pembuatan Pesanan Pembeli (/api/orders)
-  ✓ Pesanan Berhasil Dibuat: Kode [BQ-7TPHFA]
-  ✓ Subtotal: Rp 9,500 | Kode Unik 3-Digit: 269
-  ✓ Total Tagihan Exact: Rp 9.769 (Rp 9,769)
-  ✓ URL Pembayaran: https://baiwormyid--bakpao.modal.run/pay/BQ-7TPHFA
+  ✓ Pesanan Berhasil Dibuat: Kode [BQ-X3TMEK]
+  ✓ Subtotal: Rp 9,500 | Kode Unik 3-Digit: 988
+  ✓ Total Tagihan Exact: Rp 10.488 (Rp 10,488)
+  ✓ URL Pembayaran: https://baiwormyid--bakpao.modal.run/pay/BQ-X3TMEK
 
-[Langkah 7/12] Cek Status Pesanan (/api/orders/BQ-7TPHFA)
+[Langkah 7/12] Cek Status Pesanan (/api/orders/BQ-X3TMEK)
   ✓ Status Pesanan Saat Ini: MENUNGGU_BAYAR
 
-[Langkah 8/12] Konfirmasi Mutasi QRIS Masuk (/api/orders/BQ-7TPHFA/paid)
+[Langkah 8/12] Konfirmasi Mutasi QRIS Masuk (/api/orders/BQ-X3TMEK/paid)
   ✓ Status Berubah: LUNAS ✅
-  ✓ Nomor Antrean Dapur: #3
+  ✓ Nomor Antrean Dapur: #4
 
 [Langkah 9/12] Pemantauan Layar Dapur KDS (/api/kitchen/queue)
-  ✓ Antrean aktif di dapur: 3 pesanan
-  ✓ Pesanan [BQ-7TPHFA] terverifikasi masuk antrean produksi: True
+  ✓ Antrean aktif di dapur: 4 pesanan
+  ✓ Pesanan [BQ-X3TMEK] terverifikasi masuk antrean produksi: True
 
-[Langkah 10/12] Tombol Dapur: Siap Disajikan (/api/orders/BQ-7TPHFA/complete)
+[Langkah 10/12] Tombol Dapur: Siap Disajikan (/api/orders/BQ-X3TMEK/complete)
   ✓ Status Final: SELESAI 🎉 (Pesanan selesai)
 
 [Langkah 11/12] Uji Mesin Geometri Vision (SAM 2.1 QC Simulation)
@@ -66,6 +68,6 @@ Target URL  : http://127.0.0.1:8000
 
 ======================================================================
 ✅ SELURUH 12 LANGKAH INTEGRASI END-TO-END BERHASIL TUNTAS 100%!
-Total Durasi Pengujian: 8.31 detik
+Total Durasi Pengujian: 11.32 detik
 ======================================================================
 ```
