@@ -1,9 +1,11 @@
 """Lihat / kosongkan antrean order di volume produksi (untuk rekaman demo).
 
-Arsip dibuat dulu, jadi data lama tidak hilang — hanya dipindahkan.
+Default mengarsipkan dulu, jadi data lama tidak hilang — hanya dipindahkan.
+`--tanpa-arsip` menghapus tanpa menyimpan salinan (pakai hanya untuk data uji).
 
-    python -m modal run tools/reset_demo_orders.py::lihat
-    python -m modal run tools/reset_demo_orders.py::kosongkan
+    python -m modal run tools/reset_demo_orders.py
+    python -m modal run tools/reset_demo_orders.py --aksi kosongkan
+    python -m modal run tools/reset_demo_orders.py --aksi kosongkan --tanpa-arsip
 """
 import datetime
 import json
@@ -37,7 +39,7 @@ def lihat() -> dict:
 
 
 @app.function(volumes={"/data": data_volume}, timeout=120)
-def kosongkan() -> dict:
+def kosongkan(simpan_arsip: bool = True) -> dict:
     data_volume.reload()
     try:
         with open(ORDERS, encoding="utf-8") as f:
@@ -47,20 +49,26 @@ def kosongkan() -> dict:
 
     orders = json.loads(isi)
     jumlah = len(orders.get("orders", {})) if isinstance(orders, dict) else len(orders)
-    stempel = datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=7)))
-    arsip = f"/data/orders_archive_{stempel:%Y%m%d-%H%M%S}.json"
-    with open(arsip, "w", encoding="utf-8") as f:
-        f.write(isi)
+    arsip = None
+    if simpan_arsip:
+        stempel = datetime.datetime.now(
+            datetime.timezone(datetime.timedelta(hours=7)))
+        arsip = f"/data/orders_archive_{stempel:%Y%m%d-%H%M%S}.json"
+        with open(arsip, "w", encoding="utf-8") as f:
+            f.write(isi)
     with open(ORDERS, "w", encoding="utf-8") as f:
         f.write('{"orders": {}, "queue_counter": 0}')
     data_volume.commit()
-    return {"ok": True, "dipindah": jumlah, "arsip": arsip}
+    return {"ok": True, "dihapus": jumlah, "arsip": arsip}
 
 
 @app.local_entrypoint()
-def main(aksi: str = "lihat"):
-    """modal run tools/reset_demo_orders.py            # lihat
-       modal run tools/reset_demo_orders.py --aksi kosongkan
+def main(aksi: str = "lihat", tanpa_arsip: bool = False):
+    """modal run tools/reset_demo_orders.py                             # lihat
+       modal run tools/reset_demo_orders.py --aksi kosongkan            # arsip dulu
+       modal run tools/reset_demo_orders.py --aksi kosongkan --tanpa-arsip
     """
-    fungsi = kosongkan if aksi == "kosongkan" else lihat
-    print(fungsi.remote())
+    if aksi == "kosongkan":
+        print(kosongkan.remote(simpan_arsip=not tanpa_arsip))
+    else:
+        print(lihat.remote())
