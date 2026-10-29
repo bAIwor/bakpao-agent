@@ -319,8 +319,10 @@ async def pricing_reprice(body: RepriceBody | None = None):
     default_today = commodities.get("prices", {})
 
     b = body or RepriceBody()
-    today = b.prices_today or b.prices_hari_ini or default_today
-    yesterday = b.prices_yesterday or b.prices_kemarin or default_today
+    # Kiriman sebagian digabung dengan harga acuan; tanpa ini HPP dihitung dari
+    # bahan yang disebut saja dan hasilnya menyesatkan (mis. HPP ayam 772).
+    today = {**default_today, **(b.prices_today or b.prices_hari_ini or {})}
+    yesterday = {**default_today, **(b.prices_yesterday or b.prices_kemarin or {})}
 
     decision = await evaluate_repricing(recipes, today, yesterday)
     return {
