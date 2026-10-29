@@ -127,3 +127,83 @@ async function loadQueue() {
 
 setInterval(loadQueue, 3000);
 loadQueue();
+
+const PASAR_NAMA = {
+  terigu: "Terigu",
+  gula: "Gula",
+  minyak: "Minyak",
+  ayam: "Ayam",
+  telur: "Telur",
+  kacang_hijau: "Kacang hijau"
+};
+
+function fmtPersenPasar(v) {
+  const t = Number(v).toLocaleString("id-ID", { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+  return (v < 0 ? "" : "+") + t + "% vs dapur";
+}
+
+function fmtPeriodePasar(p) {
+  if (!p || !p.dari || !p.sampai) return "-";
+  const o = { day: "numeric", month: "short" };
+  const a = new Date(p.dari + "T00:00:00").toLocaleDateString("id-ID", o);
+  const b = new Date(p.sampai + "T00:00:00");
+  return a + " - " + b.toLocaleDateString("id-ID", o) + " " + b.getFullYear();
+}
+
+async function loadPasar() {
+  try {
+    const panel = document.getElementById("panel-pasar");
+    const grid = document.getElementById("pasar-grid");
+    if (!panel || !grid) return;
+    const r = await fetch("/api/pricing/commodities");
+    const data = await r.json();
+    const idx = data && data.indeks_pasar;
+    const banding = (data && data.bandingan_pasar) || {};
+    if (!idx || idx.ok !== true) return;
+    const eceran = idx.eceran || {};
+
+    const cards = Object.keys(PASAR_NAMA)
+      .filter(k => eceran[k])
+      .map(k => {
+        const bd = banding[k];
+        const sel = bd ? bd.selisih_dapur_vs_eceran_pct : null;
+        let cls, label;
+        if (sel === null || sel === undefined) {
+          cls = "bg-stone-800 text-stone-400 border-stone-700";
+          label = "tanpa data dapur";
+        } else {
+          cls = sel < 0
+            ? "bg-stone-800 text-stone-300 border-stone-600"
+            : "bg-amber-950/80 text-amber-300 border-amber-600/40";
+          label = fmtPersenPasar(sel);
+        }
+        return `<div class="bg-stone-950/60 border border-stone-800 rounded-xl p-2.5">`
+          + `<div class="text-[11px] font-semibold text-stone-400">${PASAR_NAMA[k]}</div>`
+          + `<div class="font-extrabold text-sm text-stone-100 mt-0.5">Rp ${Number(eceran[k].median).toLocaleString("id-ID")}</div>`
+          + `<span class="inline-block mt-1.5 px-2 py-0.5 rounded-full text-[11px] font-bold border ${cls}">${label}</span>`
+          + `</div>`;
+      }).join("");
+    grid.innerHTML = cards;
+
+    const per = document.getElementById("pasar-periode");
+    const umur = document.getElementById("pasar-umur");
+    const st = document.getElementById("pasar-status");
+    if (per) per.textContent = fmtPeriodePasar(idx.periode);
+    if (umur) umur.textContent = (idx.umur_hari === null || idx.umur_hari === undefined)
+      ? "" : idx.umur_hari + " hari lalu";
+    if (st) {
+      const segar = idx.stale !== true;
+      st.textContent = segar ? "data segar" : "data lama";
+      st.className = "px-2.5 py-1 rounded-full text-[11px] font-bold border " + (segar
+        ? "bg-emerald-950/80 text-emerald-300 border-emerald-600/40"
+        : "bg-amber-950/80 text-amber-300 border-amber-600/40");
+    }
+
+    panel.classList.remove("hidden");
+  } catch (err) {
+    return;
+  }
+}
+
+setInterval(loadPasar, 60000);
+loadPasar();

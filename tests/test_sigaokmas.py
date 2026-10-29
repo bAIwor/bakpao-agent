@@ -37,6 +37,34 @@ def test_fetch_melampirkan_indeks():
     json.dumps(payload)
 
 
+def test_panel_mendapat_6_bahan_dari_eceran():
+    # Kontrak untuk panel /dapur: 6 kunci, tiap entri punya median angka.
+    idx = indeks_pasar()
+    assert idx["ok"] is True
+    assert set(idx["eceran"]) == {
+        "terigu", "gula", "minyak", "ayam", "telur", "kacang_hijau"}
+    for kunci, row in idx["eceran"].items():
+        assert isinstance(row["median"], (int, float)), kunci
+    assert idx["periode"]["dari"] <= idx["periode"]["sampai"]
+
+
+def test_bahan_tanpa_harga_dapur_tetap_tampil():
+    # Telur tidak ada di harga beli dapur -> tanpa entri bandingan.
+    # Panel harus tetap menampilkannya (badge netral), bukan menghilangkannya.
+    payload = fetch_commodity_prices()
+    assert "telur" in payload["indeks_pasar"]["eceran"]
+    assert "telur" not in payload["bandingan_pasar"]
+
+
+def test_indeks_hilang_dilaporkan_bukan_dikarang(monkeypatch):
+    # Tanpa berkas ringkasan -> ok False; panel /dapur tetap hidden.
+    import src.services.sigaokmas as s
+    monkeypatch.setattr(s, "_kandidat_ringkasan", lambda: [])
+    idx = s.indeks_pasar()
+    assert idx["ok"] is False
+    assert idx["error"] == "indeks_belum_ada"
+
+
 def test_hpp_memakai_eceran_sigaokmas():
     idx = indeks_pasar()
     hasil = harga_hpp({"ayam": 35000, "coklat": 38000}, faktor=1.0)
