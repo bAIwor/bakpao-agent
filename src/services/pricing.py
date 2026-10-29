@@ -112,16 +112,24 @@ def calculate_catalog_hpp(recipes: dict[str, Any], prices: dict[str, float]) -> 
         hpp_info = hpp_per_biji(recipe, prices)
         target_cost = recipe.get("target_food_cost_pct", 0.30)
         price_info = suggest_price(hpp_info["total"], target_cost)
+        hpp = hpp_info["total"]
+        # Margin dan food-cost dihitung pada harga yang benar-benar dipakai
+        # (target_price), bukan pada harga saran: memakai harga saran membuat
+        # varian yang dijual di atas saran tampak berbiaya lebih tinggi.
+        target_price = int(recipe.get("target_price") or price_info["price"])
+        margin = target_price - hpp
+        margin_pct = round(margin / target_price * 100.0, 1) if target_price else 0.0
+        food_cost_pct = round(hpp / target_price * 100.0, 1) if target_price else 100.0
         result[product_id] = {
             "name": recipe.get("name", product_id),
             "size": recipe.get("size", "reguler"),
-            "target_price": recipe.get("target_price", price_info["price"]),
-            "hpp": hpp_info["total"],
+            "target_price": target_price,
+            "hpp": hpp,
             "suggested_price": price_info["price"],
-            "margin": price_info["margin"],
-            "margin_pct": price_info["margin_pct"],
-            "food_cost_pct": price_info["food_cost_pct"],
-            "warning": price_info["warning"],
+            "margin": margin,
+            "margin_pct": margin_pct,
+            "food_cost_pct": food_cost_pct,
+            "warning": ("food_cost_above_target" if food_cost_pct > 70.0 else None),
             "overhead": hpp_info["overhead"],
             "detail": hpp_info["detail"],
         }

@@ -88,3 +88,23 @@ def test_calculate_catalog_hpp():
     assert "bakpao-ayam" in cat
     assert cat["bakpao-ayam"]["hpp"] > 0
     assert cat["bakpao-ayam"]["suggested_price"] >= cat["bakpao-ayam"]["hpp"]
+
+
+def test_catalog_food_cost_memakai_harga_jual_bukan_harga_saran():
+    # Varian yang dijual jauh di atas harga saran: food-cost harus mengikuti
+    # harga jual, bukan angka saran yang lebih rendah.
+    recipes = {
+        "bakpao-coklat": {
+            "name": "Bakpao Coklat",
+            "overhead_ratio": 0.0,
+            "target_food_cost_pct": 0.30,
+            "target_price": 3500,
+            "ingredients": [{"key": "coklat", "gram_per_biji": 33.5}],
+        }
+    }
+    prices = {"coklat": 38000}
+    row = calculate_catalog_hpp(recipes, prices)["bakpao-coklat"]
+    assert row["hpp"] == 1273
+    assert row["suggested_price"] == 2000
+    assert row["food_cost_pct"] == 36.4
+    assert row["margin"] == 2227
