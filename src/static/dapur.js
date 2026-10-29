@@ -277,8 +277,6 @@ async function runReprice(ayamHarga) {
   const ctrl = new AbortController();
   const batas = setTimeout(() => ctrl.abort(), 30000);
   try {
-    const cek = await fetch("/api/pricing/commodities", { signal: ctrl.signal });
-    if (!cek.ok) throw new Error("HTTP " + cek.status);
     const r = await fetch("/api/pricing/reprice", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
