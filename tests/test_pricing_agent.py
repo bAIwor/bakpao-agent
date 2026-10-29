@@ -108,6 +108,39 @@ def test_validate_agent_override_price_too_high():
     assert result["per_item"][0]["suggested_price"] == 3000
 
 
+def test_validate_agent_hold_harga_lama_tidak_di_override():
+    # Harga toko yang berjalan sudah di atas hpp_new * 2.5. Model memilih
+    # mempertahankannya -> bukan pelanggaran, harga tidak boleh dipotong.
+    mock_agent_data = {
+        "per_item": [
+            {
+                "product_id": "bakpao-coklat",
+                "hpp_old": 1272,
+                "hpp_new": 1272,
+                "hpp_change_pct": 0.0,
+                "current_price": 3500,
+                "suggested_price": 3500,
+                "action": "HOLD",
+                "reason": "HPP tidak berubah",
+            }
+        ],
+        "vendor_alert": "",
+        "summary": "Tidak ada perubahan",
+    }
+    context = {
+        "bakpao-coklat": {
+            "hpp_new": 1272,
+            "hpp_old": 1272,
+            "hpp_change_pct": 0.0,
+            "current_price": 3500,
+            "deterministic_price": 2000,
+        }
+    }
+    result, overrides = validate_agent_output(mock_agent_data, context)
+    assert result["agent_override"] is False
+    assert result["per_item"][0]["suggested_price"] == 3500
+
+
 def test_validate_agent_valid_accepted():
     # Model memberikan output valid dan logis
     mock_agent_data = {

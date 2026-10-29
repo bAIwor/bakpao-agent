@@ -108,9 +108,11 @@ def validate_agent_output(agent_data: dict[str, Any], items_context: dict[str, A
             action = "HOLD"
             suggested = current_price
 
-        # Aturan 3: suggested_price harus dalam rentang wajar [hpp_new, hpp_new * 2.5]
+        # Aturan 3: kenaikan harga tidak boleh melewati plafon hpp_new * 2.5.
+        # Hanya berlaku saat menaikkan: mempertahankan harga toko yang sudah
+        # berjalan bukan pelanggaran, walau plafonnya di bawah harga itu.
         max_allowed = int(hpp_new * 2.5)
-        if suggested > max_allowed:
+        if suggested > current_price and suggested > max_allowed:
             overrides.append(
                 f"Item {pid}: suggested_price Rp {suggested} > batas atas Rp {max_allowed} -> di-override ke Rp {deterministic_price}"
             )
