@@ -2,7 +2,7 @@
 
 [![Live Production](https://img.shields.io/badge/Live_Storefront-bakpao.my.id-amber?style=for-the-badge&logo=cloudflare)](https://bakpao.my.id)
 [![Meta Hackathon](https://img.shields.io/badge/Meta_Global_AI_Hackathon-2026_Startup_Track-blue?style=for-the-badge&logo=meta)](https://bakpao.my.id/cara-kerja)
-[![Tests Passing](https://img.shields.io/badge/Pytest-82_Passed-emerald?style=for-the-badge&logo=pytest)](https://bakpao.my.id)
+[![Tests Passing](https://img.shields.io/badge/Pytest-86_Passed-emerald?style=for-the-badge&logo=pytest)](https://bakpao.my.id)
 
 > **"Tool AI global umumnya hanya jadi chatbot atau image generator biasa. Bakpao.my.id secara nyata mengukur fisik daganganmu, menghitung biaya pokok operasional harian, dan menjaga uang pembayaran masuk ke dapur."**
 
@@ -132,7 +132,7 @@ pip install -r requirements.txt
 ### 2. Jalankan Pengujian Otomatis
 ```bash
 pytest --basetemp=.pytest_temp -q
-# Hasil: 82 passed in ~0.9s
+# Hasil: 86 passed in ~1.0s
 ```
 
 ### 2b. Perbarui Indeks Harga Pasar (SIGAOKMAS)
@@ -141,7 +141,16 @@ python tools/refresh_sigaokmas.py            # 7 hari terakhir, 5 cakupan pasar
 # -> src/data/cache/sigaokmas/prices_raw.csv + median_7d.json
 ```
 
-### 2c. Bersihkan Antrean Demo (opsional)
+### 2c. Ukur Bakpao dari Foto
+```bash
+# Frase tanpa titik manual (sam-3.1 via Meta Model API)
+python tools/ukur_bakpao.py --foto foto_nampan.jpg --frasa "steamed bun"
+
+# Titik + SAM 2.1 open-weights di Modal (bobot Meta, Apache-2.0)
+python tools/ukur_bakpao.py --foto foto_nampan.jpg --titik 300,225 --px-per-cm 20
+```
+
+### 2d. Bersihkan Antrean Demo (opsional)
 ```bash
 python -m modal run tools/reset_demo_orders.py                  # lihat isi antrean
 python -m modal run tools/reset_demo_orders.py --aksi kosongkan # arsipkan lalu kosongkan
