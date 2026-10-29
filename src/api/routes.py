@@ -243,8 +243,9 @@ def vision_measure(body: VisionMeasureBody, response: Response):
                 "detail": seg.get("detail", ""),
                 "confidence": "rendah",
                 "warnings": ["vision tidak tersedia — angka tidak dihitung"]}
+    asal = {"model": seg.get("model"), "device": seg.get("device")}
     if not body.scale_cm or "px_per_cm" not in body.scale_cm:
-        return {"ok": True, "skala": "tidak_diketahui",
+        return {"ok": True, **asal, "skala": "tidak_diketahui",
                 "objects": seg["objects"], "image_px": seg["image_px"],
                 "infer_seconds": seg.get("infer_seconds"),
                 "confidence": "sedang",
@@ -255,7 +256,7 @@ def vision_measure(body: VisionMeasureBody, response: Response):
          for o in seg["objects"]], s)
     if not measured.get("ok"):
         return {**measured, "confidence": "rendah", "warnings": []}
-    return {**measured, "image_px": seg["image_px"],
+    return {**measured, **asal, "image_px": seg["image_px"],
             "infer_seconds": seg.get("infer_seconds"),
             "confidence": "sedang",
             "warnings": ["skala dari pengguna, bukan papan acuan"]}
