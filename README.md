@@ -2,7 +2,7 @@
 
 [![Live Production](https://img.shields.io/badge/Live_Storefront-bakpao.my.id-amber?style=for-the-badge&logo=cloudflare)](https://bakpao.my.id)
 [![Meta Hackathon](https://img.shields.io/badge/Meta_Global_AI_Hackathon-2026_Startup_Track-blue?style=for-the-badge&logo=meta)](https://bakpao.my.id/cara-kerja)
-[![Tests Passing](https://img.shields.io/badge/Pytest-67_Passed-emerald?style=for-the-badge&logo=pytest)](https://bakpao.my.id)
+[![Tests Passing](https://img.shields.io/badge/Pytest-79_Passed-emerald?style=for-the-badge&logo=pytest)](https://bakpao.my.id)
 
 > **"Tool AI global umumnya hanya jadi chatbot atau image generator biasa. Bakpao.my.id secara nyata mengukur fisik daganganmu, menghitung biaya pokok operasional harian, dan menjaga uang pembayaran masuk ke dapur."**
 
@@ -11,8 +11,8 @@ Sistem operasional micro-bakery otonom ditenagai Meta AI Tooling dan model open-
 ---
 
 ## 🎥 3-Minute Demo Video
-[![Tonton Video Demo 3 Menit](https://img.shields.io/badge/YouTube-Video_Demo_3_Menit-red?style=for-the-badge&logo=youtube)](https://youtube.com)
-*(Tautan rekaman alur penuh: pemesanan, verifikasi slip QRIS otomatis, layar dapur realtime, dan kontrol mutu visual nampan)*
+[![Video Demo](https://img.shields.io/badge/YouTube-Video_3_Menit_(segera)-red?style=for-the-badge&logo=youtube)](#)
+*(Rekaman alur penuh — pemesanan, verifikasi slip QRIS, layar dapur, kontrol mutu visual — ditautkan sebelum 3 Nov 2026. Sistem yang direkam sudah live di tautan di bawah.)*
 
 ---
 
@@ -45,7 +45,7 @@ Kami mengelola warung bakpao tradisional di Banyumas. Selama bertahun-tahun, ope
 │                       PELANGGAN (Mobile Browser)                            │
 │           https://bakpao.my.id (Storefront, Cart, QRIS Ticket)              │
 └──────────────────────────────────────┬──────────────────────────────────────┘
-                                       │ HTTPS / Cloudflare Edge
+                                       │ HTTPS · nginx VPS → Modal Edge
                                        ▼
 ┌─────────────────────────────────────────────────────────────────────────────┐
 │                  FASTAPI BACKEND & AGENT ORCHESTRATION                      │
@@ -60,7 +60,7 @@ Kami mengelola warung bakpao tradisional di Banyumas. Selama bertahun-tahun, ope
      ▼                     ▼     ▼                     ▼    ┌─────────────┐
 ┌──────────────┐ ┌──────────────┐ ┌──────────────┐ ┌──────┐ │ Layar Dapur │
 │ Baseten      │ │ Meta Model   │ │ SIGAOKMAS    │ │Modal │ │ (/dapur)    │
-│ Endpoint     │ │ API (Spark)  │ │ Banyumas     │ │CPU/T4│ └─────────────┘
+│ Endpoint     │ │ API (Spark)  │ │ Banyumas     │ │CPU   │ └─────────────┘
 │ Multimodal   │ │ Reasoning    │ │ Data Pasar   │ │SAM2.1│
 │ Receipt OCR  │ │ Tool Calling │ │ Tradisional  │ │QC Bun│
 └──────────────┘ └──────────────┘ └──────────────┘ └──────┘
@@ -72,8 +72,8 @@ Kami mengelola warung bakpao tradisional di Banyumas. Selama bertahun-tahun, ope
 
 | Model Meta | Runtime / Provider | Peran Khusus dalam Sistem | Estimasi Biaya |
 |---|---|---|---|
-| **SAM 2.1 Hiera Large** (`facebook/sam2.1-hiera-large`) | Modal Serverless | Segmentasi nampan kukusan, hitung diameter fisik ($d=2\sqrt{A/\pi}$), deteksi tingkat reject | ~$0.0007 / analisis |
-| **Muse Spark 1.3** | Meta Model API | Evaluasi fluktuasi HPP komoditas pasar, pembuatan keputusan repricing, dan notifikasi vendor | ~$0.000002 / run |
+| **SAM 2.1 Hiera Large** (`facebook/sam2.1-hiera-large`) | Modal Serverless | Segmentasi nampan kukusan, hitung diameter fisik ($d=2\sqrt{A/\pi}$), deteksi tingkat reject | ±$0.002 / analisis (CPU 8 core) |
+| **Muse Spark 1.3** | Meta Model API | Evaluasi fluktuasi HPP komoditas pasar, pembuatan keputusan repricing, dan notifikasi vendor | total pemakaian Meta API selama build: $0,0152 |
 | **Muse Image 1.0** | Meta Model API | Generasi poster promosi produk komersial kualitas tinggi | $0.01 / poster |
 | **Muse Spark Open 1026** | Baseten Endpoint | Pembacaan multimodal struk bukti bayar e-wallet & caption katalog | Kredit Hackathon |
 
@@ -110,7 +110,7 @@ tersedia sebagai jalur alternatif — keduanya melewati fungsi geometri yang sam
 
 Sistem dirancang dengan pemisahan beban komputasi yang hemat biaya:
 - **Vision di Modal Serverless**: Berjalan dengan `scaledown_window=60`, kontainer otomatis mati saat tidak ada antrean nampan (biaya idle $0).
-- **Penalaran di Meta Model API (Spark 1.3)**: Struktur JSON schema ketat dengan reasoning effort rendah menghasilkan biaya mikro (~$0.000002 per evaluasi repricing).
+- **Penalaran di Meta Model API (Spark 1.3)**: Struktur JSON schema ketat dengan reasoning effort rendah biayanya mikro (total pemakaian Meta API selama seluruh build: $0,0152).
 - **Pemisahan Peran**: Logika aritmetika harga dilakukan 100% deterministik di Python, sedangkan model LLM difokuskan murni untuk penalaran bisnis dan bahasa komunikasi vendor.
 
 ---
