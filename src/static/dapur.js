@@ -242,9 +242,12 @@ function renderReprice(decision) {
     return;
   }
   const cards = decision.per_item.map(it => {
-    const aksi = REPRICE_LABEL[it.action] || it.action;
+    const naik = it.action === "REPRICE_UP" && it.suggested_price !== it.current_price;
+    const aksi = (it.action === "REPRICE_UP" && !naik)
+      ? "Harga tetap"
+      : (REPRICE_LABEL[it.action] || it.action);
     const cls = REPRICE_CLS[it.action] || REPRICE_CLS.HOLD;
-    const pindah = (it.action === "REPRICE_UP" && it.suggested_price !== it.current_price)
+    const pindah = naik
       ? `<div class="text-xs font-bold text-stone-200 mt-1">${rpReprice(it.current_price)} -&gt; ${rpReprice(it.suggested_price)}</div>`
       : "";
     return `<div class="bg-stone-950/60 border border-stone-800 rounded-xl p-2.5">`
