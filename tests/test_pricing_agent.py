@@ -182,3 +182,33 @@ def test_evaluate_repricing_status_not_completed_falls_back():
     # Harus fallback ke evaluasi deterministik tanpa crash
     assert len(res["per_item"]) == 1
     assert res["per_item"][0]["action"] == "HOLD"
+
+
+def test_kontrak_keputusan_untuk_panel_simulasi():
+    # Panel /dapur me-render decision apa adanya: 6 item dgn 8 kunci,
+    # summary + vendor_alert string, tanpa override pada lonjakan wajar.
+    import json
+    from pathlib import Path
+    recipes = json.loads(
+        (Path(__file__).resolve().parents[1] / "src" / "data"
+         / "recipes.json").read_text(encoding="utf-8"))
+    kunci = set()
+    for pid, rec in recipes.items():
+        if pid.startswith("_"):
+            continue
+        kunci.update(i.get("key", "") for i in rec.get("ingredients", []))
+    kemarin = {k: 20000 for k in kunci if k}
+    kemarin["ayam"] = 40000
+    hari_ini = dict(kemarin, ayam=50000)
+    res = evaluate_repricing_deterministic(recipes, hari_ini, kemarin)
+    assert len(res["per_item"]) == 6
+    for it in res["per_item"]:
+        assert set(it) == {"product_id", "hpp_old", "hpp_new",
+                           "hpp_change_pct", "current_price",
+                           "suggested_price", "action", "reason"}
+        assert it["action"] in ("REPRICE_UP", "HOLD", "REVIEW_SUPPLIER")
+        assert it["suggested_price"] >= it["hpp_new"]
+    assert isinstance(res["summary"], str) and res["summary"]
+    assert isinstance(res["vendor_alert"], str) and res["vendor_alert"]
+    assert res["agent_override"] is False
+    assert res["overrides"] == []

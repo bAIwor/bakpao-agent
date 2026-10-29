@@ -207,3 +207,98 @@ async function loadPasar() {
 
 setInterval(loadPasar, 60000);
 loadPasar();
+
+function rpReprice(n) {
+  return "Rp " + Number(n).toLocaleString("id-ID");
+}
+
+function fmtPersenReprice(v) {
+  const t = Number(v).toLocaleString("id-ID", { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+  return (v < 0 ? "" : "+") + t + "%";
+}
+
+function escReprice(s) {
+  return String(s === null || s === undefined ? "" : s)
+    .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
+
+const REPRICE_LABEL = {
+  REPRICE_UP: "Sesuaikan harga",
+  REVIEW_SUPPLIER: "Review supplier",
+  HOLD: "Harga stabil"
+};
+
+const REPRICE_CLS = {
+  REPRICE_UP: "bg-amber-950/80 text-amber-300 border-amber-600/40",
+  REVIEW_SUPPLIER: "bg-rose-950/80 text-rose-300 border-rose-600/40",
+  HOLD: "bg-stone-800 text-stone-300 border-stone-600"
+};
+
+function renderReprice(decision) {
+  const hasil = document.getElementById("reprice-hasil");
+  if (!hasil) return;
+  if (!decision || !Array.isArray(decision.per_item)) {
+    hasil.innerHTML = `<p class="text-xs text-rose-300">Simulasi gagal: respons agen tidak lengkap. Coba lagi.</p>`;
+    return;
+  }
+  const cards = decision.per_item.map(it => {
+    const aksi = REPRICE_LABEL[it.action] || it.action;
+    const cls = REPRICE_CLS[it.action] || REPRICE_CLS.HOLD;
+    const pindah = (it.action === "REPRICE_UP" && it.suggested_price !== it.current_price)
+      ? `<div class="text-xs font-bold text-stone-200 mt-1">${rpReprice(it.current_price)} -&gt; ${rpReprice(it.suggested_price)}</div>`
+      : "";
+    return `<div class="bg-stone-950/60 border border-stone-800 rounded-xl p-2.5">`
+      + `<div class="flex items-center justify-between gap-2">`
+      + `<span class="text-sm font-bold text-stone-100">${escReprice(it.product_id)}</span>`
+      + `<span class="px-2 py-0.5 rounded-full text-[11px] font-bold border ${cls}">${escReprice(aksi)}</span>`
+      + `</div>`
+      + `<div class="text-xs text-stone-400 mt-1">HPP ${rpReprice(it.hpp_old)} -&gt; ${rpReprice(it.hpp_new)} (${fmtPersenReprice(it.hpp_change_pct)})</div>`
+      + pindah
+      + (it.reason ? `<div class="text-[11px] text-stone-500 mt-1">${escReprice(it.reason)}</div>` : "")
+      + `</div>`;
+  }).join("");
+  const catat = decision.agent_override
+    ? `<p class="text-[11px] text-stone-500 mt-2">Catatan: keputusan disesuaikan guardrail deterministik.</p>`
+      + (Array.isArray(decision.overrides) ? decision.overrides.map(o => `<p class="text-[11px] text-stone-500">${escReprice(o)}</p>`).join("") : "")
+    : "";
+  hasil.innerHTML = `<p class="text-sm text-stone-200">${escReprice(decision.summary)}</p>`
+    + `<div class="space-y-2 mt-2">${cards}</div>`
+    + (decision.vendor_alert ? `<blockquote class="border-l-2 border-amber-600/60 pl-3 mt-3 text-xs text-stone-300 italic">${escReprice(decision.vendor_alert)}</blockquote>` : "")
+    + catat;
+}
+
+async function runReprice(ayamHarga) {
+  const hasil = document.getElementById("reprice-hasil");
+  const btns = [document.getElementById("btn-ayam-45"), document.getElementById("btn-ayam-50")].filter(Boolean);
+  if (btns.length === 0) return;
+  const labelAwal = btns.map(b => b.textContent);
+  btns.forEach(b => { b.disabled = true; b.textContent = "Agen mengevaluasi..."; });
+  if (hasil) hasil.innerHTML = `<p class="text-xs text-stone-400">Agen mengevaluasi dampak kenaikan harga ayam, biasanya 6-9 detik...</p>`;
+  const ctrl = new AbortController();
+  const batas = setTimeout(() => ctrl.abort(), 30000);
+  try {
+    const cek = await fetch("/api/pricing/commodities", { signal: ctrl.signal });
+    if (!cek.ok) throw new Error("HTTP " + cek.status);
+    const r = await fetch("/api/pricing/reprice", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ prices_today: { ayam: ayamHarga } }),
+      signal: ctrl.signal
+    });
+    if (!r.ok) throw new Error("HTTP " + r.status);
+    const data = await r.json();
+    renderReprice(data && data.decision);
+  } catch (err) {
+    if (hasil) hasil.innerHTML = `<p class="text-xs text-rose-300">Simulasi gagal: ${escReprice(err && err.name === "AbortError" ? "batas 30 detik terlampaui" : "jaringan terputus")}. Tombol aktif lagi, silakan coba ulang.</p>`;
+  } finally {
+    clearTimeout(batas);
+    btns.forEach((b, i) => { b.disabled = false; b.textContent = labelAwal[i]; });
+  }
+}
+
+(function pasangReprice() {
+  const b45 = document.getElementById("btn-ayam-45");
+  const b50 = document.getElementById("btn-ayam-50");
+  if (b45) b45.addEventListener("click", () => runReprice(45000));
+  if (b50) b50.addEventListener("click", () => runReprice(50000));
+})();
