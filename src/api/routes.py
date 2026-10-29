@@ -301,6 +301,7 @@ def pricing_hpp():
         "source": commodities.get("sumber", "tidak_diketahui"),
         "tanggal": commodities.get("tanggal"),
         "stale": commodities.get("stale", False),
+        "sumber_per_bahan": commodities.get("sumber_per_bahan"),
         "indeks_pasar": commodities.get("indeks_pasar"),
         "bandingan_pasar": commodities.get("bandingan_pasar"),
         "products": catalog,

@@ -132,7 +132,7 @@ pip install -r requirements.txt
 ### 2. Jalankan Pengujian Otomatis
 ```bash
 pytest --basetemp=.pytest_temp -q
-# Hasil: 78 passed in ~1.3s
+# Hasil: 79 passed in ~0.8s
 ```
 
 ### 2b. Perbarui Indeks Harga Pasar (SIGAOKMAS)
@@ -157,7 +157,7 @@ Buka browser di `http://localhost:8000`.
 
 ## ⚖️ Batasan Sistem yang Jujur
 1. **Akurasi Ukuran Fisik**: Estimasi diameter fisik memiliki rentang toleransi &plusmn;10–12% tergantung kemiringan sudut kamera terhadap papan referensi kalibrasi.
-2. **Indeks Harga SIGAOKMAS**: HPP dihitung dari harga beli dapur, bukan dari portal pemda. Portal SIGAOKMAS dipakai sebagai **pembanding**: median 7 hari harga eceran kabupaten diambil lewat `python tools/refresh_sigaokmas.py` (portal memutus TLS dari sebagian jaringan, jadi ada jalur cadangan reader proxy) dan disimpan sebagai cache harian. Selisih harga dapur vs eceran ditampilkan agar penurunan harga grosir tidak diasumsikan.
+2. **Dasar HPP dari SIGAOKMAS**: HPP memakai median 7 hari harga eceran Kab. Banyumas dari portal SIGAOKMAS untuk enam bahan (terigu, gula, minyak, ayam, telur, kacang hijau), dikali faktor 1,0 — sengaja tidak dikoreksi ke bawah, jadi HPP condong lebih tinggi daripada harga grosir sebenarnya. Bahan yang tidak dipantau portal (coklat, santan, margarin, ragi, bumbu) memakai harga beli dapur. Setiap bahan menyimpan asalnya di `sumber_per_bahan`, dan `/api/pricing/hpp` menampilkan selisih harga dapur vs eceran. Data diambil lewat `python tools/refresh_sigaokmas.py` (portal memutus TLS dari sebagian jaringan, ada jalur cadangan reader proxy) lalu ikut ter-deploy sebagai cache harian.
 
 ---
 

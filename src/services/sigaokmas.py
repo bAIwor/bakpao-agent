@@ -81,3 +81,40 @@ def bandingkan_pasar(indeks: dict[str, Any], prices: dict[str, Any]) -> dict[str
             "selisih_dapur_vs_eceran_pct": selisih,
         }
     return out
+
+
+def harga_hpp(harga_dapur: dict[str, Any], faktor: float = 1.0) -> dict[str, Any]:
+    """Harga dasar HPP: median eceran SIGAOKMAS × faktor, sisanya harga beli dapur.
+
+    Faktor 1,0 dipilih pemilik warung: HPP memakai harga pasar resmi apa adanya.
+    Konsekuensinya HPP sedikit lebih tinggi dari harga grosir sebenarnya — arah
+    yang aman, bukan yang menipu margin.
+    """
+    idx = indeks_pasar()
+    if not idx.get("ok"):
+        return {"ok": False, "prices": dict(harga_dapur), "sumber_per_bahan": {}}
+
+    prices = dict(harga_dapur)
+    provenance: dict[str, Any] = {}
+    for kunci, row in idx["eceran"].items():
+        if kunci not in prices:
+            continue
+        harga = int(round(row["median"] * faktor))
+        prices[kunci] = harga
+        provenance[kunci] = {
+            "sumber": "sigaokmas",
+            "harga": harga,
+            "eceran_median": row["median"],
+            "tanggal_eceran": row["terakhir"]["tanggal"],
+            "faktor": faktor,
+        }
+    for kunci, harga in harga_dapur.items():
+        provenance.setdefault(kunci, {"sumber": "dapur", "harga": harga})
+
+    return {
+        "ok": True,
+        "prices": prices,
+        "sumber_per_bahan": provenance,
+        "periode": idx.get("periode"),
+        "stale": idx.get("stale", True),
+    }

@@ -1,9 +1,10 @@
 """Harga bahan per kg untuk perhitungan HPP.
 
-Sumber kebenaran = harga beli dapur (dikonfirmasi pemilik).
-Pembanding = indeks eceran SIGAOKMAS Kab. Banyumas (median 7 hari, lihat
-src/services/sigaokmas.py). Indeks itu harga eceran konsumen, bukan harga
-supplier, jadi TIDAK dipakai sebagai dasar HPP.
+Dasar HPP = median 7 hari harga eceran SIGAOKMAS Kab. Banyumas untuk enam bahan
+yang tercakup (terigu, gula, minyak, ayam, telur, kacang hijau), dikali faktor
+1,0. Bahan yang tidak dipantau portal (coklat, santan, margarin, ragi, bumbu)
+tetap memakai harga beli dapur. Setiap bahan mencatat asalnya di
+``sumber_per_bahan`` supaya tidak ada angka tanpa jejak.
 
 Sumber otomatis lain yang diuji dan tidak dipakai:
   - dimassatria.banyumaskab.go.id      : semua harga Rp 0
@@ -18,7 +19,10 @@ import json
 from pathlib import Path
 from typing import Any
 
-from src.services.sigaokmas import bandingkan_pasar, indeks_pasar
+from src.services.sigaokmas import bandingkan_pasar, harga_hpp, indeks_pasar
+
+# HPP memakai harga eceran SIGAOKMAS apa adanya (keputusan pemilik, 29 Okt 2026).
+FAKTOR_ECERAN_KE_HPP = 1.0
 
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -66,17 +70,23 @@ def _read_preflight() -> dict[str, Any] | None:
 
 
 def fetch_commodity_prices(tanggal: str | None = None) -> dict[str, Any]:
-    """Harga beli dapur per kg + pembanding indeks eceran SIGAOKMAS.
-
-    HPP tetap dihitung dari harga beli dapur. Indeks SIGAOKMAS dilampirkan
-    supaya agen bisa melihat apakah asumsi harga kita masih masuk akal
-    dibanding harga eceran rata-rata kabupaten.
-    """
+    """Harga bahan untuk HPP: eceran SIGAOKMAS + sisa bahan dari harga dapur."""
     payload = _fetch_dapur(tanggal)
     idx = indeks_pasar()
     payload["indeks_pasar"] = idx
-    if payload.get("ok") and idx.get("ok"):
-        payload["bandingan_pasar"] = bandingkan_pasar(idx, payload.get("prices", {}))
+    if not (payload.get("ok") and idx.get("ok")):
+        return payload
+
+    dapur = payload.get("prices", {})
+    dasar = harga_hpp(dapur, FAKTOR_ECERAN_KE_HPP)
+    payload["harga_dapur"] = dapur
+    payload["prices"] = dasar["prices"]
+    payload["sumber_per_bahan"] = dasar["sumber_per_bahan"]
+    payload["bandingan_pasar"] = bandingkan_pasar(idx, dapur)
+    payload["sumber"] = ("SIGAOKMAS Kab. Banyumas (eceran, median 7 hari) "
+                         "+ harga beli dapur untuk bahan yang tidak dipantau")
+    payload["status"] = "sigaokmas_eceran"
+    payload["stale"] = bool(payload.get("stale") or dasar.get("stale"))
     return payload
 
 

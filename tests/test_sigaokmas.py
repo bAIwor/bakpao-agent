@@ -3,7 +3,7 @@ import json
 from pathlib import Path
 
 from src.services.commodity_prices import fetch_commodity_prices
-from src.services.sigaokmas import DATA_DIR, bandingkan_pasar, indeks_pasar
+from src.services.sigaokmas import DATA_DIR, bandingkan_pasar, harga_hpp, indeks_pasar
 
 RAW = Path(DATA_DIR) / "prices_raw.csv"
 
@@ -33,4 +33,17 @@ def test_fetch_melampirkan_indeks():
     assert payload["ok"] is True
     assert payload["indeks_pasar"]["ok"] is True
     assert "ayam" in payload["bandingan_pasar"]
+    assert payload["status"] == "sigaokmas_eceran"
     json.dumps(payload)
+
+
+def test_hpp_memakai_eceran_sigaokmas():
+    idx = indeks_pasar()
+    hasil = harga_hpp({"ayam": 35000, "coklat": 38000}, faktor=1.0)
+
+    # Ayam tercakup portal → diganti median eceran; coklat tidak → tetap dapur.
+    assert hasil["prices"]["ayam"] == idx["eceran"]["ayam"]["median"]
+    assert hasil["prices"]["coklat"] == 38000
+    assert hasil["sumber_per_bahan"]["ayam"]["sumber"] == "sigaokmas"
+    assert hasil["sumber_per_bahan"]["coklat"]["sumber"] == "dapur"
+    assert hasil["sumber_per_bahan"]["ayam"]["harga"] == hasil["prices"]["ayam"]
