@@ -51,6 +51,26 @@ def web():
 
 
 # ============================================================================
+# CRON — indeks harga SIGAOKMAS harian, ditulis ke volume /data/sigaokmas
+# Web membaca volume dulu (indeks_pasar memilih berkas terbaru), jadi data
+# segar tidak perlu redeploy. Jalankan manual:
+#   python -m modal run modal_app.py::refresh_harga_pasar
+# ============================================================================
+@app.function(
+    image=web_image,
+    volumes={"/data": data_volume},
+    timeout=900,
+    schedule=modal.Cron("30 8 * * *", timezone="Asia/Jakarta"),
+)
+def refresh_harga_pasar():
+    from src.services.sigaokmas_fetch import refresh
+    hasil = refresh(days=7, out_dir="/data/sigaokmas")
+    data_volume.commit()
+    print(hasil)
+    return hasil
+
+
+# ============================================================================
 # GPU — SAM 2.1 (open-weights Meta, Apache-2.0, UNGATED)
 # Dipanggil INTERNAL dari web: VisionService().segment.remote(payload)
 # ============================================================================

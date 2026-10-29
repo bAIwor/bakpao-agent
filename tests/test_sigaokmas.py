@@ -3,9 +3,9 @@ import json
 from pathlib import Path
 
 from src.services.commodity_prices import fetch_commodity_prices
-from src.services.sigaokmas import DATA_DIR, bandingkan_pasar, harga_hpp, indeks_pasar
+from src.services.sigaokmas import BUNDLED_DIR, bandingkan_pasar, harga_hpp, indeks_pasar
 
-RAW = Path(DATA_DIR) / "prices_raw.csv"
+RAW = Path(BUNDLED_DIR) / "prices_raw.csv"
 
 
 def test_csv_columns():

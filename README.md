@@ -141,6 +141,12 @@ python tools/refresh_sigaokmas.py            # 7 hari terakhir, 5 cakupan pasar
 # -> src/data/cache/sigaokmas/prices_raw.csv + median_7d.json
 ```
 
+### 2c. Bersihkan Antrean Demo (opsional)
+```bash
+python -m modal run tools/reset_demo_orders.py                  # lihat isi antrean
+python -m modal run tools/reset_demo_orders.py --aksi kosongkan # arsipkan lalu kosongkan
+```
+
 ### 3. Jalankan Skrip Demo End-to-End
 ```bash
 python scripts/demo_e2e.py --url http://127.0.0.1:8000
@@ -157,7 +163,7 @@ Buka browser di `http://localhost:8000`.
 
 ## ⚖️ Batasan Sistem yang Jujur
 1. **Akurasi Ukuran Fisik**: Estimasi diameter fisik memiliki rentang toleransi &plusmn;10–12% tergantung kemiringan sudut kamera terhadap papan referensi kalibrasi.
-2. **Dasar HPP dari SIGAOKMAS**: HPP memakai median 7 hari harga eceran Kab. Banyumas dari portal SIGAOKMAS untuk enam bahan (terigu, gula, minyak, ayam, telur, kacang hijau), dikali faktor 1,0 — sengaja tidak dikoreksi ke bawah, jadi HPP condong lebih tinggi daripada harga grosir sebenarnya. Bahan yang tidak dipantau portal (coklat, santan, margarin, ragi, bumbu) memakai harga beli dapur. Setiap bahan menyimpan asalnya di `sumber_per_bahan`, dan `/api/pricing/hpp` menampilkan selisih harga dapur vs eceran. Data diambil lewat `python tools/refresh_sigaokmas.py` (portal memutus TLS dari sebagian jaringan, ada jalur cadangan reader proxy) lalu ikut ter-deploy sebagai cache harian.
+2. **Dasar HPP dari SIGAOKMAS**: HPP memakai median 7 hari harga eceran Kab. Banyumas dari portal SIGAOKMAS untuk enam bahan (terigu, gula, minyak, ayam, telur, kacang hijau), dikali faktor 1,0 — sengaja tidak dikoreksi ke bawah, jadi HPP condong lebih tinggi daripada harga grosir sebenarnya. Bahan yang tidak dipantau portal (coklat, santan, margarin, ragi, bumbu) memakai harga beli dapur. Setiap bahan menyimpan asalnya di `sumber_per_bahan`, dan `/api/pricing/hpp` menampilkan selisih harga dapur vs eceran. Data diperbarui otomatis oleh cron Modal `refresh_harga_pasar` setiap 08.30 WIB: hasilnya ditulis ke volume `/data/sigaokmas` dan dibaca web (reload berkala, tanpa redeploy). Portal memutus TLS dari sebagian jaringan, jadi fetcher memakai jalur langsung lalu reader proxy. Refresh manual: `python tools/refresh_sigaokmas.py`.
 
 ---
 

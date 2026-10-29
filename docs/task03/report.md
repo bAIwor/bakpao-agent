@@ -1,5 +1,10 @@
 # TASK: 03 — HPP Engine + Repricing Agent
 
+> **Catatan 29 Okt 2026**: angka HPP di laporan ini berasal dari resep versi awal dan
+> sebagian harga estimasi. Dasar HPP sudah berubah ke median eceran SIGAOKMAS; angka
+> yang berlaku ada di `GET /api/pricing/hpp` (ayam Rp 2.289/biji). Laporan dibiarkan
+> apa adanya sebagai jejak eksekusi task.
+
 STATUS: PASS
 
 ## 1. PYTEST OUTPUT

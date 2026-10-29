@@ -8,12 +8,13 @@ from __future__ import annotations
 
 import datetime
 import json
+import os
+import time
 from pathlib import Path
 from typing import Any
 
-DATA_DIR = Path(__file__).resolve().parents[1] / "data" / "cache" / "sigaokmas"
-SUMMARY_FILE = DATA_DIR / "median_7d.json"
-RAW_FILE = DATA_DIR / "prices_raw.csv"
+BUNDLED_DIR = Path(__file__).resolve().parents[1] / "data" / "cache" / "sigaokmas"
+RAW_FILE = BUNDLED_DIR / "prices_raw.csv"
 
 WIB = datetime.timezone(datetime.timedelta(hours=7))
 
@@ -28,15 +29,58 @@ PETA = {
 }
 
 
+_RELOAD_AT = 0.0
+
+
+def _reload_volume(jeda_detik: int = 600) -> None:
+    """Container Modal melihat snapshot volume saat start; segarkan berkala.
+
+    Tanpa ini, hasil cron harian baru terlihat setelah container dingin.
+    """
+    global _RELOAD_AT
+    if not os.environ.get("DATA_DIR"):
+        return
+    if time.time() - _RELOAD_AT < jeda_detik:
+        return
+    _RELOAD_AT = time.time()
+    try:
+        import modal
+        modal.Volume.from_name(
+            os.environ.get("MODAL_VOLUME_NAME", "bakpao-data")).reload()
+    except Exception:
+        pass
+
+
+def _kandidat_ringkasan() -> list[Path]:
+    """Volume (hasil cron) diutamakan, lalu cache yang ikut image."""
+    files: list[Path] = []
+    data_dir = os.environ.get("DATA_DIR")
+    if data_dir:
+        files.append(Path(data_dir) / "sigaokmas" / "median_7d.json")
+    files.append(BUNDLED_DIR / "median_7d.json")
+    return [f for f in files if f.is_file()]
+
+
+def _muat_ringkasan() -> dict[str, Any] | None:
+    """Ambil berkas dengan `diambil_pada` terbaru; cron bisa kalah dari image."""
+    terbaru: dict[str, Any] | None = None
+    for f in _kandidat_ringkasan():
+        try:
+            raw = json.loads(f.read_text(encoding="utf-8"))
+        except Exception:
+            continue
+        if terbaru is None or raw.get("diambil_pada", "") > terbaru.get("diambil_pada", ""):
+            terbaru = raw
+            terbaru["berkas"] = str(f)
+    return terbaru
+
+
 def indeks_pasar() -> dict[str, Any]:
     """Median 7 hari harga eceran kabupaten untuk bahan bakpao."""
-    if not SUMMARY_FILE.is_file():
+    _reload_volume()
+    raw = _muat_ringkasan()
+    if raw is None:
         return {"ok": False, "error": "indeks_belum_ada"}
-
-    try:
-        raw = json.loads(SUMMARY_FILE.read_text(encoding="utf-8"))
-    except Exception as exc:
-        return {"ok": False, "error": "indeks_rusak", "detail": str(exc)}
 
     kab = (raw.get("cakupan") or {}).get("KABUPATEN BANYUMAS") or {}
     eceran = {}
@@ -64,6 +108,7 @@ def indeks_pasar() -> dict[str, Any]:
         "umur_hari": umur_hari,
         "stale": umur_hari is None or umur_hari > 1,
         "eceran": eceran,
+        "berkas": raw.get("berkas"),
     }
 
 
