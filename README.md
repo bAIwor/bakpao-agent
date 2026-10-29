@@ -2,7 +2,7 @@
 
 [![Live Production](https://img.shields.io/badge/Live_Storefront-bakpao.my.id-amber?style=for-the-badge&logo=cloudflare)](https://bakpao.my.id)
 [![Meta Hackathon](https://img.shields.io/badge/Meta_Global_AI_Hackathon-2026_Startup_Track-blue?style=for-the-badge&logo=meta)](https://bakpao.my.id/cara-kerja)
-[![Tests Passing](https://img.shields.io/badge/Pytest-79_Passed-emerald?style=for-the-badge&logo=pytest)](https://bakpao.my.id)
+[![Tests Passing](https://img.shields.io/badge/Pytest-82_Passed-emerald?style=for-the-badge&logo=pytest)](https://bakpao.my.id)
 
 > **"Tool AI global umumnya hanya jadi chatbot atau image generator biasa. Bakpao.my.id secara nyata mengukur fisik daganganmu, menghitung biaya pokok operasional harian, dan menjaga uang pembayaran masuk ke dapur."**
 
@@ -132,7 +132,7 @@ pip install -r requirements.txt
 ### 2. Jalankan Pengujian Otomatis
 ```bash
 pytest --basetemp=.pytest_temp -q
-# Hasil: 79 passed in ~0.8s
+# Hasil: 82 passed in ~0.9s
 ```
 
 ### 2b. Perbarui Indeks Harga Pasar (SIGAOKMAS)
