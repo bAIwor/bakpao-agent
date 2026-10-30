@@ -156,6 +156,15 @@ python -m modal run tools/reset_demo_orders.py                  # lihat isi antr
 python -m modal run tools/reset_demo_orders.py --aksi kosongkan # arsipkan lalu kosongkan
 ```
 
+### 2e. Cek Kondisi Live Server Produksi
+```bash
+python tools/cek_live.py                        # lawan https://bakpao.my.id
+python tools/cek_live.py --url http://127.0.0.1:8000  # lawan server lokal
+# Memeriksa 6 titik (halaman /, /dapur, /katalog + API health, hpp, queue),
+# mencetak tabel PASS/FAIL + durasi tiap pemeriksaan dan ringkasan "x/y lulus".
+# Keluar kode 1 bila ada yang gagal. Tanpa dependensi baru (hanya urllib).
+```
+
 ### 3. Jalankan Skrip Demo End-to-End
 ```bash
 python scripts/demo_e2e.py --url http://127.0.0.1:8000
@@ -167,6 +176,59 @@ python scripts/demo_e2e.py --url http://127.0.0.1:8000
 python -m uvicorn src.main:app --host 127.0.0.1 --port 8000 --reload
 ```
 Buka browser di `http://localhost:8000`.
+
+---
+
+## ✅ Verifikasi Cepat (5 Menit)
+
+Perintah di bawah bisa dijalankan juri apa adanya terhadap server produksi.
+Contoh keluaran disalin dari hasil nyata tanggal 30 Okt 2026 — angka harga pasar
+bisa bergeser mengikuti refresh SIGAOKMAS harian, tetapi bentuk responsnya sama.
+
+### 1. Status layanan
+
+```bash
+curl -s https://bakpao.my.id/api/health
+```
+
+```json
+{"ok":true,"time":"2026-10-30T08:09:30.281212+00:00","service":"Bakpao.my.id"}
+```
+
+### 2. HPP, food cost, dan sumber harga per bahan
+
+```bash
+curl -s https://bakpao.my.id/api/pricing/hpp | python -c "import json,sys; d=json.load(sys.stdin); p=d['products']['bakpao-ayam']; print('hpp:', p['hpp'], '| food_cost_pct:', p['food_cost_pct'], '| harga_jual:', p['price_aktual']); print('ayam:', d['sumber_per_bahan']['ayam']); print('indeks_pasar.ok:', d['indeks_pasar']['ok'])"
+```
+
+```
+hpp: 2281 | food_cost_pct: 65.2 | harga_jual: 3500
+ayam: {'sumber': 'sigaokmas', 'harga': 39619, 'eceran_median': 39619, 'tanggal_eceran': '2026-10-29', 'faktor': 1.0}
+indeks_pasar.ok: True
+```
+
+`food_cost_pct` dihitung dari harga jual aktual (Rp3.500), bukan dari harga saran.
+
+### 3. Simulasi repricing saat harga ayam melonjak
+
+```bash
+curl -s -X POST https://bakpao.my.id/api/pricing/reprice \
+  -H "Content-Type: application/json" \
+  -d '{"prices_today":{"ayam":50000}}'
+```
+
+Hasil nyata: Bakpao Ayam Reguler 2281 → 2481 (`REPRICE_UP`, saran Rp4.000),
+Bakpao Ayam Mini `REVIEW_SUPPLIER`, 4 varian lain `HOLD`, `agent_override: false`.
+Panggilan pertama memakan waktu ±13 detik (penalaran LLM). Endpoint ini hanya
+menghasilkan proposal — tidak mengubah harga toko.
+
+### 4. Ukur bakpao dari foto
+
+```bash
+python tools/ukur_bakpao.py --foto src/static/assets/produk/bakpao-ayam.jpg --frasa "steamed bun"
+```
+
+Hasil nyata: `count: 8` dalam 5,9 detik.
 
 ---
 
