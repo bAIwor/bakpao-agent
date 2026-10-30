@@ -230,6 +230,18 @@ python tools/ukur_bakpao.py --foto src/static/assets/produk/bakpao-ayam.jpg --fr
 
 Hasil nyata: `count: 8` dalam 5,9 detik.
 
+Foto nampan asli warung (nampan 35 cm, diukur penggaris) — jalur titik, keluaran sentimeter:
+
+```bash
+python tools/ukur_bakpao.py --foto src/static/assets/foto/nampan-10-biji.jpg --px-per-cm 26.86 --titik "340,390;520,335;690,455;195,545;395,560;780,640;255,730;545,680;420,860;630,840"
+```
+
+Hasil nyata: `model: facebook/sam2.1-hiera-large`, `device: cpu`, 10 objek,
+median 6,95 cm, rentang 6,53–7,49 cm, `reject_count: 0`, semua `LAYAK`.
+
+Catatan: jalur frasa (`backend: sam3`) mengembalikan 0 objek pada foto nampan ini;
+ia bekerja pada foto katalog di atas. Perilaku ini dibahas di bagian model bobot terbuka.
+
 ---
 
 ## ⚖️ Batasan Sistem yang Jujur
