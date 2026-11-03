@@ -34,6 +34,13 @@ def _db_path() -> Path:
 
 
 def _load() -> dict:
+    if os.environ.get("DATA_DIR") == "/data":
+        try:
+            import modal
+            modal.Volume.from_name(
+                os.environ.get("MODAL_VOLUME_NAME", "bakpao-data")).reload()
+        except Exception:
+            pass
     p = _db_path()
     if p.is_file():
         return json.loads(p.read_text(encoding="utf-8"))
