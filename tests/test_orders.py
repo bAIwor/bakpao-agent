@@ -39,9 +39,9 @@ def test_queue_number_increments(db):
 
 def test_missing_order_clear_error(db):
     with pytest.raises(store.OrderNotFound):
-        store.get_order("BQ-XXXXXX")
+        store.get_order("PAO-XXXXXX")
     with pytest.raises(store.OrderNotFound):
-        store.mark_paid("BQ-XXXXXX")
+        store.mark_paid("PAO-XXXXXX")
 
 
 def test_cancel_and_list(db):

@@ -56,50 +56,50 @@ def test_parse_time_iso():
 
 
 def test_valid_receipt_is_paid():
-    r = decide(receipt(), EXPECTED, "BQ-AAAAAA", {})
+    r = decide(receipt(), EXPECTED, "PAO-AAAAAA", {})
     assert r["status"] == STATUS_PAID and r["verified"] is True
     assert r["detected_amount"] == EXPECTED
     assert r["needs_human_review"] is False
 
 
 def test_wrong_amount_rejected_with_difference():
-    r = decide(receipt(detected_amount="Rp30.000"), EXPECTED, "BQ-AAAAAA", {})
+    r = decide(receipt(detected_amount="Rp30.000"), EXPECTED, "PAO-AAAAAA", {})
     assert r["status"] == STATUS_REJECT
     assert r["reason"] == "nominal_beda"
     assert "16815" in r["notes"]         # |13185 - 30000|
 
 
 def test_not_a_receipt():
-    r = decide(receipt(is_transfer_screenshot=False), EXPECTED, "BQ-AAAAAA", {})
+    r = decide(receipt(is_transfer_screenshot=False), EXPECTED, "PAO-AAAAAA", {})
     assert r["status"] == STATUS_REJECT and r["reason"] == "bukan_struk_transfer"
 
 
 def test_low_confidence_needs_check():
-    r = decide(receipt(confidence=0.3), EXPECTED, "BQ-AAAAAA", {})
+    r = decide(receipt(confidence=0.3), EXPECTED, "PAO-AAAAAA", {})
     assert r["status"] == STATUS_REVIEW and r["reason"] == "confidence_rendah"
 
 
 def test_medium_confidence_paid_but_reviewed():
-    r = decide(receipt(confidence=0.7), EXPECTED, "BQ-AAAAAA", {})
+    r = decide(receipt(confidence=0.7), EXPECTED, "PAO-AAAAAA", {})
     assert r["status"] == STATUS_PAID
     assert r["needs_human_review"] is True
 
 
 def test_duplicate_reference_blocked():
-    used = {"TRX20261029ABC": "BQ-LAINXX"}
-    r = decide(receipt(), EXPECTED, "BQ-AAAAAA", used)
+    used = {"TRX20261029ABC": "PAO-LAINXX"}
+    r = decide(receipt(), EXPECTED, "PAO-AAAAAA", used)
     assert r["status"] == STATUS_ERROR and r["reason"] == "duplikat_transaksi"
 
 
 def test_same_order_replay_allowed():
-    used = {"TRX20261029ABC": "BQ-AAAAAA"}
-    r = decide(receipt(), EXPECTED, "BQ-AAAAAA", used)
+    used = {"TRX20261029ABC": "PAO-AAAAAA"}
+    r = decide(receipt(), EXPECTED, "PAO-AAAAAA", used)
     assert r["status"] == STATUS_PAID
 
 
 def test_outside_time_window():
     r = decide(receipt(detected_time="2026-10-29T03:00:00"), EXPECTED,
-               "BQ-AAAAAA", {}, created_at="2026-10-29T10:00:00+00:00")
+               "PAO-AAAAAA", {}, created_at="2026-10-29T10:00:00+00:00")
     assert r["status"] == STATUS_REVIEW
     assert r["reason"] == "di_luar_jendela_waktu"
 
@@ -107,7 +107,7 @@ def test_outside_time_window():
 def test_inside_time_window():
     # 17:20 WIB == 10:20 UTC; pesanan 10:00 UTC -> selisih 20 menit
     r = decide(receipt(detected_time="2026-10-29T17:20:00"), EXPECTED,
-               "BQ-AAAAAA", {}, created_at="2026-10-29T10:00:00+00:00")
+               "PAO-AAAAAA", {}, created_at="2026-10-29T10:00:00+00:00")
     assert r["status"] == STATUS_PAID
 
 
@@ -118,12 +118,12 @@ def test_naive_receipt_time_read_as_wib():
 
 
 def test_invalid_model_response():
-    r = decide(None, EXPECTED, "BQ-AAAAAA", {})
+    r = decide(None, EXPECTED, "PAO-AAAAAA", {})
     assert r["status"] == STATUS_ERROR and r["reason"] == "respons_tidak_valid"
 
 
 def test_response_always_carries_both_amounts():
     for payload in (receipt(), receipt(detected_amount=1), receipt(confidence=0.1)):
-        r = decide(payload, EXPECTED, "BQ-AAAAAA", {})
+        r = decide(payload, EXPECTED, "PAO-AAAAAA", {})
         assert r["expected_amount"] == EXPECTED
         assert "detected_amount" in r

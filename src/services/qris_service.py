@@ -17,8 +17,8 @@ _ALPHABET = string.ascii_uppercase + string.digits
 
 
 def generate_order_code() -> str:
-    """mis. 'BQ-7F3K9A'."""
-    return "BQ-" + "".join(secrets.choice(_ALPHABET) for _ in range(6))
+    """mis. 'PAO-7F3K9A'."""
+    return "PAO-" + "".join(secrets.choice(_ALPHABET) for _ in range(6))
 
 
 def generate_unique_suffix() -> int:

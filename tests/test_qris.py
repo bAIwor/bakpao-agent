@@ -37,20 +37,20 @@ def test_suffix_range():
 
 def test_order_code_shape():
     code = generate_order_code()
-    assert code.startswith("BQ-") and len(code) == 9
+    assert code.startswith("PAO-") and len(code) == 10
 
 
 def test_payment_url_has_code():
-    assert build_payment_url("BQ-7F3K9A").endswith("/pay/BQ-7F3K9A")
+    assert build_payment_url("PAO-7F3K9A").endswith("/pay/PAO-7F3K9A")
 
 
 def test_qr_payload_default_is_url():
-    payload = build_qr_payload("http://localhost:8000/pay/BQ-7F3K9A")
+    payload = build_qr_payload("http://localhost:8000/pay/PAO-7F3K9A")
     assert payload.startswith("http")
 
 
 def test_render_qr_base64_is_png():
-    raw = base64.b64decode(render_qr_base64("http://localhost:8000/pay/BQ-X"))
+    raw = base64.b64decode(render_qr_base64("http://localhost:8000/pay/PAO-X"))
     assert raw[:8] == b"\x89PNG\r\n\x1a\n"
 
 
@@ -85,9 +85,9 @@ def test_dynamic_tag54_carries_exact_amount():
 def test_build_qris_for_order_modes(monkeypatch):
     import src.services.qris_service as qs
     monkeypatch.setattr(qs.get_settings(), "QR_MODE", "static")
-    r = build_qris_for_order(13185, "BQ-AAAAAA", suffix=185)
+    r = build_qris_for_order(13185, "PAO-AAAAAA", suffix=185)
     assert r["mode"] == "static" and r["payload"] == MERCHANT
     assert r["nominal"] == 13185 and r["suffix"] == 185
     monkeypatch.setattr(qs.get_settings(), "QR_MODE", "url")
-    r = build_qris_for_order(13185, "BQ-AAAAAA", suffix=185)
+    r = build_qris_for_order(13185, "PAO-AAAAAA", suffix=185)
     assert r["mode"] == "url" and r["payload"].startswith("http")
