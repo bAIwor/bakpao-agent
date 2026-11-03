@@ -1,7 +1,7 @@
 {
   "sumber": "sigaokmas.banyumaskab.go.id",
   "catatan": "Harga eceran rata-rata tingkat pasar, bukan harga supplier",
-  "diambil_pada": "2026-11-03T08:19:39+07:00",
+  "diambil_pada": "2026-11-03T08:33:57+07:00",
   "periode": {
     "dari": "2026-10-27",
     "sampai": "2026-11-02"
@@ -10,190 +10,6 @@
     "direct"
   ],
   "cakupan": {
-    "KABUPATEN BANYUMAS": {
-      "Daging Ayam Ras, 1 kg": {
-        "median": 38783,
-        "min": 37900,
-        "max": 39413,
-        "n_hari": 7,
-        "terakhir": {
-          "tanggal": "2026-11-02",
-          "harga": 37900
-        }
-      },
-      "Gula Pasir Curah, 1 kg": {
-        "median": 18109,
-        "min": 18100,
-        "max": 18136,
-        "n_hari": 7,
-        "terakhir": {
-          "tanggal": "2026-11-02",
-          "harga": 18100
-        }
-      },
-      "Gula Pasir Kemasan (Gulaku / Rosebrand), 1 kg": {
-        "median": 18800,
-        "min": 18786,
-        "max": 18864,
-        "n_hari": 7,
-        "terakhir": {
-          "tanggal": "2026-11-02",
-          "harga": 18833
-        }
-      },
-      "Kacang Hijau, 1 kg": {
-        "median": 29263,
-        "min": 29118,
-        "max": 29500,
-        "n_hari": 7,
-        "terakhir": {
-          "tanggal": "2026-11-02",
-          "harga": 29412
-        }
-      },
-      "Minyak Goreng Curah, 1 lt": {
-        "median": 19359,
-        "min": 19086,
-        "max": 19450,
-        "n_hari": 7,
-        "terakhir": {
-          "tanggal": "2026-11-02",
-          "harga": 19239
-        }
-      },
-      "Minyak Goreng Kemasan Premium, 1 lt": {
-        "median": 22600,
-        "min": 22522,
-        "max": 22690,
-        "n_hari": 7,
-        "terakhir": {
-          "tanggal": "2026-11-02",
-          "harga": 22600
-        }
-      },
-      "Tahu Putih, 1 kg": {
-        "median": 12421,
-        "min": 12324,
-        "max": 12556,
-        "n_hari": 7,
-        "terakhir": {
-          "tanggal": "2026-11-02",
-          "harga": 12324
-        }
-      },
-      "Telur Ayam Ras, 1kg": {
-        "median": 25075,
-        "min": 24789,
-        "max": 25300,
-        "n_hari": 7,
-        "terakhir": {
-          "tanggal": "2026-11-02",
-          "harga": 24789
-        }
-      },
-      "Tempe bungkus, 1 kg": {
-        "median": 12023,
-        "min": 11881,
-        "max": 12184,
-        "n_hari": 7,
-        "terakhir": {
-          "tanggal": "2026-11-02",
-          "harga": 12175
-        }
-      },
-      "Tepung Terigu, 1 kg": {
-        "median": 11000,
-        "min": 10921,
-        "max": 11214,
-        "n_hari": 7,
-        "terakhir": {
-          "tanggal": "2026-11-02",
-          "harga": 10975
-        }
-      }
-    },
-    "SITUMPUR": {
-      "Daging Ayam Ras, 1 kg": {
-        "median": 39000,
-        "min": 38000,
-        "max": 40000,
-        "n_hari": 7,
-        "terakhir": {
-          "tanggal": "2026-11-02",
-          "harga": 38000
-        }
-      },
-      "Gula Pasir Curah, 1 kg": {
-        "median": 19000,
-        "min": 18500,
-        "max": 19000,
-        "n_hari": 7,
-        "terakhir": {
-          "tanggal": "2026-11-02",
-          "harga": 18500
-        }
-      },
-      "Minyak Goreng Curah, 1 lt": {
-        "median": 19000,
-        "min": 19000,
-        "max": 20000,
-        "n_hari": 7,
-        "terakhir": {
-          "tanggal": "2026-11-02",
-          "harga": 20000
-        }
-      },
-      "Minyak Goreng Kemasan Premium, 1 lt": {
-        "median": 23000,
-        "min": 22500,
-        "max": 23000,
-        "n_hari": 7,
-        "terakhir": {
-          "tanggal": "2026-11-02",
-          "harga": 23000
-        }
-      },
-      "Tahu Putih, 1 kg": {
-        "median": 13000,
-        "min": 12500,
-        "max": 13000,
-        "n_hari": 7,
-        "terakhir": {
-          "tanggal": "2026-11-02",
-          "harga": 12500
-        }
-      },
-      "Telur Ayam Ras, 1kg": {
-        "median": 26000,
-        "min": 25500,
-        "max": 26000,
-        "n_hari": 7,
-        "terakhir": {
-          "tanggal": "2026-11-02",
-          "harga": 26000
-        }
-      },
-      "Tempe bungkus, 1 kg": {
-        "median": 12500,
-        "min": 12500,
-        "max": 12500,
-        "n_hari": 7,
-        "terakhir": {
-          "tanggal": "2026-11-02",
-          "harga": 12500
-        }
-      },
-      "Tepung Terigu, 1 kg": {
-        "median": 11500,
-        "min": 11500,
-        "max": 11500,
-        "n_hari": 7,
-        "terakhir": {
-          "tanggal": "2026-11-02",
-          "harga": 11500
-        }
-      }
-    },
     "SARIMULYO": {
       "Daging Ayam Ras, 1 kg": {
         "median": 38000,
@@ -263,6 +79,89 @@
         "terakhir": {
           "tanggal": "2026-11-02",
           "harga": 9500
+        }
+      }
+    },
+    "PON": {},
+    "SITUMPUR": {
+      "Daging Ayam Ras, 1 kg": {
+        "median": 39000,
+        "min": 38500,
+        "max": 40000,
+        "n_hari": 7,
+        "terakhir": {
+          "tanggal": "2026-11-02",
+          "harga": 38500
+        }
+      },
+      "Gula Pasir Curah, 1 kg": {
+        "median": 19000,
+        "min": 18500,
+        "max": 19000,
+        "n_hari": 7,
+        "terakhir": {
+          "tanggal": "2026-11-02",
+          "harga": 19000
+        }
+      },
+      "Minyak Goreng Curah, 1 lt": {
+        "median": 19000,
+        "min": 19000,
+        "max": 21000,
+        "n_hari": 7,
+        "terakhir": {
+          "tanggal": "2026-11-02",
+          "harga": 21000
+        }
+      },
+      "Minyak Goreng Kemasan Premium, 1 lt": {
+        "median": 23000,
+        "min": 22500,
+        "max": 23000,
+        "n_hari": 7,
+        "terakhir": {
+          "tanggal": "2026-11-02",
+          "harga": 23000
+        }
+      },
+      "Tahu Putih, 1 kg": {
+        "median": 13000,
+        "min": 12500,
+        "max": 13000,
+        "n_hari": 7,
+        "terakhir": {
+          "tanggal": "2026-11-02",
+          "harga": 12500
+        }
+      },
+      "Telur Ayam Ras, 1kg": {
+        "median": 25500,
+        "min": 25000,
+        "max": 26000,
+        "n_hari": 7,
+        "terakhir": {
+          "tanggal": "2026-11-02",
+          "harga": 25000
+        }
+      },
+      "Tempe bungkus, 1 kg": {
+        "median": 12500,
+        "min": 12500,
+        "max": 12500,
+        "n_hari": 7,
+        "terakhir": {
+          "tanggal": "2026-11-02",
+          "harga": 12500
+        }
+      },
+      "Tepung Terigu, 1 kg": {
+        "median": 11500,
+        "min": 11500,
+        "max": 12000,
+        "n_hari": 7,
+        "terakhir": {
+          "tanggal": "2026-11-02",
+          "harga": 12000
         }
       }
     },
@@ -358,6 +257,107 @@
         }
       }
     },
-    "PON": {}
+    "KABUPATEN BANYUMAS": {
+      "Daging Ayam Ras, 1 kg": {
+        "median": 38783,
+        "min": 37925,
+        "max": 39413,
+        "n_hari": 7,
+        "terakhir": {
+          "tanggal": "2026-11-02",
+          "harga": 37925
+        }
+      },
+      "Gula Pasir Curah, 1 kg": {
+        "median": 18119,
+        "min": 18105,
+        "max": 18136,
+        "n_hari": 7,
+        "terakhir": {
+          "tanggal": "2026-11-02",
+          "harga": 18125
+        }
+      },
+      "Gula Pasir Kemasan (Gulaku / Rosebrand), 1 kg": {
+        "median": 18800,
+        "min": 18786,
+        "max": 18864,
+        "n_hari": 7,
+        "terakhir": {
+          "tanggal": "2026-11-02",
+          "harga": 18833
+        }
+      },
+      "Kacang Hijau, 1 kg": {
+        "median": 29263,
+        "min": 29118,
+        "max": 29500,
+        "n_hari": 7,
+        "terakhir": {
+          "tanggal": "2026-11-02",
+          "harga": 29412
+        }
+      },
+      "Minyak Goreng Curah, 1 lt": {
+        "median": 19359,
+        "min": 19086,
+        "max": 19450,
+        "n_hari": 7,
+        "terakhir": {
+          "tanggal": "2026-11-02",
+          "harga": 19292
+        }
+      },
+      "Minyak Goreng Kemasan Premium, 1 lt": {
+        "median": 22600,
+        "min": 22522,
+        "max": 22690,
+        "n_hari": 7,
+        "terakhir": {
+          "tanggal": "2026-11-02",
+          "harga": 22600
+        }
+      },
+      "Tahu Putih, 1 kg": {
+        "median": 12421,
+        "min": 12324,
+        "max": 12556,
+        "n_hari": 7,
+        "terakhir": {
+          "tanggal": "2026-11-02",
+          "harga": 12324
+        }
+      },
+      "Telur Ayam Ras, 1kg": {
+        "median": 25075,
+        "min": 24737,
+        "max": 25300,
+        "n_hari": 7,
+        "terakhir": {
+          "tanggal": "2026-11-02",
+          "harga": 24737
+        }
+      },
+      "Tempe bungkus, 1 kg": {
+        "median": 12023,
+        "min": 11881,
+        "max": 12184,
+        "n_hari": 7,
+        "terakhir": {
+          "tanggal": "2026-11-02",
+          "harga": 12175
+        }
+      },
+      "Tepung Terigu, 1 kg": {
+        "median": 11000,
+        "min": 10921,
+        "max": 11214,
+        "n_hari": 7,
+        "terakhir": {
+          "tanggal": "2026-11-02",
+          "harga": 11000
+        }
+      }
+    }
   }
 }

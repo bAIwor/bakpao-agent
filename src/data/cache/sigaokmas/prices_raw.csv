@@ -5,14 +5,14 @@ tanggal,komoditas,pasar,harga
 2026-10-30,"Tepung Terigu, 1 kg",KABUPATEN BANYUMAS,11114
 2026-10-31,"Tepung Terigu, 1 kg",KABUPATEN BANYUMAS,11214
 2026-11-01,"Tepung Terigu, 1 kg",KABUPATEN BANYUMAS,10921
-2026-11-02,"Tepung Terigu, 1 kg",KABUPATEN BANYUMAS,10975
+2026-11-02,"Tepung Terigu, 1 kg",KABUPATEN BANYUMAS,11000
 2026-10-27,"Gula Pasir Curah, 1 kg",KABUPATEN BANYUMAS,18109
 2026-10-28,"Gula Pasir Curah, 1 kg",KABUPATEN BANYUMAS,18119
 2026-10-29,"Gula Pasir Curah, 1 kg",KABUPATEN BANYUMAS,18109
 2026-10-30,"Gula Pasir Curah, 1 kg",KABUPATEN BANYUMAS,18136
 2026-10-31,"Gula Pasir Curah, 1 kg",KABUPATEN BANYUMAS,18119
 2026-11-01,"Gula Pasir Curah, 1 kg",KABUPATEN BANYUMAS,18105
-2026-11-02,"Gula Pasir Curah, 1 kg",KABUPATEN BANYUMAS,18100
+2026-11-02,"Gula Pasir Curah, 1 kg",KABUPATEN BANYUMAS,18125
 2026-10-27,"Gula Pasir Kemasan (Gulaku / Rosebrand), 1 kg",KABUPATEN BANYUMAS,18800
 2026-10-28,"Gula Pasir Kemasan (Gulaku / Rosebrand), 1 kg",KABUPATEN BANYUMAS,18786
 2026-10-29,"Gula Pasir Kemasan (Gulaku / Rosebrand), 1 kg",KABUPATEN BANYUMAS,18800
@@ -26,7 +26,7 @@ tanggal,komoditas,pasar,harga
 2026-10-30,"Minyak Goreng Curah, 1 lt",KABUPATEN BANYUMAS,19424
 2026-10-31,"Minyak Goreng Curah, 1 lt",KABUPATEN BANYUMAS,19345
 2026-11-01,"Minyak Goreng Curah, 1 lt",KABUPATEN BANYUMAS,19086
-2026-11-02,"Minyak Goreng Curah, 1 lt",KABUPATEN BANYUMAS,19239
+2026-11-02,"Minyak Goreng Curah, 1 lt",KABUPATEN BANYUMAS,19292
 2026-10-27,"Minyak Goreng Kemasan Premium, 1 lt",KABUPATEN BANYUMAS,22522
 2026-10-28,"Minyak Goreng Kemasan Premium, 1 lt",KABUPATEN BANYUMAS,22571
 2026-10-29,"Minyak Goreng Kemasan Premium, 1 lt",KABUPATEN BANYUMAS,22543
@@ -40,14 +40,14 @@ tanggal,komoditas,pasar,harga
 2026-10-30,"Daging Ayam Ras, 1 kg",KABUPATEN BANYUMAS,39045
 2026-10-31,"Daging Ayam Ras, 1 kg",KABUPATEN BANYUMAS,38762
 2026-11-01,"Daging Ayam Ras, 1 kg",KABUPATEN BANYUMAS,38053
-2026-11-02,"Daging Ayam Ras, 1 kg",KABUPATEN BANYUMAS,37900
+2026-11-02,"Daging Ayam Ras, 1 kg",KABUPATEN BANYUMAS,37925
 2026-10-27,"Telur Ayam Ras, 1kg",KABUPATEN BANYUMAS,25182
 2026-10-28,"Telur Ayam Ras, 1kg",KABUPATEN BANYUMAS,25300
 2026-10-29,"Telur Ayam Ras, 1kg",KABUPATEN BANYUMAS,25045
 2026-10-30,"Telur Ayam Ras, 1kg",KABUPATEN BANYUMAS,25119
 2026-10-31,"Telur Ayam Ras, 1kg",KABUPATEN BANYUMAS,25075
 2026-11-01,"Telur Ayam Ras, 1kg",KABUPATEN BANYUMAS,24972
-2026-11-02,"Telur Ayam Ras, 1kg",KABUPATEN BANYUMAS,24789
+2026-11-02,"Telur Ayam Ras, 1kg",KABUPATEN BANYUMAS,24737
 2026-10-27,"Kacang Hijau, 1 kg",KABUPATEN BANYUMAS,29158
 2026-10-28,"Kacang Hijau, 1 kg",KABUPATEN BANYUMAS,29118
 2026-10-29,"Kacang Hijau, 1 kg",KABUPATEN BANYUMAS,29263
@@ -215,14 +215,14 @@ tanggal,komoditas,pasar,harga
 2026-10-30,"Tepung Terigu, 1 kg",SITUMPUR,11500
 2026-10-31,"Tepung Terigu, 1 kg",SITUMPUR,11500
 2026-11-01,"Tepung Terigu, 1 kg",SITUMPUR,11500
-2026-11-02,"Tepung Terigu, 1 kg",SITUMPUR,11500
+2026-11-02,"Tepung Terigu, 1 kg",SITUMPUR,12000
 2026-10-27,"Gula Pasir Curah, 1 kg",SITUMPUR,19000
 2026-10-28,"Gula Pasir Curah, 1 kg",SITUMPUR,19000
 2026-10-29,"Gula Pasir Curah, 1 kg",SITUMPUR,19000
 2026-10-30,"Gula Pasir Curah, 1 kg",SITUMPUR,19000
 2026-10-31,"Gula Pasir Curah, 1 kg",SITUMPUR,18500
 2026-11-01,"Gula Pasir Curah, 1 kg",SITUMPUR,18500
-2026-11-02,"Gula Pasir Curah, 1 kg",SITUMPUR,18500
+2026-11-02,"Gula Pasir Curah, 1 kg",SITUMPUR,19000
 2026-10-27,"Gula Pasir Kemasan (Gulaku / Rosebrand), 1 kg",SITUMPUR,0
 2026-10-28,"Gula Pasir Kemasan (Gulaku / Rosebrand), 1 kg",SITUMPUR,0
 2026-10-29,"Gula Pasir Kemasan (Gulaku / Rosebrand), 1 kg",SITUMPUR,0
@@ -236,7 +236,7 @@ tanggal,komoditas,pasar,harga
 2026-10-30,"Minyak Goreng Curah, 1 lt",SITUMPUR,19000
 2026-10-31,"Minyak Goreng Curah, 1 lt",SITUMPUR,19000
 2026-11-01,"Minyak Goreng Curah, 1 lt",SITUMPUR,19000
-2026-11-02,"Minyak Goreng Curah, 1 lt",SITUMPUR,20000
+2026-11-02,"Minyak Goreng Curah, 1 lt",SITUMPUR,21000
 2026-10-27,"Minyak Goreng Kemasan Premium, 1 lt",SITUMPUR,22500
 2026-10-28,"Minyak Goreng Kemasan Premium, 1 lt",SITUMPUR,22500
 2026-10-29,"Minyak Goreng Kemasan Premium, 1 lt",SITUMPUR,23000
@@ -250,14 +250,14 @@ tanggal,komoditas,pasar,harga
 2026-10-30,"Daging Ayam Ras, 1 kg",SITUMPUR,39000
 2026-10-31,"Daging Ayam Ras, 1 kg",SITUMPUR,39000
 2026-11-01,"Daging Ayam Ras, 1 kg",SITUMPUR,39000
-2026-11-02,"Daging Ayam Ras, 1 kg",SITUMPUR,38000
+2026-11-02,"Daging Ayam Ras, 1 kg",SITUMPUR,38500
 2026-10-27,"Telur Ayam Ras, 1kg",SITUMPUR,26000
 2026-10-28,"Telur Ayam Ras, 1kg",SITUMPUR,26000
 2026-10-29,"Telur Ayam Ras, 1kg",SITUMPUR,26000
 2026-10-30,"Telur Ayam Ras, 1kg",SITUMPUR,25500
 2026-10-31,"Telur Ayam Ras, 1kg",SITUMPUR,25500
 2026-11-01,"Telur Ayam Ras, 1kg",SITUMPUR,25500
-2026-11-02,"Telur Ayam Ras, 1kg",SITUMPUR,26000
+2026-11-02,"Telur Ayam Ras, 1kg",SITUMPUR,25000
 2026-10-27,"Kacang Hijau, 1 kg",SITUMPUR,0
 2026-10-28,"Kacang Hijau, 1 kg",SITUMPUR,0
 2026-10-29,"Kacang Hijau, 1 kg",SITUMPUR,0
