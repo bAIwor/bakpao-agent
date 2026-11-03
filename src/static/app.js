@@ -225,6 +225,7 @@ document.getElementById("orderbtn")?.addEventListener("click", async () => {
     const order = await r.json();
     cart = {};
     saveCart();
+    try { localStorage.setItem("bakpao_last_order", order.order_code); } catch (err) {}
     window.location.href = "/pay/" + order.order_code;
   } catch (err) {
     alert("Koneksi gagal. Periksa koneksi internet Anda.");
@@ -233,5 +234,26 @@ document.getElementById("orderbtn")?.addEventListener("click", async () => {
   }
 });
 
+async function resumePendingOrder() {
+  let code = null;
+  try { code = localStorage.getItem("bakpao_last_order"); } catch (err) { return; }
+  if (!code) return;
+  try {
+    const r = await fetch("/api/orders/" + code);
+    if (!r.ok) throw new Error("hilang");
+    const o = await r.json();
+    if (o.status !== "MENUNGGU_BAYAR") throw new Error("selesai");
+    const a = document.getElementById("resumeorder");
+    if (!a) return;
+    a.href = "/pay/" + code;
+    document.getElementById("resumetext").textContent =
+      "Pesanan " + code + " belum dibayar (" + rupiah(o.amount) + ") — lanjutkan?";
+    a.classList.remove("hidden");
+  } catch (err) {
+    try { localStorage.removeItem("bakpao_last_order"); } catch (e) {}
+  }
+}
+
 setupFilterTabs();
 loadMenu();
+resumePendingOrder();
