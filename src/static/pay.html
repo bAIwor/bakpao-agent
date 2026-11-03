@@ -81,6 +81,13 @@
       <img src="/static/assets/merchant-qris.jpg" alt="QRIS Merchant DANA Bisnis bAIwor" class="w-full max-w-[340px] mx-auto object-contain rounded-xl shadow-md">
     </div>
 
+    <!-- Countdown 3 menit -->
+    <div id="countbox" class="bg-rose-50 rounded-2xl p-3 border border-rose-200 text-center">
+      <div class="text-xs text-rose-700 font-semibold">Sisa waktu bayar:</div>
+      <div id="countdown" class="text-2xl font-extrabold font-mono text-rose-600 tracking-wider">03:00</div>
+      <div class="text-[11px] text-stone-500">Tiket otomatis hangus jika tidak dibayar dalam 3 menit</div>
+    </div>
+
     <!-- Nominal di BAWAH QR -->
     <div class="bg-amber-50 rounded-2xl p-4 border border-amber-200/70">
       <div class="text-xs text-stone-500 font-medium">Nominal Tepat yang Ditransfer:</div>
@@ -90,6 +97,8 @@
       </div>
       <p class="text-[11px] text-stone-500 mt-2">Ketik nominal ini persis (beda Rp1 = TIDAK_COCOK). Contoh: <span class="font-mono text-amber-900">Rp 3.905</span> = 3500 + 405</p>
     </div>
+
+    <button id="cancelbtn" class="w-full py-3 rounded-2xl border border-rose-200 bg-white hover:bg-rose-50 text-rose-700 font-bold text-sm transition-colors">Batalkan Pesanan</button>
 
     <!-- Galat: order tak dikenal server -->
     <div id="ordererr" class="hidden rounded-2xl p-4 border border-rose-200 bg-rose-50 text-xs text-rose-800">

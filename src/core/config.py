@@ -27,6 +27,7 @@ class Settings(BaseSettings):
     PORT: int = 8000
     DEBUG: bool = True
     DATA_DIR: str = "data"
+    ORDER_TTL_MINUTES: int = 3
 
 
 @lru_cache

@@ -122,8 +122,12 @@ def order_qr(code: str):
     except store.OrderNotFound as e:
         raise HTTPException(status_code=404, detail=str(e))
     url = build_payment_url(code)
+    from src.core.config import get_settings
     return {"qr_b64": render_qr_base64(url), "url": url,
-            "amount": order["amount"], "suffix": order["unique_suffix"]}
+            "amount": order["amount"], "suffix": order["unique_suffix"],
+            "created_at": order.get("created_at"),
+            "ttl_minutes": get_settings().ORDER_TTL_MINUTES,
+            "status": order.get("status")}
 
 
 @router.post("/api/orders/{code}/cancel")
@@ -158,7 +162,10 @@ def complete(code: str):
 
 @router.get("/api/kitchen/queue")
 def queue():
-    return {"queue": store.list_orders()}
+    # Hanya antrean aktif yang ditampilkan di dapur — GAGAL/SELESAI dianggap hilang
+    semua = store.list_orders()
+    aktif = [o for o in semua if o.get("status") in ("MENUNGGU_BAYAR", "LUNAS")]
+    return {"queue": aktif, "queue_all": semua}
 
 
 class VisionMeasureBody(BaseModel):

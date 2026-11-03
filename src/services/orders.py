@@ -40,6 +40,44 @@ def _load() -> dict:
     return {"orders": {}, "queue_counter": 0}
 
 
+def _ttl_minutes() -> int:
+    try:
+        from src.core.config import get_settings
+        return int(get_settings().ORDER_TTL_MINUTES or 3)
+    except Exception:
+        return 3
+
+
+def _is_expired(order: dict, now_utc: datetime.datetime) -> bool:
+    if order.get("status") != STATUS_WAITING:
+        return False
+    raw = order.get("created_at")
+    if not raw:
+        return False
+    try:
+        created = datetime.datetime.fromisoformat(raw)
+        if created.tzinfo is None:
+            created = created.replace(tzinfo=datetime.timezone.utc)
+    except Exception:
+        return False
+    age = (now_utc - created).total_seconds() / 60
+    return age > _ttl_minutes()
+
+
+def expire_stale_orders() -> int:
+    """Tandai MENUNGGU_BAYAR yang lewat TTL menjadi GAGAL. Return jumlah."""
+    db = _load()
+    now_utc = datetime.datetime.now(datetime.timezone.utc)
+    changed = 0
+    for o in db.get("orders", {}).values():
+        if _is_expired(o, now_utc):
+            o["status"] = STATUS_FAILED
+            changed += 1
+    if changed:
+        _save(db)
+    return changed
+
+
 def _save(db: dict) -> None:
     _data_dir().mkdir(parents=True, exist_ok=True)
     _db_path().write_text(json.dumps(db, ensure_ascii=False, indent=1),
@@ -91,6 +129,7 @@ def create_order(items: list) -> dict:
 
 
 def get_order(code: str) -> dict:
+    expire_stale_orders()
     order = _load()["orders"].get(code)
     if order is None:
         raise OrderNotFound(f"pesanan tidak ditemukan: {code}")
@@ -131,6 +170,7 @@ def mark_done(code: str) -> dict:
 
 
 def list_orders() -> list:
+    expire_stale_orders()
     db = _load()
     return sorted(db["orders"].values(),
                   key=lambda o: o.get("created_at", ""))
