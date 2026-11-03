@@ -76,9 +76,14 @@
       <p class="text-xs text-stone-500">Gunakan DANA, GoPay, OVO, ShopeePay, atau m-Banking (BCA, Mandiri, BRI)</p>
     </div>
 
-    <!-- Nominal di ATAS QR -->
+    <!-- QR besar tanpa bingkai -->
+    <div>
+      <img src="/static/assets/merchant-qris.jpg" alt="QRIS Merchant DANA Bisnis bAIwor" class="w-full max-w-[340px] mx-auto object-contain rounded-xl shadow-md">
+    </div>
+
+    <!-- Nominal di BAWAH QR -->
     <div class="bg-amber-50 rounded-2xl p-4 border border-amber-200/70">
-      <div class="text-xs text-stone-500 font-medium">Nominal Tepat yang Dibayar:</div>
+      <div class="text-xs text-stone-500 font-medium">Nominal Tepat yang Ditransfer:</div>
       <div id="nominal" class="text-3xl sm:text-4xl font-extrabold text-amber-950 font-display tracking-tight my-1">Rp 0</div>
       <div class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-amber-200 text-amber-900 text-xs font-bold">
         Kode Verifikasi Unik: <span id="suffix" class="font-mono">---</span>
@@ -86,9 +91,14 @@
       <p class="text-[11px] text-stone-500 mt-2">Ketik nominal ini persis (beda Rp1 = TIDAK_COCOK). Contoh: <span class="font-mono text-amber-900">Rp 3.905</span> = 3500 + 405</p>
     </div>
 
-    <!-- QR besar -->
-    <div class="p-4 bg-white rounded-2xl border border-stone-200 inline-block shadow-sm">
-      <img src="/static/assets/merchant-qris.jpg" alt="QRIS Merchant DANA Bisnis bAIwor" class="w-72 h-72 sm:w-80 sm:h-80 mx-auto object-contain rounded-xl">
+    <!-- Galat: order tak dikenal server -->
+    <div id="ordererr" class="hidden rounded-2xl p-4 border border-rose-200 bg-rose-50 text-xs text-rose-800">
+      Pesanan tidak ditemukan — kemungkinan dapur baru dibersihkan atau kode salah.
+      <span class="block mt-2 font-bold">
+        <a href="/" class="underline">Buat pesanan baru</a>
+        <span class="mx-1">·</span>
+        <a href="#" id="retryorder" class="underline">Coba lagi</a>
+      </span>
     </div>
 
     <div class="text-center bg-stone-50 rounded-2xl p-3 border border-stone-200/80 text-xs text-stone-600">

@@ -7,7 +7,11 @@ function rupiah(n) {
 
 async function loadOrder() {
   const r = await fetch("/api/orders/" + CODE + "/qr");
-  if (!r.ok) return;
+  if (!r.ok) {
+    const e = document.getElementById("ordererr");
+    if (e) e.classList.remove("hidden");
+    return;
+  }
   const q = await r.json();
   document.getElementById("nominal").textContent = rupiah(q.amount);
   document.getElementById("suffix").textContent = q.suffix;
@@ -58,6 +62,12 @@ document.getElementById("uploadbtn").addEventListener("click", async () => {
     msg.textContent = "Gagal: " + alasan;
   }
   refreshStatus();
+});
+
+document.getElementById("retryorder")?.addEventListener("click", (ev) => {
+  ev.preventDefault();
+  document.getElementById("ordererr")?.classList.add("hidden");
+  loadOrder();
 });
 
 setInterval(refreshStatus, 2000);

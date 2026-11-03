@@ -44,6 +44,17 @@ def _save(db: dict) -> None:
     _data_dir().mkdir(parents=True, exist_ok=True)
     _db_path().write_text(json.dumps(db, ensure_ascii=False, indent=1),
                            encoding="utf-8")
+    # Tulis langsung komit ke volume (hanya di Modal, DATA_DIR=/data):
+    # tanpa ini order hanya hidup di snapshot container pembuat dan tak
+    # terlihat container lain. Lokal/tes tidak menyentuh jaringan.
+    if os.environ.get("DATA_DIR") != "/data":
+        return
+    try:
+        import modal
+        modal.Volume.from_name(
+            os.environ.get("MODAL_VOLUME_NAME", "bakpao-data")).commit()
+    except Exception:
+        pass
 
 
 def _products() -> dict:
