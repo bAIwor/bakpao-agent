@@ -67,65 +67,41 @@
     </div>
   </div>
 
-  <!-- QRIS Payment Grid -->
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-    
-    <!-- Left Card: Dynamic Order QR & Nominal -->
-    <div class="pay-card rounded-3xl p-6 flex flex-col justify-between text-center space-y-4">
-      <div>
-        <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-100 text-amber-900 text-xs font-bold mb-3">
-          <span>📱</span> 1. Scan QR Pesanan
-        </div>
-        <p class="text-xs text-stone-500 mb-4">Scan langsung untuk membuka link pembayaran resmi ini di HP Anda.</p>
-        
-        <div class="p-3 bg-amber-50 rounded-2xl border border-amber-200/70 inline-block shadow-inner">
-          <img id="qrpay" alt="QR pesanan dinamis" class="w-48 h-48 mx-auto object-contain rounded-xl bg-white p-2">
-        </div>
+  <!-- QRIS Payment — hanya QRIS DANA Bisnis asli -->
+  <div class="pay-card rounded-3xl p-6 sm:p-8 text-center space-y-5 max-w-lg mx-auto">
+    <div>
+      <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-100 text-emerald-900 text-xs font-bold mb-2">
+        <span>🏦</span> Scan QRIS DANA Bisnis untuk Bayar
       </div>
-
-      <div class="pt-3 border-t border-amber-100/80 bg-amber-50/50 rounded-2xl p-4">
-        <div class="text-xs text-stone-500 font-medium">Nominal Tepat yang Dibayar:</div>
-        <div id="nominal" class="text-3xl font-extrabold text-amber-950 font-display tracking-tight my-1">
-          Rp 0
-        </div>
-        <div class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md bg-amber-200 text-amber-900 text-xs font-bold">
-          Kode Verifikasi Unik: <span id="suffix" class="font-mono">---</span>
-        </div>
-        <p class="text-[10px] text-stone-400 mt-1">Pastikan nominal transfer sama persis dengan angka di atas.</p>
-      </div>
+      <p class="text-xs text-stone-500">Gunakan DANA, GoPay, OVO, ShopeePay, atau m-Banking (BCA, Mandiri, BRI)</p>
     </div>
 
-    <!-- Right Card: Official Merchant QRIS (DANA Bisnis) -->
-    <div class="pay-card rounded-3xl p-6 flex flex-col justify-between text-center space-y-4">
-      <div>
-        <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-100 text-emerald-900 text-xs font-bold mb-3">
-          <span>🏦</span> 2. Scan QRIS DANA Bisnis
-        </div>
-        <p class="text-xs text-stone-500 mb-4">Gunakan aplikasi m-Banking (BCA, Mandiri, BRI) atau e-Wallet (DANA, GoPay, OVO, ShopeePay).</p>
-        
-        <div class="p-3 bg-white rounded-2xl border border-stone-200 inline-block shadow-sm">
-          <img src="/static/assets/merchant-qris.jpg" alt="QRIS Merchant DANA Bisnis bAIwor" class="w-48 h-48 mx-auto object-contain rounded-xl">
-        </div>
+    <!-- Nominal di ATAS QR -->
+    <div class="bg-amber-50 rounded-2xl p-4 border border-amber-200/70">
+      <div class="text-xs text-stone-500 font-medium">Nominal Tepat yang Dibayar:</div>
+      <div id="nominal" class="text-3xl sm:text-4xl font-extrabold text-amber-950 font-display tracking-tight my-1">Rp 0</div>
+      <div class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-amber-200 text-amber-900 text-xs font-bold">
+        Kode Verifikasi Unik: <span id="suffix" class="font-mono">---</span>
       </div>
-
-      <div class="text-left bg-stone-50 rounded-2xl p-4 border border-stone-200/80 text-xs text-stone-600 space-y-1">
-        <div class="font-bold text-stone-800 flex items-center gap-1">
-          <span>🏪</span> bAIwor Agentic Indonesia
-        </div>
-        <div class="text-[11px] text-stone-500">NMID: ID1026624673848 · Kab. Banyumas</div>
-        <p class="text-[10px] text-stone-400 pt-1 border-t border-stone-200">
-          Ketik nominal pas sesuai angka di sebelah kiri agar verifikasi berjalan cepat.
-        </p>
-      </div>
+      <p class="text-[11px] text-stone-500 mt-2">Ketik nominal ini persis (beda Rp1 = TIDAK_COCOK). Contoh: <span class="font-mono text-amber-900">Rp 3.905</span> = 3500 + 405</p>
     </div>
 
+    <!-- QR besar -->
+    <div class="p-4 bg-white rounded-2xl border border-stone-200 inline-block shadow-sm">
+      <img src="/static/assets/merchant-qris.jpg" alt="QRIS Merchant DANA Bisnis bAIwor" class="w-72 h-72 sm:w-80 sm:h-80 mx-auto object-contain rounded-xl">
+    </div>
+
+    <div class="text-center bg-stone-50 rounded-2xl p-3 border border-stone-200/80 text-xs text-stone-600">
+      <div class="font-bold text-stone-800">🏪 bAIwor Agentic Indonesia</div>
+      <div class="text-[11px] text-stone-500">NMID: ID1026624673848 · Kab. Banyumas</div>
+    </div>
   </div>
 
   <!-- Upload Proof Section -->
   <div class="pay-card rounded-3xl p-6 space-y-4">
     <div class="flex items-center gap-2">
       <span class="text-xl">📤</span>
-      <h2 class="font-bold text-lg text-amber-950">3. Konfirmasi / Upload Bukti Transfer</h2>
+      <h2 class="font-bold text-lg text-amber-950">2. Konfirmasi / Upload Bukti Transfer</h2>
     </div>
     <p class="text-xs sm:text-sm text-stone-600">
       Sudah selesai transfer via QRIS? Unggah tangkapan layar (screenshot) bukti pembayaran Anda untuk diverifikasi secara otomatis oleh AI.

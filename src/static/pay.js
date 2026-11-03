@@ -11,7 +11,8 @@ async function loadOrder() {
   const q = await r.json();
   document.getElementById("nominal").textContent = rupiah(q.amount);
   document.getElementById("suffix").textContent = q.suffix;
-  document.getElementById("qrpay").src = "data:image/png;base64," + q.qr_b64;
+  const qrEl = document.getElementById("qrpay");
+  if (qrEl) qrEl.src = "data:image/png;base64," + q.qr_b64;
   refreshStatus();
 }
 
